@@ -12,7 +12,7 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "footie",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -100,5 +100,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "cb5171f9-6be2-48be-a26d-99f1bf964af7"
   }
 }
