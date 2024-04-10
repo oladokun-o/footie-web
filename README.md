@@ -1,27 +1,58 @@
-# FootieWeb
+# Footie Web Delivery App (Frontend)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.11.
+The Footie Web Delivery App frontend is developed using Angular 15, providing a modern and robust user interface for the web application. This README specifically covers the frontend aspect of the project.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- **User Authentication:** Sign up and log in using email, Gmail, or phone number.
+- **Order Placement:** Recipients can post delivery orders with pickup and destination addresses, item description, and time-based pricing.
+- **Real-time Messaging:** Automated messaging system notifies users about order status and facilitates communication between couriers and recipients.
+- **Integration with Yandex Map:** Plan routes and estimate delivery times efficiently using Yandex Map.
+- **Earnings Tracking:** Couriers have access to a comprehensive earnings dashboard displaying completed deliveries, tips, bonuses, and performance ratings.
+- **Ratings and Reviews:** Recipients can rate and review delivery experiences, fostering transparency and accountability.
+- **Notifications:** Real-time notifications keep users informed about new delivery requests, payment transactions, and chat updates.
 
-## Code scaffolding
+## Technologies Used
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- **Angular 15:** Frontend framework for building robust web applications.
+- **TypeScript:** Superset of JavaScript that adds optional static typing.
+- **HTML5/CSS3:** Markup and styling languages for structuring and presenting web content.
+- **Angular Material:** UI component library for Angular applications.
 
-## Build
+## Installation
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+To run the Footie Web Delivery App frontend locally, follow these steps:
 
-## Running unit tests
+1. Clone the repository:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+    ```
+    git clone https://github.com/yourusername/footie-web-delivery-app.git
+    ```
 
-## Running end-to-end tests
+2. Navigate to the frontend directory:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+    ```
+    cd footie-web-delivery-app/frontend
+    ```
 
-## Further help
+3. Install dependencies:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+    ```
+    npm install
+    ```
+
+4. Start the Angular development server:
+
+    ```
+    npm start
+    ```
+
+5. Access the application in your web browser at `http://localhost:4200`.
+
+## Contributing
+
+Contributions to the frontend of the Footie Web Delivery App are welcome! Please read the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines on how to contribute to the project.
+
+## License
+
+This frontend of the Footie Web Delivery App is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
