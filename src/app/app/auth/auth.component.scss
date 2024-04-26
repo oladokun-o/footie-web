@@ -21,5 +21,30 @@
     color: #fff;
     z-index: 1;
     text-align: start;
+    position: relative;
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      font-family: 'Poppins', 'Inter';
+    }
+
+    .social-links {
+      position: absolute;
+      bottom: 15px;
+      left: 5px;
+
+      a {
+        color: #fff !important;
+        font-size: 1.5rem;
+        margin: 0 0.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+          color: #E36F00 !important;
+        }
+      }
+    }
   }
 }

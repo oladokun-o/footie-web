@@ -14,7 +14,7 @@ export class AuthService {
 
   loginByEmail(payload: { email: string, password: string, role: UserRole }): Observable<any> {
     return this.httpClient.post<RequestResponse>(ApiEndpoints.auth.login.viaEmail(), payload).pipe(
-      tap(response => localStorage.setItem("token", response.data.token)),
+      tap(response => { if (response.result === "success") localStorage.setItem("token", response.data.token) }),
       switchMap(response => response.result === "success" ? of(response.data) : throwError(response.message)),
       catchError(error => throwError(error)),
     );
@@ -22,7 +22,7 @@ export class AuthService {
 
   loginByPhone(payload: { phone: string, password: string, role: UserRole }): Observable<any> {
     return this.httpClient.post<RequestResponse>(ApiEndpoints.auth.login.viaPhone(), payload).pipe(
-      tap(response => localStorage.setItem("token", response.data.token)),
+      tap(response => { if (response.result === "success") localStorage.setItem("token", response.data.token) }),
       switchMap(response => response.result === "success" ? of(response.data) : throwError(response.message)),
       catchError(error => throwError(error)),
     );

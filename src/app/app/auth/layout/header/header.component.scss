@@ -1,9 +1,11 @@
 header {
   background-image: url('/assets/images/backgrounds/auth-header-bg.svg');
-  background-size: contain;
-  background-repeat: repeat;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom;
   position: relative;
-  height: 169px;
+  min-height: 169px;
+  transition: all 0.3s ease;
 
   .logo {
     position: absolute;

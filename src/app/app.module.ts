@@ -14,17 +14,25 @@ import { OnlineStatusModule } from 'ngx-online-status';
 import { AuthModule } from './app/auth/auth.module';
 import { SharedComponentsModule } from 'src/shared/components/components.module';
 import { SharedDirectivesModule } from 'src/shared/directives/directives.module';
+import { PageNotFoundComponent } from './app/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      preventDuplicates: true,
+      closeButton: false,
+      resetTimeoutOnDuplicate: true,
+      enableHtml: true,
+      positionClass: 'toast-top-center',
+    }),
     RouterModule,
     NgSelectModule,
     OnlineStatusModule,

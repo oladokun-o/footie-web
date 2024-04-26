@@ -1,0 +1,25 @@
+.page {
+  background-color: #01674F;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 50px;
+
+  h1 {
+    color: #fff;
+    font-size: 2rem;
+  }
+
+  a {
+    color: #fff !important;
+    text-decoration: none;
+    font-size: 1.5rem;
+  }
+
+  img {
+    width: 100%;
+    max-width: 400px;
+  }
+}
