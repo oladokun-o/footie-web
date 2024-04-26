@@ -37,6 +37,8 @@ $footiedrop-web-theme: mat.define-light-theme((color: (primary: $footiedrop-web-
 @import "@ng-select/ng-select/themes/default.theme.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
+@import url(assets/fonts/fonts.scss);
+
 html,
 body {
   height: 100%;
@@ -44,7 +46,7 @@ body {
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: 'Inter', Roboto, "Helvetica Neue", sans-serif;
 }
 
 .heading {
@@ -67,6 +69,21 @@ form {
   .form-group {
     margin-bottom: 15px;
   }
+
+  small {
+    font-size: 12px !important;
+  }
+
+  &.loading {
+    input,
+    button,
+    textarea,
+    select,
+    a {
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
 }
 
 label {
@@ -84,6 +101,21 @@ input {
 
   &::placeholder {
     color: #00000034;
+  }
+
+  &:focus,
+  &:active {
+    border: 1px solid #01674f57 !important;
+    box-shadow: 0 0 0 0.2rem #01674f3d !important;
+  }
+
+  &.ng-invalid.ng-touched {
+    border: 1px solid #ff0000 !important;
+
+    &:focus,
+    &:active {
+      box-shadow: 0 0 0 0.2rem #ff00003d !important;
+    }
   }
 }
 
@@ -118,4 +150,70 @@ a {
 
 button:disabled {
   opacity: 0.7;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+// Font size for laptop and desktop screens
+@media (min-width: 992px) {
+  .heading {
+    font-size: 24px;
+  }
+
+  .sub-heading {
+    font-size: 18px;
+  }
+
+  form {
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 16px;
+    }
+
+    input {
+      font-size: 14px !important;
+      padding: 20px 15px !important;
+    }
+
+    .btn-primary {
+      font-size: 16px !important;
+      padding: 20px !important;
+    }
+
+    a {
+      font-size: 16px;
+    }
+
+    .btn-transparent {
+      font-size: 16px !important;
+      padding: 20px;
+    }
+  }
+}
+
+.toast-top-center {
+  top: 15px;
+
+  .ngx-toastr {
+    box-shadow: 0 0 5px #0000004d;
+    font-size: 12px;
+
+    &:hover {
+      box-shadow: 0 0 5px #0000004d;
+    }
+  }
+
+  // .toast-error {
+
+  // }
+
+  // .toast-success {
+
+  // }
 }

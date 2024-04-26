@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavigationStart, NavigationEnd, Router } from '@angular/router';
 import { OnlineStatusType, OnlineStatusService } from 'ngx-online-status';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +17,12 @@ export class AppComponent {
   constructor(
     private toastr: ToastrService,
     private onlineStatusService: OnlineStatusService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
   ) {
+    // check if user is already logged in
+    this.checkIfUserIsLoggedIn();
+
     toastr.toastrConfig.preventDuplicates = true;
     this.onlineStatusService.status.subscribe((status: OnlineStatusType) => {
       // Retrieve Online status Type
@@ -38,5 +43,19 @@ export class AppComponent {
         this.loading = false;
       }
     });
+  }
+
+  checkIfUserIsLoggedIn() {
+    this.authService.checkIfLoggedIn().subscribe(
+      response => {
+        if (response) {
+          // this.toastr.info('You are already logged in.');
+          this.router.navigate(['/dashboard']);
+        }
+      },
+      error => {
+        this.toastr.error('An error occurred while checking if user is logged in. Please try again later.');
+      }
+    );
   }
 }

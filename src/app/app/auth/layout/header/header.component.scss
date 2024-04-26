@@ -11,3 +11,15 @@ header {
     bottom: -32px;
   }
 }
+
+// laptop & desktop screen sizes
+@media (min-width: 992px) {
+  header {
+    .logo {
+
+      img {
+        width: 150%;
+      }
+    }
+  }
+}

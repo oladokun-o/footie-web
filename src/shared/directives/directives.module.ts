@@ -1,18 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NumbersOnlyDirective } from './numbers-only.directive';
+import { InputMaskDirective } from './input-mask.directive';
 
 
 
 @NgModule({
   declarations: [
-    NumbersOnlyDirective
+    NumbersOnlyDirective,
+    InputMaskDirective
   ],
   imports: [
     CommonModule
   ],
   exports: [
-    NumbersOnlyDirective
+    NumbersOnlyDirective,
+    InputMaskDirective
   ]
 })
 export class SharedDirectivesModule { }

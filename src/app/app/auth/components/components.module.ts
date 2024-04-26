@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { SharedDirectivesModule } from 'src/shared/directives/directives.module';
 import { SharedComponentsModule } from 'src/shared/components/components.module';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { LogoutComponent } from './logout/logout.component';
 
 const COMPONENTS = [
   LoginComponent,
@@ -20,6 +21,7 @@ const COMPONENTS = [
     RegisterComponent,
     ForgotPasswordComponent,
     VerifyCodeComponent,
+    LogoutComponent,
   ],
   imports: [
     CommonModule,
