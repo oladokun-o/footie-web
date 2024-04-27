@@ -40,7 +40,6 @@ export class RegisterComponent {
       this.loading = true;
       this.userService.create(payload).subscribe(
         (response) => {
-          console.log(response);
           if (response) {
             this.toastr.success('Account created successfully');
             this.router.navigate(['/verifyOTP']);
@@ -49,13 +48,18 @@ export class RegisterComponent {
           }
         },
         (error) => {
-          if (Array.isArray(error.message)) {
-            error.message.forEach((err: string) => {
-              this.toastr.error(err);
-            });
+          if (error && error.message) {
+            if (Array.isArray(error.message)) {
+              error.message.forEach((err: string) => {
+                this.toastr.error(err);
+              });
+            } else {
+              this.toastr.error(error.message);
+            }
           } else {
             this.toastr.error(error);
-          };
+          }
+
           this.loading = false;
         }
       );
