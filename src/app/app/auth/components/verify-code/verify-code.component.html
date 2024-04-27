@@ -1,1 +1,33 @@
-<p>verify-code works!</p>
+<div class="col-12 d-flex justify-content-center align-items-start h-100">
+  <div class="col-lg-10 col-12 px-1 px-lg-4">
+    <form [formGroup]="form" (ngSubmit)="verify()" class="mt-3" [class.loading]="loading">
+      <div class="container-fluid ps-0 mb-3">
+        <h3 class="heading">Enter the 4-digit code</h3>
+        <p class="sub-heading">Please input the verification code sent to your email address <span style="text-transform: lowercase;">{{
+        truncateEmailAddress(userData.email) }}</span></p>
+      </div>
+
+      <div class="form-group">
+        <label for="otp" class="form-label">
+          <a routerLink="/changeEmail">Change Email?</a>
+        </label>
+        <input footiedropWebInputMask="0  0  0  0" type="tel" class="form-control text-center fs-2" id="otp" formControlName="otp"
+          placeholder="--  --  --  --">
+        <small class="text-danger">{{ form.get('otp')?.touched && form.get('otp')?.errors?.['required'] ? 'otp is required' : '' }}</small>
+      </div>
+      <div class="form-group text-end">
+        <small style="font-size: 13px !important;">Didn’t get any code yet? <a (click)="resendOTP()">{{ resending ? 'Resending' : 'Resend code' }}</a></small>
+      </div>
+
+      <footiedrop-web-loading-button buttonText="Verify" [disabled]="form.invalid" [loading]="loading"
+        class="primary"></footiedrop-web-loading-button>
+      <div class="form-group text-center mt-3">
+        By signing up, you agree to Footiedrop’s <br>
+        <a href="#">Terms of Service</a>
+        and
+        <a href="#">Privacy Policy</a>.
+      </div>
+    </form>
+  </div>
+
+</div>

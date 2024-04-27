@@ -35,6 +35,8 @@ export class LoginComponent {
     this.checkLoginMode();
     // reset the form
     this.form.reset();
+    // set role
+    this.form.controls["role"].setValue("customer");
   }
 
   checkLoginMode() {
@@ -62,29 +64,44 @@ export class LoginComponent {
         }).subscribe(
           response => {
             this.loggingIn = false;
-            this.toastr.success('Sign In Successful!');
+            this.toastr.success('Sign In Successful!', '', {
+              timeOut: 1000
+            });
             this.router.navigate(['/dashboard']);
           },
           error => {
             this.loggingIn = false;
-            this.toastr.error(error);
+            if (Array.isArray(error.message)) {
+              error.message.forEach((err: string) => {
+                this.toastr.error(err);
+              });
+            } else {
+              this.toastr.error(error);
+            };
           }
         )
       } else {
-        console.log(role)
         this.authService.loginByPhone({
-          phone: phone,
+          phone: phone.replace(/[\s-]/g, ''),
           password: password,
           role: role
         }).subscribe(
           response => {
             this.loggingIn = false;
-            this.toastr.success(response.message);
+            this.toastr.success('Sign In Successful!','', {
+              timeOut: 1000
+            });
             this.router.navigate(['/dashboard']);
           },
           error => {
             this.loggingIn = false;
-            this.toastr.error(error);
+            if (typeof error === 'string') {
+              this.toastr.error(error);
+            } else if (error.error.message) {
+              error.error.message.forEach((err: string) => {
+                this.toastr.error(err);
+              });
+            };
           }
         )
       }

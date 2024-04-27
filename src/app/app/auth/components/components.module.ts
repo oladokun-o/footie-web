@@ -10,6 +10,9 @@ import { SharedDirectivesModule } from 'src/shared/directives/directives.module'
 import { SharedComponentsModule } from 'src/shared/components/components.module';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LogoutComponent } from './logout/logout.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ChangeEmailComponent } from './change-email/change-email.component';
 
 const COMPONENTS = [
   LoginComponent,
@@ -22,6 +25,8 @@ const COMPONENTS = [
     ForgotPasswordComponent,
     VerifyCodeComponent,
     LogoutComponent,
+    ResetPasswordComponent,
+    ChangeEmailComponent,
   ],
   imports: [
     CommonModule,
@@ -31,6 +36,7 @@ const COMPONENTS = [
     SharedDirectivesModule,
     SharedComponentsModule,
     MatTooltipModule,
+    NgSelectModule
   ],
   exports: [
     ...COMPONENTS,

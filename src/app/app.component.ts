@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavigationStart, NavigationEnd, Router } from '@angular/router';
+import { NavigationStart, NavigationEnd, Router, ActivatedRoute } from '@angular/router';
 import { OnlineStatusType, OnlineStatusService } from 'ngx-online-status';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from './core/services/auth.service';
@@ -48,9 +48,12 @@ export class AppComponent {
   checkIfUserIsLoggedIn() {
     this.authService.checkIfLoggedIn().subscribe(
       response => {
-        if (response) {
-          // this.toastr.info('You are already logged in.');
+        // If the user is logged in, and is not in the dashboard, then redirect to the dashboard
+        if (response && !this.router.url.includes('dashboard')) {
           this.router.navigate(['/dashboard']);
+        } else if (!response && this.router.url.includes('dashboard')) {
+          // If the user is not logged in, and is in the dashboard, then redirect to the login page
+          this.router.navigate(['/login']);
         }
       },
       error => {

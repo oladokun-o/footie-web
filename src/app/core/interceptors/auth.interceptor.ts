@@ -22,9 +22,20 @@ export class AuthInterceptor implements HttpInterceptor {
     const isAuthorizedDomain = authorizedDomains.some(domain => req.url.includes(domain));
 
     // Check if the request URL is for the login page
-    const isLoginPage = req.url.endsWith('/login');
+    const AuthPages = [
+      '/login',
+      '/register',
+      '/validateToken',
+      '/verifyOTP',
+      '/changeEmail',
+      '/resetPassword',
+      '/verifyPasswordResetToken',
+      'updatePassword',
+    ];
 
-    if (isAuthorizedDomain && !isLoginPage) {
+    const isAuthPage = AuthPages.some(page => req.url.endsWith(page));
+
+    if (isAuthorizedDomain && !isAuthPage) {
       // Add the authorization header for requests to authorized domains
       const clonedRequest = req.clone({
         setHeaders: {

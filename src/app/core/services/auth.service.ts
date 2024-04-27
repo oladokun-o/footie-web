@@ -14,7 +14,12 @@ export class AuthService {
 
   loginByEmail(payload: { email: string, password: string, role: UserRole }): Observable<any> {
     return this.httpClient.post<RequestResponse>(ApiEndpoints.auth.login.viaEmail(), payload).pipe(
-      tap(response => { if (response.result === "success") localStorage.setItem("token", response.data.token) }),
+      tap(response => {
+        if (response.result === "success") {
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("userSessionData", JSON.stringify(response.data));
+        }
+      }),
       switchMap(response => response.result === "success" ? of(response.data) : throwError(response.message)),
       catchError(error => throwError(error)),
     );
@@ -22,7 +27,12 @@ export class AuthService {
 
   loginByPhone(payload: { phone: string, password: string, role: UserRole }): Observable<any> {
     return this.httpClient.post<RequestResponse>(ApiEndpoints.auth.login.viaPhone(), payload).pipe(
-      tap(response => { if (response.result === "success") localStorage.setItem("token", response.data.token) }),
+      tap(response => {
+        if (response.result === "success") {
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("userSessionData", JSON.stringify(response.data));
+        }
+      }),
       switchMap(response => response.result === "success" ? of(response.data) : throwError(response.message)),
       catchError(error => throwError(error)),
     );
@@ -33,15 +43,23 @@ export class AuthService {
   }
 
   checkIfLoggedIn(): Observable<boolean> {
-    return this.httpClient.get<RequestResponse>(ApiEndpoints.auth.login.isAuthenticated()).pipe(
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem("token")}`);
+    return this.httpClient.get<RequestResponse>(ApiEndpoints.auth.login.isAuthenticated(), { headers }).pipe(
+      tap(response => { if (response.result === "success") localStorage.setItem("userSessionData", JSON.stringify(response.data)) }),
       switchMap(response => response.result === "success" ? of(true) : of(false)),
       catchError(error => of(false)),
     );
   }
 
   logout() {
-    return this.httpClient.get<RequestResponse>(ApiEndpoints.auth.login.logout()).pipe(
-      tap(() => localStorage.removeItem("token")),
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem("token")}`);
+    return this.httpClient.get<RequestResponse>(ApiEndpoints.auth.login.logout(), { headers }).pipe(
+      tap((response) => {
+        if (response.result === 'success') {
+          localStorage.removeItem("token");
+          localStorage.removeItem("userSessionData");
+        }
+      }),
       switchMap(response => response.result === "success" ? of(true) : throwError(response.message)),
       catchError(error => throwError(error)),
     );

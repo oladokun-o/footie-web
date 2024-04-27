@@ -34,4 +34,13 @@ export class NumbersOnlyDirective {
       event.preventDefault();
     }
   }
+
+  // Handle paste events
+  @HostListener('paste', ['$event'])
+  onPaste(event: ClipboardEvent) {
+    const clipboardData = event.clipboardData?.getData('text');
+    if (clipboardData?.match(/[^0-9]/)) {
+      event.preventDefault();
+    }
+  }
 }

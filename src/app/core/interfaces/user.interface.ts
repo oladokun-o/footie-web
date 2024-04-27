@@ -1,4 +1,4 @@
-interface User {
+export interface User {
   id: string
   firstName: string
   middleName: string
@@ -20,7 +20,7 @@ interface User {
   settings: Settings
 }
 
-interface Order {
+export interface Order {
   id: string;
   date: Date;
   status: string;
@@ -29,14 +29,14 @@ interface Order {
   };
 }
 
-interface Payment {
+export interface Payment {
   id: string;
   date: Date;
   amount: number;
   status: 'pending' | 'completed' | 'failed' | 'refunded' | 'cancelled';
 }
 
-interface Settings {
+export interface Settings {
   language: string
   notificationsEmail: boolean
   notificationsSms: boolean
@@ -45,7 +45,7 @@ interface Settings {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-interface UserAccount {
+export interface UserAccount {
   profile: User;
   orders: Order[];
   payments: Payment[];

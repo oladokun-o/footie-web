@@ -13,6 +13,15 @@ export const ApiEndpoints = {
     }
   },
   users: {
-    getAll: () => `${environment.apiUrl}/users`
+    getAll: () => `${environment.apiUrl}/users`,
+    getById: (id: string) => `${environment.apiUrl}/users/id/${id}`,
+    getByEmail: (email: string) => `${environment.apiUrl}/users/email/${email}`,
+    create: () => `${environment.apiUrl}/users`,
+    verifyOTP: () => `${environment.apiUrl}/users/verify`,
+    resendOtp: () => `${environment.apiUrl}/users/resendOtp`,
+    resetPassword: () => `${environment.apiUrl}/users/resetPassword`,
+    verifyResetPasswordToken: (token: string) => `${environment.apiUrl}/users/verifyPasswordResetToken/${token}`,
+    updatePassword: () => `${environment.apiUrl}/users/updatePassword`,
+    changeEmail: () => `${environment.apiUrl}/users/changeEmail`,
   }
 }

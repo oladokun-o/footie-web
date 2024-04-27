@@ -7,22 +7,27 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item d-none d-lg-block">
+        <li data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+          aria-label="Toggle navigation" class="nav-item d-none d-lg-block">
           <a class="nav-link" [routerLink]="['/']">
             <img src="assets/images/logos/logo-transparent-light.svg" alt="Footiedrop Logo">
           </a>
         </li>
-        <li class="nav-item">
+        <li data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+          aria-label="Toggle navigation" class="nav-item">
           <a class="nav-link" [routerLink]="['/']">Home</a>
         </li>
-        <li class="nav-item">
+        <li data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+          aria-label="Toggle navigation" class="nav-item">
           <a class="nav-link" href="https://footiedrop.ru/contact">Contact</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/auth/login']">Sign In</a>
+        <li data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+          aria-label="Toggle navigation" class="nav-item">
+          <a class="nav-link" [routerLink]="['/login']">Sign In</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/auth/register']">Sign Up</a>
+        <li data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+          aria-label="Toggle navigation" class="nav-item">
+          <a class="nav-link" [routerLink]="['/register']">Sign Up</a>
         </li>
       </ul>
     </div>

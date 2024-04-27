@@ -14,18 +14,22 @@
       </div>
       <div *ngIf="loginmode === 'phone'" class="form-group">
         <label for="phone">Phone</label>
-        <input footiedropWebInputMask="+0 000 000-00-00" autofocus type="phone" class="form-control" id="phone" formControlName="phone"
+        <input footiedropWebNumbersOnly footiedropWebInputMask="+0 000 000-00-00" autofocus type="tel" class="form-control" id="phone" formControlName="phone"
           placeholder="Enter your phone number">
         <small class="text-danger">{{ form.get('phone')?.touched && form.get('phone')?.errors?.['required'] ? 'Phone is required' : '' }}</small>
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" formControlName="password"
-          placeholder="Enter your password">
+        <div class="pwd-group">
+          <input type="password" class="form-control" id="password" formControlName="password" placeholder="Enter your password" #pwdInput>
+          <button type="button" class="btn-transparent" (click)="pwdInput.type = pwdInput.type === 'text' ? 'password' : 'text';">
+            <img src="assets/images/icons/{{ pwdInput.type === 'password' ? 'eye-off' : 'eye' }}.svg" alt="eye" class="icon">
+          </button>
+        </div>
         <small class="text-danger">{{ form.get('password')?.touched && form.get('password')?.errors?.['required'] ? 'Password is required' : '' }}</small>
       </div>
       <div class="form-group text-end">
-        <a routerLink="/auth/forgot-password">Forgot Password?</a>
+        <a routerLink="/forgot-password">Forgot Password?</a>
       </div>
       <footiedrop-web-loading-button buttonText="Sign In" [disabled]="form.invalid" [loading]="loggingIn"
         class="primary"></footiedrop-web-loading-button>
@@ -46,13 +50,13 @@
           </button>
           <button [disabled]="loggingIn" class="btn-transparent p-0" (click)="toggleLoginMode()" [matTooltipPosition]="'above'"
             [matTooltip]="loginmode === 'email' ? 'Login with phone' : 'Login with email'">
-            <img src="assets/images/icons/{{ loginmode }}.svg" alt="{{ loginmode }}" class="icon">
+            <img src="assets/images/icons/{{ loginmode === 'email' ? 'phone' : 'email' }}.svg" alt="{{ loginmode }}" class="icon">
           </button>
         </div>
       </div>
 
       <div class="col-12 text-center">
-        <p class="mt-4 text-muted">Don't have an account? <a [class.disabled]="loggingIn" routerLink="/auth/register">Sign Up</a></p>
+        <p class="mt-4 text-muted">Don't have an account? <a [class.disabled]="loggingIn" routerLink="/register">Sign Up</a></p>
       </div>
     </div>
   </div>

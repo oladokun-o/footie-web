@@ -12,7 +12,9 @@ export class LogoutComponent {
   constructor(private authService: AuthService, private toastr: ToastrService, private router: Router) {
     authService.logout().subscribe(
       response => {
-        this.toastr.success('Logged out successfully.');
+        this.toastr.success('Logged out successfully.','', {
+          timeOut: 1000
+        });
         this.router.navigate(['/login']);
       },
       error => {

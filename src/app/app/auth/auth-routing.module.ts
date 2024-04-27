@@ -3,6 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthComponent } from './auth.component';
 import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { RegisterComponent } from './components/register/register.component';
+import { VerifyCodeComponent } from './components/verify-code/verify-code.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ChangeEmailComponent } from './components/change-email/change-email.component';
 
 const routes: Routes = [
   {
@@ -21,6 +26,26 @@ const routes: Routes = [
       {
         path: 'logout',
         component: LogoutComponent
+      },
+      {
+        path: 'register',
+        component: RegisterComponent
+      },
+      {
+        path: 'verifyOTP',
+        component: VerifyCodeComponent
+      },
+      {
+        path: 'forgot-password',
+        component: ForgotPasswordComponent
+      },
+      {
+        path: 'reset-password/:token',
+        component: ResetPasswordComponent
+      },
+      {
+        path: 'changeEmail',
+        component: ChangeEmailComponent
       }
     ]
   }

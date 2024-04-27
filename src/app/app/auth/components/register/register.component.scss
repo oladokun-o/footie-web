@@ -1,0 +1,69 @@
+.line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1px;
+  width: 20%;
+  background-color: #EDEDED;
+}
+
+.sign-in-text {
+  font-size: 14px;
+  color: #b6b6b6;
+}
+
+.pwd-group {
+  position: relative;
+  width: 100%;
+  height: auto;
+
+  button {
+    position: absolute;
+    right: 10px;
+    top: 0;
+
+    .icon {
+      cursor: pointer;
+      width: 17px;
+    }
+  }
+}
+
+::ng-deep ng-select {
+  .ng-select-container {
+    height: 52px !important;
+    border: 1px solid #EDEDED !important;
+    background-color: #F7F7F7 !important;
+  }
+
+  .ng-value {
+    text-transform: capitalize;
+    font-size: 14px;
+  }
+
+  .ng-option {
+    text-transform: capitalize;
+    font-size: 14px;
+
+    &.ng-option-selected {
+      color: #E36F00 !important;
+      background-color: #e36e001d !important;
+    }
+  }
+
+  .ng-arrow {
+    border-color: #eb9a4c transparent transparent !important;
+    border-width: 7px 7px 2.5px !important;
+  }
+}
+
+// laptop & desktop screen sizes
+@media (min-width: 1024px) {
+  ::ng-deep ng-select {
+      .ng-select-container {
+        height: 62px !important;
+        border: 1px solid #EDEDED !important;
+        background-color: #F7F7F7 !important;
+      }
+  }
+}
