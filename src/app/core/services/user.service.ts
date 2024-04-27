@@ -14,6 +14,14 @@ export class UserService {
 
   create(payload: CreateUserDto): Observable<any> {
     return this.httpClient.post<RequestResponse>(ApiEndpoints.users.create(), payload).pipe(
+      tap(response => {
+        if (response.result === "success") {
+          localStorage.setItem("userSessionData", JSON.stringify({
+            email: response.data.email,
+            userId: response.data.user.id,
+          }));
+        }
+      }),
       switchMap(response => response.result === "success" ? of(response.data) : throwError(response)),
       catchError(error => throwError(error.error)),
     );
