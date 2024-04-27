@@ -30,7 +30,8 @@ export class AuthInterceptor implements HttpInterceptor {
       '/changeEmail',
       '/resetPassword',
       '/verifyPasswordResetToken',
-      'updatePassword',
+      '/updatePassword',
+      '/users'
     ];
 
     const isAuthPage = AuthPages.some(page => req.url.endsWith(page));
