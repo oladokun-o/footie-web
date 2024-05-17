@@ -15,7 +15,7 @@ export class LoginComponent {
     email: new FormControl(null, [Validators.required, Validators.email]),
     password: new FormControl(null, [Validators.required]),
     phone: new FormControl(null, [Validators.required]),
-    role: new FormControl("customer"),
+    role: new FormControl(localStorage.getItem("role") || "customer")
   });
   loggingIn = false;
 
@@ -88,7 +88,7 @@ export class LoginComponent {
         }).subscribe(
           response => {
             this.loggingIn = false;
-            this.toastr.success('Sign In Successful!','', {
+            this.toastr.success('Sign In Successful!', '', {
               timeOut: 1000
             });
             this.router.navigate(['/dashboard']);
@@ -110,5 +110,16 @@ export class LoginComponent {
 
   loginWithGoogle() {
 
+  }
+
+  changeRole(stat: boolean) {
+    if (stat) {
+      this.form.controls["role"].setValue("courier");
+    } else {
+      this.form.controls["role"].setValue("customer");
+    }
+
+    // save to local storage
+    localStorage.setItem("role", this.form.controls["role"].value);
   }
 }

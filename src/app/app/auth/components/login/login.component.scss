@@ -4,7 +4,7 @@
   align-items: center;
   height: 1px;
   width: 20%;
-  background-color: #EDEDED;
+  background-color: #ededed;
 }
 
 .sign-in-text {
@@ -25,6 +25,35 @@
     .icon {
       cursor: pointer;
       width: 17px;
+    }
+  }
+}
+
+.switch-acct {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding-top: 10px;
+  padding-right: 15px;
+
+  p {
+    margin: 0;
+    opacity: 32%;
+    position: relative;
+    top: -3px;
+
+    &.active {
+      opacity: 100%;
+    }
+  }
+
+  ::ng-deep  {
+    .cswitch {
+      right: -5px !important;
     }
   }
 }

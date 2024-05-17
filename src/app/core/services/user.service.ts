@@ -15,6 +15,7 @@ export class UserService {
   create(payload: CreateUserDto): Observable<any> {
     return this.httpClient.post<RequestResponse>(ApiEndpoints.users.create(), payload).pipe(
       tap(response => {
+        console.log(response)
         if (response.result === "success") {
           localStorage.setItem("userSessionData", JSON.stringify({
             email: response.data.email,
