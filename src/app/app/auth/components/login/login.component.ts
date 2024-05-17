@@ -56,6 +56,7 @@ export class LoginComponent {
     } else {
       const { email, password, phone, role } = this.form.value;
       this.loggingIn = true;
+      this.toastr.clear();
       if (this.loginmode === 'email') {
         this.authService.loginByEmail({
           email: email,
