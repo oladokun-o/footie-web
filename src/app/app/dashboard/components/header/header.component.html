@@ -1,0 +1,56 @@
+<header class="py-3 fixed-top shadow-sm" style="z-index: 999 !important">
+  <!-- Default Header Item -->
+  <ng-container *ngIf="currentPage === ''">
+    <div class="header-item default">
+      Welcome back, <br />
+      <span class="text-capitalize">{{ user.firstName }}</span>
+    </div></ng-container>
+
+  <!-- Orders Header Item -->
+  <div class="header-item">
+    <span class="text-capitalize fw-normal">{{ currentPage }}</span>
+  </div>
+
+  <div class="header-item">
+    <img
+      role="button"
+      ]
+      [mat-menu-trigger-for]="MatMenu"
+      [src]="user.profilePicture"
+      *ngIf="user.profilePicture"
+      alt="Profile Icon"
+      class="profile-icon"
+    />
+    <img
+      role="button"
+      [mat-menu-trigger-for]="MatMenu"
+      src="assets/images/icons/profile-icon.svg"
+      alt="Profile Icon"
+      class="profile-icon"
+      *ngIf="!user.profilePicture"
+    />
+    <!-- Use Mat Menu for dropdown -->
+    <mat-menu #MatMenu class="profile-menu">
+      <div
+        mat-menu-item
+        class="profile-menu-item"
+        routerLink="./settings/profile"
+      >
+        <span>Profile</span>
+      </div>
+      <div
+        mat-menu-item
+        class="profile-menu-item"
+        routerLink="./settings/payment"
+      >
+        <span>Payment</span>
+      </div>
+      <div mat-menu-item class="profile-menu-item" routerLink="./settings">
+        <span>Settings</span>
+      </div>
+      <div mat-menu-item routerLink="/logout" class="profile-menu-item">
+        <span>Logout</span>
+      </div>
+    </mat-menu>
+  </div>
+</header>

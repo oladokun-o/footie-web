@@ -158,6 +158,10 @@ button:disabled {
   opacity: 0.7;
 }
 
+.mat-mdc-menu-content {
+  padding: 0 !important;
+}
+
 // Font size for laptop and desktop screens
 @media (min-width: 992px) {
   .heading {

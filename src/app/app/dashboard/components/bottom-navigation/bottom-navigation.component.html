@@ -1,0 +1,52 @@
+<nav class="navbar fixed-bottom navbar-light bg-light px-3">
+  <ul class="nav justify-content-between w-100">
+    <li class="nav-item">
+      <a class="nav-link active" routerLink="./" title="Home">
+        <img
+          [src]="
+            currentPage === ''
+              ? 'assets/images/icons/home-icon-active.svg'
+              : 'assets/images/icons/home-icon.svg'
+          "
+          alt="Home"
+        />
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="./orders" title="Orders">
+        <img
+          [src]="
+            currentPage === 'orders'
+              ? 'assets/images/icons/orders-icon-active.svg'
+              : 'assets/images/icons/orders-icon.svg'
+          "
+          alt="Orders"
+        />
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="./notifications" title="Notifications">
+        <img
+          [src]="
+            currentPage === 'notifications'
+              ? 'assets/images/icons/notifications-icon-active.svg'
+              : 'assets/images/icons/notifications-icon.svg'
+          "
+          alt="Notifications"
+        />
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="./settings" title="Settings">
+        <img
+          [src]="
+            currentPage === 'settings'
+              ? 'assets/images/icons/settings-icon-active.svg'
+              : 'assets/images/icons/settings-icon.svg'
+          "
+          alt="Settings"
+        />
+      </a>
+    </li>
+  </ul>
+</nav>
