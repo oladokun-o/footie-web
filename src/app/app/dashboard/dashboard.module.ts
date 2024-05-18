@@ -6,6 +6,7 @@ import { DashboardComponent } from './dashboard.component';
 import { RouterModule } from '@angular/router';
 import { DashboardPagesModule } from './pages/pages.module';
 import { DashboardComponentsModule } from './components/components.module';
+import { HomeModule } from './pages/home/home.module';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { DashboardComponentsModule } from './components/components.module';
     DashboardRoutingModule,
     RouterModule,
     DashboardPagesModule,
-    DashboardComponentsModule
+    DashboardComponentsModule,
+    HomeModule
   ]
 })
 export class DashboardModule { }

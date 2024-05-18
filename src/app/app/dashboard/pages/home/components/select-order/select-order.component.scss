@@ -1,0 +1,40 @@
+.row > p {
+  font-weight: 600;
+}
+
+.option {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 32px 15px;
+  gap: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  position: relative;
+
+  & > img {
+    position: absolute;
+    right: 15px;
+    top: 22%;
+  }
+
+  .d-flex {
+    gap: 10px;
+  }
+
+  & div > p {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000000;
+  }
+
+  &.option-1 {
+    background: #B3D2CB;
+  }
+
+  &.option-2 {
+    background: #C8C8C8;
+  }
+}
