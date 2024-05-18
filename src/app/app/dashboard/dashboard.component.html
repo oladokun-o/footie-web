@@ -1,4 +1,7 @@
-<div class="col-12 p-5">
-  <p>You are logged In!</p>
-  <a routerLink="/logout">Logout</a>
+<div class="container-fluid p-0 position-relative">
+  <footiedrop-web-dashboard-header></footiedrop-web-dashboard-header>
+  <div class="container-fluid pb-5" style="padding-top: 100px;">
+    <router-outlet></router-outlet>
+  </div>
+  <footiedrop-web-bottom-navigation></footiedrop-web-bottom-navigation>
 </div>
