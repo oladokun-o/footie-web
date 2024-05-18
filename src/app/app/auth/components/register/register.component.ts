@@ -57,6 +57,7 @@ export class RegisterComponent {
               this.toastr.error(error.message);
             }
           } else {
+            console.log(error)
             this.toastr.error(error);
           }
 

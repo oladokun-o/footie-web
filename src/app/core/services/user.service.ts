@@ -23,7 +23,7 @@ export class UserService {
         }
       }),
       switchMap(response => response.result === "success" ? of(response.data) : throwError(response)),
-      catchError(error => throwError(error.error)),
+      catchError(error => throwError(error)),
     );
   }
 
