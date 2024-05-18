@@ -1,7 +1,14 @@
-<div class="container-fluid p-0 position-relative">
-  <footiedrop-web-dashboard-header></footiedrop-web-dashboard-header>
-  <div class="container-fluid pb-5" style="padding-top: 100px;">
-    <router-outlet></router-outlet>
+<div class="container-fluid position-relative h-100">
+  <div class="row h-100">
+    <div class="col-md-3 d-none d-md-block p-0 shadow">
+      <footiedrop-web-side-navigation [currentPage]="currentPage"></footiedrop-web-side-navigation>
+    </div>
+    <div class="col-12 px-0 col-md-9">
+      <footiedrop-web-dashboard-header [currentPage]="currentPage"></footiedrop-web-dashboard-header>
+      <div class="container-fluid pb-5 px-md-5 pt-md-4" style="padding-top: 15px;">
+        <router-outlet></router-outlet>
+      </div>
+      <footiedrop-web-bottom-navigation class="d-block d-md-none" [currentPage]="currentPage"></footiedrop-web-bottom-navigation>
+    </div>
   </div>
-  <footiedrop-web-bottom-navigation></footiedrop-web-bottom-navigation>
 </div>

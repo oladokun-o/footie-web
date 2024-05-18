@@ -5,6 +5,16 @@ header {
   padding: 0 15px;
   background: #fff;
   height: 86px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -4px;
+    width: 8px;
+    height: 100%;
+    background: #fff;
+  }
 }
 
 .default.header-item:nth-child(1) {

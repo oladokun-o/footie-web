@@ -52,7 +52,7 @@ export class AppComponent {
         // if (response && !this.router.url.includes('dashboard')) {
         //   this.router.navigate(['/dashboard']);
         // } else
-        if (!response && this.router.url.includes('dashboard')) {
+        if (!response) {
           // If the user is not logged in, and is in the dashboard, then redirect to the login page
           this.router.navigate(['/login']);
         }

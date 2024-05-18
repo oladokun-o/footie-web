@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input } from '@angular/core';
+import { User } from 'src/app/core/interfaces/user.interface';
 
 @Component({
   selector: 'footiedrop-web-bottom-navigation',
@@ -7,13 +7,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./bottom-navigation.component.scss']
 })
 export class BottomNavigationComponent {
-  currentPage: string = '';
-
-  constructor(
-    private router: Router
-  ) {
-    router.events.subscribe(val => {
-      this.currentPage = this.router.url.endsWith('/dashboard') ? '' : this.router.url.split('/')[2];
-    })
-  }
+  user: User = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string) : null;
+  @Input() currentPage: string = '';
 }

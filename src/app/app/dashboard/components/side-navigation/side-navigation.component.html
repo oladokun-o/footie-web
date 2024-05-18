@@ -1,0 +1,46 @@
+<nav class="navbar sidebar">
+  <ul class="nav justify-content-between w-100">
+    <li class="nav-item logo">
+      <a class="nav-link" routerLink="./" title="Home">
+        <img src="assets/images/logos/logo-light.svg" alt="Footiedrop" />
+      </a>
+    </li>
+    <mat-list class="w-100">
+      <mat-list-item role="button" matRipple routerLink="./" title="Home" [class.active]="currentPage === ''">
+        <img [src]="
+                    currentPage === ''
+                      ? 'assets/images/icons/home-icon-active.svg'
+                      : 'assets/images/icons/home-icon.svg'
+                  " alt="Home" />
+                  <span>Home</span>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item role="button" matRipple routerLink="./orders" title="Orders" [class.active]="currentPage === 'orders'">
+        <img [src]="
+                          currentPage === 'orders'
+                            ? 'assets/images/icons/orders-icon-active.svg'
+                            : 'assets/images/icons/orders-icon.svg'
+                        " alt="Orders" />
+                        <span>Orders</span>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item role="button" matRipple routerLink="./notifications" title="Notifications" [class.active]="currentPage === 'notifications'">
+        <img [src]="
+                          currentPage === 'notifications'
+                            ? 'assets/images/icons/notifications-icon-active.svg'
+                            : 'assets/images/icons/notifications-icon.svg'
+                        " alt="Notifications" />
+                        <span>Notifications</span>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item role="button" matRipple routerLink="./settings" title="Settings" [class.active]="currentPage === 'settings'">
+        <img [src]="
+                          currentPage === 'settings'
+                            ? 'assets/images/icons/settings-icon-active.svg'
+                            : 'assets/images/icons/settings-icon.svg'
+                        " alt="Settings" />
+                        <span>Settings</span>
+      </mat-list-item>
+    </mat-list>
+  </ul>
+</nav>

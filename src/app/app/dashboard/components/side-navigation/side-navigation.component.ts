@@ -2,11 +2,11 @@ import { Component, Input } from '@angular/core';
 import { User } from 'src/app/core/interfaces/user.interface';
 
 @Component({
-  selector: 'footiedrop-web-dashboard-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  selector: 'footiedrop-web-side-navigation',
+  templateUrl: './side-navigation.component.html',
+  styleUrls: ['./side-navigation.component.scss']
 })
-export class HeaderComponent {
+export class SideNavigationComponent {
   user: User = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string) : null;
   @Input() currentPage: string = '';
 }

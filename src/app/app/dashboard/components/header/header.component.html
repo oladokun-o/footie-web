@@ -1,4 +1,4 @@
-<header class="py-3 fixed-top shadow-sm" style="z-index: 999 !important">
+<header class="py-3 sticky-top shadow-sm px-md-5" style="z-index: 999 !important">
   <!-- Default Header Item -->
   <ng-container *ngIf="currentPage === ''">
     <div class="header-item default">
@@ -14,7 +14,6 @@
   <div class="header-item">
     <img
       role="button"
-      ]
       [mat-menu-trigger-for]="MatMenu"
       [src]="user.profilePicture"
       *ngIf="user.profilePicture"
