@@ -1,4 +1,4 @@
-import { User } from "./user.interface";
+import { Courier, User } from "./user.interface";
 
 export enum OrderStatus {
   Pending = 'Pending',           // Order is created but not yet accepted by any courier
@@ -12,6 +12,7 @@ export enum OrderStatus {
 export enum ItemType {
   gadget = "gadget",
   clothing = "clothing",
+  document = "document",
   food = "food",
   furniture = "furniture",
   book = "book",
@@ -51,6 +52,24 @@ export interface Order {
   deliveryMode?: 'feet' | 'bike' | 'car' | 'van' | 'truck'; // Mode of delivery
   currency?: string;            // Currency of the price
   itemType?: ItemType;
+  packageSize?: 'small' | 'medium' | 'large';
+  packageWeight?: number; // in kilograms
+  distance?: number; // in kilometers
+  courier?: Courier; // Details of the courier assigned to the order
+  chat?: Chat; // Chat messages related to the order
+}
+
+export interface Chat {
+  id: string;
+  orderId: string;
+  messages: Message[];
+}
+
+export interface Message {
+  id: string;
+  sender: User | Courier;
+  content: string;
+  timestamp: Date | string;
 }
 
 export type Orders = Order[];

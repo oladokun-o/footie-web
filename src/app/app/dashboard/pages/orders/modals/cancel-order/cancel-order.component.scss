@@ -1,0 +1,29 @@
+::ng-deep {
+  .container.cancel {
+
+    label,
+    h2 {
+      font-family: Inter !important;
+      line-height: normal !important;
+    }
+
+    label {
+      padding: 0 !important;
+    }
+  }
+
+  .active .mdc-form-field {
+    label {
+      color: #000 !important;
+      font-weight: 600 !important;
+    }
+  }
+
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    border-radius: 15px !important;
+  }
+
+  .mat-mdc-radio-button .mdc-radio {
+    padding-left: 0 !important;
+  }
+}

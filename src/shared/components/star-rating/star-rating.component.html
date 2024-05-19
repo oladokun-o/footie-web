@@ -1,0 +1,6 @@
+<div class="star-rating">
+  <ng-container *ngFor="let filled of stars">
+    <i class="bi" [class.bi-star-fill]="filled" [class.bi-star]="!filled"></i>
+  </ng-container>
+  <small class="text-muted ms-2">{{ rating | number: '1.1-1' }}</small>
+</div>

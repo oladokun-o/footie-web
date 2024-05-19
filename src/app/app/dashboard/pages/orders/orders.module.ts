@@ -4,6 +4,7 @@ import { OrdersRoutingModule } from './orders-routing.module';
 import { RouterModule } from '@angular/router';
 import { OrdersComponent } from './orders.component';
 import { PagesModule } from './pages/pages.module';
+import { ModalsModule } from './modals/modals.module';
 
 
 
@@ -15,7 +16,8 @@ import { PagesModule } from './pages/pages.module';
     CommonModule,
     RouterModule,
     OrdersRoutingModule,
-    PagesModule
+    PagesModule,
+    ModalsModule
   ]
 })
 export class OrdersModule { }

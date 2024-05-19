@@ -1,6 +1,6 @@
 import * as Chance from 'chance';
-import { Order, OrderStatus, Address, ItemType } from '../../core/interfaces/order.interface';
-import { User } from '../../core/interfaces/user.interface';
+import { Order, OrderStatus, Address, ItemType, Orders, Chat } from '../../core/interfaces/order.interface';
+import { Courier, User } from '../../core/interfaces/user.interface';
 const chance = new Chance();
 
 const generateMockUser = (): User => ({
@@ -11,7 +11,11 @@ const generateMockUser = (): User => ({
   email: chance.email(),
   password: chance.string({ length: 8 }),
   phone: chance.phone(),
-  profilePicture: chance.avatar(),
+  profilePicture: chance.avatar({
+    protocol: 'https',
+    fileExtension: 'svg',
+    email: chance.email(),
+  }),
   addressStreet: chance.address(),
   addressCity: chance.city(),
   addressState: chance.state(),
@@ -39,6 +43,7 @@ const generateMockAddress = (): Address => ({
   country: 'Russia',
 });
 
+
 const generateMockOrder = (): Order => ({
   itemName: chance.sentence({ words: 3 }),
   id: chance.guid(),
@@ -57,12 +62,72 @@ const generateMockOrder = (): Order => ({
   trackingNumber: chance.guid(),
   deliveryMode: 'feet',
   currency: 'RUB',
-  itemType: chance.pickone(Object.values(ItemType)) as ItemType
+  itemType: chance.pickone(Object.values(ItemType)) as ItemType,
+  packageSize: chance.pickone(['small', 'medium', 'large']),
+  packageWeight: chance.floating({ min: 0.1, max: 50 }),
+  distance: chance.floating({ min: 1, max: 100 }),
+});
+
+const generateMockCourier = (): Courier => ({
+  ...generateMockUser(),
+  orders: [],
+  vehicleType: chance.pickone(['bike', 'car', 'van']),
+  licensePlate: chance.string({ length: 7, alpha: true, numeric: true }).toUpperCase(),
+  ratings: chance.floating({ min: 0, max: 5 }),
+  completedDeliveries: chance.integer({ min: 0, max: 100 }),
+  averageDeliveryTime: `00:${chance.integer({ min: 20, max: 90 })}:00`,
+  availabilityStatus: chance.pickone(['available', 'unavailable', 'busy']),
 });
 
 // Generate a list of mock orders
 const generateMockOrders = (count: number): Order[] => {
   return Array.from({ length: count }, generateMockOrder);
 };
+const generateMockCouriers = (count: number): Courier[] => {
+  return Array.from({ length: count }, generateMockCourier);
+};
 
-export const mockOrders = generateMockOrders(10);
+// Generate Chat messages
+const generateMockMessage = (user: User, courier: Courier): Chat => ({
+  id: chance.guid(),
+  orderId: chance.guid(),
+  messages: Array.from({ length: chance.integer({ min: 1, max: 10 }) }, () => ({
+    id: chance.guid(),
+    sender: chance.pickone([user, courier]),
+    content: chance.sentence(),
+    timestamp: chance.date({ month: new Date().getMonth(), year: 2024 }).toString(),
+  })),
+});
+
+// Function to assign non-pending orders to couriers
+const assignOrdersToCouriers = (orders: Orders, couriers: Courier[]): void => {
+  orders.forEach(order => {
+    // Assign if order is not Pending and doesn't have a courier assigned
+    if (order.status !== OrderStatus.Pending) {
+      const availableCouriers = couriers.filter(courier => courier.availabilityStatus === 'available');
+      if (availableCouriers.length > 0) {
+        const selectedCourier = availableCouriers[chance.integer({ min: 0, max: availableCouriers.length - 1 })];
+        order.courier = selectedCourier;
+        order.chat = generateMockMessage(order.sender, selectedCourier);
+        selectedCourier.orders.push({ orderId: order.id });
+        selectedCourier.availabilityStatus = 'busy'; // Update status to busy
+        console.log(order)
+      }
+    }
+
+    if (order.status === OrderStatus.Delivered || order.status === OrderStatus.Cancelled || order.status === OrderStatus.Failed) {
+      if (order.courier) {
+        order.courier.availabilityStatus = 'available'; // Update status to available
+      }
+    }
+  });
+};
+
+const mockOrders = generateMockOrders(10);
+const mockCouriers = generateMockCouriers(5);
+assignOrdersToCouriers(mockOrders, mockCouriers);
+
+export const mockData = {
+  orders: mockOrders,
+  couriers: mockCouriers,
+};

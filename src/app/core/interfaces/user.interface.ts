@@ -1,3 +1,5 @@
+import { OrderStatus } from "./order.interface"
+
 export interface User {
   id: string
   firstName: string
@@ -55,4 +57,18 @@ export interface UserAccount {
 export enum UserRole {
   CUSTOMER = 'customer',
   COURIER = 'courier',
+}
+
+export interface Courier extends User {
+  orders: Delivery[];
+  vehicleType: string; // e.g., bike, car, van
+  licensePlate: string;
+  ratings: number;
+  completedDeliveries: number;
+  averageDeliveryTime: string; // e.g., "00:45:00" for 45 minutes
+  availabilityStatus: 'available' | 'unavailable' | 'busy';
+}
+
+export interface Delivery {
+  orderId: string;
 }

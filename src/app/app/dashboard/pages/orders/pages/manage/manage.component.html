@@ -20,6 +20,42 @@
             </div>
           </div>
 
+          <div *ngIf="order.courier" class="col-12 d-flex">
+            <div class="col-auto">
+              <img [src]="order.courier.profilePicture" class="profile" width="25" alt="locator icon" />
+            </div>
+            <div class="col">
+              <div class="row h-100" style="gap: 10px;">
+                <div>
+                  <p class="m-0 text-truncate fw-medium">{{ order.courier.firstName }} {{ order.courier.lastName }}</p>
+                  <small class="text-muted">{{ order.courier.completedDeliveries }} {{ order.courier.completedDeliveries
+                    > 1 ? 'Deliveries' : 'Delivery' }}</small>
+                  <!-- ratings using stars - order.courier.ratings -->
+                  <footiedrop-web-star-rating [rating]="order.courier.ratings"></footiedrop-web-star-rating>
+                </div>
+              </div>
+            </div>
+            <div class="col-2 d-flex justify-content-end align-items-start">
+              <button class="message-btn">
+                <div class="badge" [class.d-none]="order.chat?.messages?.length === 0"
+                  [class.d-block]="order.chat?.messages?.length"></div>
+                  <svg width="35" height="33" viewBox="0 0 35 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.735596" y="0.702332" width="34.2643" height="32" rx="5" fill="#01674F" />
+                    <g clip-path="url(#clip0_353_1922)">
+                      <path
+                        d="M8.91651 16.5674C8.917 14.412 9.62582 12.3165 10.9339 10.6033C12.2419 8.8902 14.0767 7.65442 16.1559 7.08616C18.235 6.51791 20.4433 6.64868 22.4409 7.45836C24.4385 8.26803 26.1146 9.71173 27.2113 11.5673C28.308 13.4228 28.7646 15.5873 28.5107 17.7278C28.2568 19.8682 27.3065 21.8658 25.8061 23.4133C24.3057 24.9607 22.3383 25.9722 20.2068 26.2921C18.0752 26.612 15.8976 26.2225 14.0091 25.1836L10.1867 26.3476C10.0162 26.3995 9.83481 26.4041 9.6619 26.3609C9.48899 26.3177 9.33108 26.2283 9.20505 26.1023C9.07902 25.9763 8.98963 25.8184 8.94642 25.6455C8.90322 25.4725 8.90783 25.2911 8.95976 25.1206L10.1238 21.2923C9.33092 19.8437 8.91572 18.2188 8.91651 16.5674ZM14.8153 15.5843C14.8153 15.845 14.9189 16.0951 15.1032 16.2795C15.2876 16.4638 15.5377 16.5674 15.7984 16.5674H21.6972C21.9579 16.5674 22.208 16.4638 22.3924 16.2795C22.5768 16.0951 22.6803 15.845 22.6803 15.5843C22.6803 15.3235 22.5768 15.0735 22.3924 14.8891C22.208 14.7047 21.9579 14.6011 21.6972 14.6011H15.7984C15.5377 14.6011 15.2876 14.7047 15.1032 14.8891C14.9189 15.0735 14.8153 15.3235 14.8153 15.5843ZM15.7984 18.5337C15.5377 18.5337 15.2876 18.6372 15.1032 18.8216C14.9189 19.006 14.8153 19.2561 14.8153 19.5168C14.8153 19.7775 14.9189 20.0276 15.1032 20.212C15.2876 20.3963 15.5377 20.4999 15.7984 20.4999H19.7309C19.9917 20.4999 20.2417 20.3963 20.4261 20.212C20.6105 20.0276 20.7141 19.7775 20.7141 19.5168C20.7141 19.2561 20.6105 19.006 20.4261 18.8216C20.2417 18.6372 19.9917 18.5337 19.7309 18.5337H15.7984Z"
+                        fill="white" />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_353_1922">
+                        <rect width="21" height="21" fill="white" transform="translate(8 5.70233)" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+              </button>
+            </div>
+          </div>
+
           <div class="col-12 d-flex">
             <div class="col-1">
               <img src="assets/images/icons/locator.svg" width="25" alt="locator icon" />
@@ -67,8 +103,9 @@
             </div>
           </div>
 
-          <div *ngIf="!['delivered','failed','cancelled'].includes(order.status.toLowerCase())" class="col-12 last text-center p-4">
-            <a class="text-danger">Cancel</a>
+          <div *ngIf="!['delivered','failed','cancelled'].includes(order.status.toLowerCase())"
+            class="col-12 last text-center p-4">
+            <a class="text-danger" role="button" (click)="cancelOrder(order)">Cancel</a>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { LoadingButtonComponent } from './loading-button/loading-button.componen
 import { SwitchControlComponent } from './switch-control/switch-control.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
+import { StarRatingComponent } from './star-rating/star-rating.component';
 
 
 
@@ -11,7 +12,8 @@ import { LoadingScreenComponent } from './loading-screen/loading-screen.componen
   declarations: [
     LoadingButtonComponent,
     SwitchControlComponent,
-    LoadingScreenComponent
+    LoadingScreenComponent,
+    StarRatingComponent
   ],
   imports: [
     CommonModule,
@@ -21,7 +23,8 @@ import { LoadingScreenComponent } from './loading-screen/loading-screen.componen
   exports: [
     LoadingButtonComponent,
     SwitchControlComponent,
-    LoadingScreenComponent
+    LoadingScreenComponent,
+    StarRatingComponent
   ]
 })
 export class SharedComponentsModule { }

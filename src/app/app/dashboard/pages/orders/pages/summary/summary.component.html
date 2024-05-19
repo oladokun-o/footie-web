@@ -1,4 +1,4 @@
-<div class="d-flex flex-column" style="gap: 15px;">
+<div class="d-flex flex-column position-relative" style="gap: 15px;">
   <div class="container-fluid px-0">
     <div class="row">
       <ng-container *ngIf="orders.length > 0; else noOrders">
@@ -70,5 +70,11 @@
         </div>
       </ng-template>
     </div>
+  </div>
+
+  <div class="position-fixed add-button-contn">
+    <button type="button" class="bg-transparent border-0" style="width: 80px;">
+      <img src="assets/images/icons/new-order.svg" class="shadow w-100" style="border-radius: 50%;" alt="add order icon" />
+    </button>
   </div>
 </div>

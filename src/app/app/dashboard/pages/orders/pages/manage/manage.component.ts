@@ -1,9 +1,11 @@
 import { AfterViewInit, Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Order } from 'src/app/core/interfaces/order.interface';
 import { OrdersService } from 'src/app/core/services/orders.service';
 import { OrdersHelpers } from 'src/app/utils/orders/helpers';
+import { CancelOrderComponent } from '../../modals/cancel-order/cancel-order.component';
 
 @Component({
   selector: 'footiedrop-web-manage',
@@ -20,6 +22,7 @@ export class ManageComponent extends OrdersHelpers implements AfterViewInit {
     private route: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService,
+    public dialog: MatDialog
   ) {
     super();
     this.route.params.subscribe(params => {
@@ -37,6 +40,7 @@ export class ManageComponent extends OrdersHelpers implements AfterViewInit {
     this.orderService.getOrder(id).subscribe(
       (order) => {
       this.order = order;
+      console.log(order);
 
       if (!order) {
         this.toastr.error('Order not found!');
@@ -51,5 +55,24 @@ export class ManageComponent extends OrdersHelpers implements AfterViewInit {
 
   onDragEvent(event: any): void {
     console.log(event);
+  }
+
+  cancelOrder(order: Order): void {
+      const ref = this.dialog.open(CancelOrderComponent);
+      ref.afterClosed().subscribe((reason) => {
+        if (reason) {
+          this.orderService.cancelOrder(order.id).subscribe(
+            res => {
+              if (res.result === "success") {
+                this.toastr.success(res.message);
+                this.order = res.data.order;
+              }
+            },
+            err => {
+              this.toastr.error(err.message);
+            }
+          )
+        }
+      });
   }
 }

@@ -20,6 +20,7 @@ iframe {
   background: #FFF;
   box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 15px 15px 0 0;
+  cursor: default;
 
   .first {
 
@@ -39,6 +40,18 @@ iframe {
   .form-label {
     color: #777777;
   }
+
+  img.profile {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .mat-badge-accent .mat-badge-content {
+    background: #FF0000 !important;
+    color: white;
+  }
 }
 
 .top-status {
@@ -46,4 +59,29 @@ iframe {
   color: white;
   border-radius: 10px;
   padding: 10px;
+}
+
+.message-btn {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  width: 50%;
+  position: relative;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .badge {
+    position: absolute;
+    top: -9px;
+    right: -9px;
+    background-color: #E36F00;
+    color: white;
+    border-radius: 50%;
+    padding: 9px;
+    font-size: 12px;
+  }
 }
