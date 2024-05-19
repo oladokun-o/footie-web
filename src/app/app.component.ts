@@ -12,7 +12,6 @@ import { AuthService } from './core/services/auth.service';
 export class AppComponent {
   title = 'footiedrop-web';
   status!: OnlineStatusType;
-  loading: boolean;
 
   constructor(
     private toastr: ToastrService,
@@ -32,15 +31,6 @@ export class AppComponent {
         toastr.toastrConfig.preventDuplicates = true;
         toastr.remove(toastr.currentlyActive);
         toastr.success('', 'You are online!', { timeOut: 2500 });
-      }
-    });
-
-    this.loading = false;
-    router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        this.loading = true;
-      } else if (event instanceof NavigationEnd) {
-        this.loading = false;
       }
     });
   }

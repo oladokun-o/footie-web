@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { User, UserRole } from 'src/app/core/interfaces/user.interface';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -13,6 +13,8 @@ import { UserService } from 'src/app/core/services/user.service';
 export class DashboardComponent {
   userSession: { email: string, role: UserRole } = localStorage.getItem('userSessionData') ? JSON.parse(localStorage.getItem('userSessionData') as string) : null;
   currentPage: string = '';
+  loading: boolean;
+  fadeOut: boolean;
 
   constructor(
     private userService: UserService,
@@ -20,7 +22,16 @@ export class DashboardComponent {
     authService: AuthService,
     private router: Router
   ) {
-    router.events.subscribe(val => {
+    this.loading = true;
+    this.fadeOut = false;
+    router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        setTimeout(() => {
+          this.fadeOut = true;
+          this.loading = false;
+        }, 1000);
+      }
+
       this.currentPage = this.router.url.endsWith('/dashboard') ? '' : this.router.url.split('/')[2];
       // make sure to exclude params from the url
       if (this.currentPage && this.currentPage.includes('?')) {

@@ -3,10 +3,21 @@
     <div class="col-md-3 d-none d-md-block p-0 shadow">
       <footiedrop-web-side-navigation [currentPage]="currentPage"></footiedrop-web-side-navigation>
     </div>
-    <div class="col-12 px-0 col-md-9 pb-5">
+    <div class="col-12 px-0 col-md-9 d-flex flex-column" style="height: inherit;">
       <footiedrop-web-dashboard-header [currentPage]="currentPage"></footiedrop-web-dashboard-header>
-      <div class="container-fluid pb-5 px-md-5 pt-md-4" style="padding-top: 15px;">
-        <router-outlet></router-outlet>
+      <div class="container-fluid px-md-5 pt-md-4 h-100 main" style="padding-top: 15px;padding-bottom: 75px;flex: 1;">
+        <ng-container *ngIf="!loading; else loadingScreen">
+          <router-outlet></router-outlet>
+        </ng-container>
+
+        <ng-template #loadingScreen>
+          <!-- bootstrap spinner -->
+          <div class="d-flex justify-content-center align-items-center h-100" [class.fade-out]="fadeOut">
+            <div class="spinner-border text-primary text-green" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </ng-template>
       </div>
       <footiedrop-web-bottom-navigation class="d-block d-md-none" [currentPage]="currentPage"></footiedrop-web-bottom-navigation>
     </div>

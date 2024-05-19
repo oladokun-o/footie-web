@@ -40,6 +40,7 @@ $footiedrop-web-theme: mat.define-light-theme((color: (primary: $footiedrop-web-
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
 @import url(assets/fonts/fonts.scss);
+@import url(assets/css/animations.css);
 
 html,
 body {
@@ -49,6 +50,7 @@ body {
 body {
   margin: 0;
   font-family: 'Inter', Roboto, "Helvetica Neue", sans-serif;
+  overflow: hidden;
 }
 
 .heading {
@@ -232,6 +234,10 @@ button:disabled {
   background-color: #01674F;
 }
 
+.text-green {
+  color: #01674F !important;
+}
+
 .red {
   background-color: #DC2836;
 }
@@ -264,7 +270,9 @@ p.status {
 .card.order {
   cursor: pointer;
 
-  &:hover {
+  &:hover,
+  &:focus,
+  &:active {
     // box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     background-color: #f9f9f9;
   }
@@ -277,12 +285,17 @@ p.status {
 
     img {
       width: 100%;
-      height: 100%;
     }
 
     small {
       font-size: 14px;
       color: #848484;
+    }
+
+    .title {
+      font-size: 18px;
+      color: #000;
+      font-weight: 500;
     }
   }
 
@@ -291,4 +304,16 @@ p.status {
     color: #000;
     font-weight: 500;
   }
+}
+
+.loading-screen {
+  background-color: #01674F;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+}
+
+.main {
+  overflow-y: auto;
 }

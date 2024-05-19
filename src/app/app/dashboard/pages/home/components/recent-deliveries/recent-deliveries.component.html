@@ -11,46 +11,54 @@
         <div class="col-12" *ngFor="let order of orders">
           <div class="card order" role="button">
             <div class="card-body" style="gap: 10px;">
-              <div class="d-flex justify-content-between align-items-center">
-                <p class="m-0 fw-bold">{{ order.itemName }}</p>
+              <div class="d-flex justify-content-between align-items-center flex-wrap-reverse">
+                <p class="m-0 fw-bold title text-truncate">{{ order.itemName }}</p>
                 <div class="col-auto">
                   <p class="m-0 status {{ getOrderStatusColor(order.status) }}" role="status">{{
                     getOrderStatus(order.status) }}</p>
                 </div>
               </div>
-              <div class="col-12 p-0 d-flex justify-content-between align-content-center">
-                <div class="col-6 d-flex justify-content-between align-content-center" style="gap: 15px;">
-                  <div class="col-4">
+              <div class="col-12 p-0 d-flex justify-content-between align-content-center flex-wrap gap-md-0 gap-2">
+                <div class="col-12 col-md-6 d-flex justify-content-between align-content-center gap-2">
+                  <div class="col-3 col-md-4 d-none d-lg-flex justify-content-center align-items-center">
                     <img [src]="getDeliveryModeIcon(order)" alt="delivery mode icon" />
                   </div>
-                  <div class="col-8">
-                    <div class="row">
-                      <div class="col-1 p-0">
-                        <img src="assets/images/icons/locator.svg" alt="locator icon" />
-                      </div>
-                      <div class="col-10">
-                        <div class="row h-100" style="gap: 10px;">
-                          <div class="col-12 p-0">
-                            <small class="text-muted">From</small>
-                            <p class="m-0 text-truncate">{{ order.pickupAddress.street }}</p>
-                          </div>
-                          <div class="col-12 p-0">
-                            <small class="text-muted">Delivered To</small>
-                            <p class="m-0 text-truncate">{{ order.deliveryAddress.street }}</p>
-                          </div>
+                  <div class="col-9 col-md-12 d-flex">
+                    <div class="col-1 col-md-1 p-md-0">
+                      <img src="assets/images/icons/locator.svg" alt="locator icon" />
+                    </div>
+                    <div class="col-10">
+                      <div class="row h-100" style="gap: 10px;">
+                        <div>
+                          <small class="text-muted">From</small>
+                          <p class="m-0 text-truncate">{{ order.pickupAddress.street }}</p>
+                        </div>
+                        <div>
+                          <small class="text-muted">Delivered To</small>
+                          <p class="m-0 text-truncate">{{ order.deliveryAddress.street }}</p>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div class="col-6 d-flex flex-column justify-content-between align-content-end text-end"
+                <!-- <div class="col-12 d-flex flex-column justify-content-between align-content-end text-start" style="gap: 15px;">
+                    <p class="m-0 text-truncate price">{{ order.price | currency: order.currency }}</p>
+                  </div> -->
+
+                <div
+                  class="col-8 col-md-6 d-flex flex-column justify-content-between align-content-end text-start text-md-end"
                   style="gap: 15px;">
                   <p class="m-0 text-truncate price">{{ order.price | currency: order.currency }}</p>
                   <!-- order created at - format: 5 May 2024, 05:30 PM -->
-                  <p class="m-0 text-truncate">{{ order.createdAt | date: 'd MMM y, hh:mm a' }}</p>
+                  <p class="m-0 text-truncate" style="word-wrap: break-word;">{{ order.createdAt | date: 'd MMM y, hh:mm
+                    a' }}</p>
                   <!-- estimated delivery time -->
                   <p class="m-0 text-truncate">{{ getEstimatedDeliveryTime(order) }}</p>
+                </div>
+
+                <div class="col-3 col-md-4 d-flex d-md-none justify-content-end align-items-end">
+                  <img [src]="getDeliveryModeIcon(order)" alt="delivery mode icon" />
                 </div>
               </div>
             </div>
@@ -62,7 +70,7 @@
         <div class="col-12">
           <div class="card">
             <div class="card-body">
-              <p class="m-0">No recent deliveries</p>
+              <p class="m-0">No current deliveries</p>
             </div>
           </div>
         </div>

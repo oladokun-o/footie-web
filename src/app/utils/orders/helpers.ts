@@ -5,7 +5,7 @@ export class OrdersHelpers {
   getOrderStatus(status: OrderStatus): string {
     switch (status) {
       case "Pending":
-        return "Pending Courier Allocation";
+        return "Pending";
       case "Accepted":
         return "Accepted";
       case "InProgress":
@@ -27,7 +27,7 @@ export class OrdersHelpers {
       case "Pending":
         return "orange";
       case "Accepted":
-        return "blue";
+        return "green";
       case "InProgress":
         return "green";
       case "Delivered":
@@ -62,14 +62,14 @@ export class OrdersHelpers {
   getEstimatedDeliveryTime(order: Order): string {
     // format: Delivery Time Left: 30 minutes | Order Placed: 1 hour ago based on whether the order has been accepted and in progress or completed
     if (order.status === "Accepted") {
-      return "Order Accepted, Awaiting Pickup"
+      return "Awaiting Pickup"
     } else if(order.status === "InProgress") {
       // Calculate the time left for delivery
       const estimatedDeliveryTime = new Date(order.estimatedDeliveryTime as Date).getTime();
       const currentTime = new Date().getTime();
       const timeLeft = estimatedDeliveryTime - currentTime;
       const minutesLeft = Math.floor(timeLeft / 60000);
-      return `Delivery Time Left: ${minutesLeft} minutes`;
+      return `Time Left: ${minutesLeft} minutes`;
     } else {
       // Calculate the time since the order was placed
       const createdAt = new Date(order.createdAt).getTime();
