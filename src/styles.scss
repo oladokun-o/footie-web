@@ -76,6 +76,7 @@ form {
   }
 
   &.loading {
+
     input,
     button,
     textarea,
@@ -221,4 +222,73 @@ button:disabled {
   // .toast-success {
 
   // }
+}
+
+.orange {
+  background-color: #E36F00;
+}
+
+.green {
+  background-color: #01674F;
+}
+
+.red {
+  background-color: #DC2836;
+}
+
+.blue {
+  background-color: #0000FF;
+}
+
+.yellow {
+  background-color: #FFD700;
+}
+
+.purple {
+  background-color: #800080;
+}
+
+.gray {
+  background-color: #808080;
+}
+
+p.status {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 500;
+  width: 100%;
+  border-radius: 5px;
+  padding: 5px 15px;
+}
+
+.card.order {
+  cursor: pointer;
+
+  &:hover {
+    // box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: normal;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+
+    small {
+      font-size: 14px;
+      color: #848484;
+    }
+  }
+
+  .price {
+    font-size: 18px;
+    color: #000;
+    font-weight: 500;
+  }
 }

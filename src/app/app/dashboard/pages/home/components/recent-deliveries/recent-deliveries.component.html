@@ -1,5 +1,72 @@
-<div class="container-fluid d-flex justify-content-between align-items-center px-0">
-  <p class="m-0 fw-bold">Recent deliveries</p>
+<div class="d-flex flex-column" style="gap: 15px;">
+  <div class="container-fluid d-flex justify-content-between align-items-center px-0">
+    <p class="m-0 fw-bold">Recent deliveries</p>
 
-  <a routerLink="./orders" style="text-decoration: none;font-size: 16px;">View all</a>
+    <a routerLink="./orders" style="text-decoration: none;font-size: 16px;">View all</a>
+  </div>
+
+  <div class="container-fluid px-0">
+    <div class="row" style="gap: 12.5px;">
+      <ng-container *ngIf="orders.length > 0; else noOrders">
+        <div class="col-12" *ngFor="let order of orders">
+          <div class="card order" role="button">
+            <div class="card-body" style="gap: 10px;">
+              <div class="d-flex justify-content-between align-items-center">
+                <p class="m-0 fw-bold">{{ order.itemName }}</p>
+                <div class="col-auto">
+                  <p class="m-0 status {{ getOrderStatusColor(order.status) }}" role="status">{{
+                    getOrderStatus(order.status) }}</p>
+                </div>
+              </div>
+              <div class="col-12 p-0 d-flex justify-content-between align-content-center">
+                <div class="col-6 d-flex justify-content-between align-content-center" style="gap: 15px;">
+                  <div class="col-4">
+                    <img [src]="getDeliveryModeIcon(order)" alt="delivery mode icon" />
+                  </div>
+                  <div class="col-8">
+                    <div class="row">
+                      <div class="col-1 p-0">
+                        <img src="assets/images/icons/locator.svg" alt="locator icon" />
+                      </div>
+                      <div class="col-10">
+                        <div class="row h-100" style="gap: 10px;">
+                          <div class="col-12 p-0">
+                            <small class="text-muted">From</small>
+                            <p class="m-0 text-truncate">{{ order.pickupAddress.street }}</p>
+                          </div>
+                          <div class="col-12 p-0">
+                            <small class="text-muted">Delivered To</small>
+                            <p class="m-0 text-truncate">{{ order.deliveryAddress.street }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-6 d-flex flex-column justify-content-between align-content-end text-end"
+                  style="gap: 15px;">
+                  <p class="m-0 text-truncate price">{{ order.price | currency: order.currency }}</p>
+                  <!-- order created at - format: 5 May 2024, 05:30 PM -->
+                  <p class="m-0 text-truncate">{{ order.createdAt | date: 'd MMM y, hh:mm a' }}</p>
+                  <!-- estimated delivery time -->
+                  <p class="m-0 text-truncate">{{ getEstimatedDeliveryTime(order) }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #noOrders>
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <p class="m-0">No recent deliveries</p>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
 </div>
