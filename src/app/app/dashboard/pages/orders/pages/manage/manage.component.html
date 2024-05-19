@@ -1,1 +1,77 @@
-<p>manage works!</p>
+<div class="container-fluid h-100 position-absolute top-0 start-0 map">
+  <iframe
+    src="https://yandex.com/map-widget/v1/?um=constructor%3A6de7b1c9a53eb01b3167ebc9dd587958a7c9bd3ca0dae77c8cb5d8f250347727&amp;source=constructor"
+    width="500" height="400" frameborder="0"></iframe>
+
+  <div *ngIf="order" class="container-fluid p-3 px-md-5 position-absolute top-0 start-0">
+    <div class="top-status shadow" [ngClass]="getOrderStatusColor(order.status)">
+      {{ getOrderStatus(order.status) }}
+    </div>
+  </div>
+
+  <div *ngIf="showButtonPickup && order" class="button-pickup slide-in-bottom p-3 px-md-5 py-md-5" role="button">
+    <div class="row">
+      <div class="col-12">
+        <div class="row gap-3">
+          <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center first">
+              <p class="m-0 fw-bold">{{getEstimatedDeliveryTime(order)}}</p>
+              <a routerLink="./help" class="text-decoration-none text-orange">Need help?</a>
+            </div>
+          </div>
+
+          <div class="col-12 d-flex">
+            <div class="col-1">
+              <img src="assets/images/icons/locator.svg" width="25" alt="locator icon" />
+            </div>
+            <div class="col-10">
+              <div class="row h-100" style="gap: 10px;">
+                <div>
+                  <small class="text-muted">Pickup Location</small>
+                  <p class="m-0 text-truncate">{{ order.pickupAddress.street }}</p>
+                </div>
+                <div>
+                  <small class="text-muted">Delivery Location</small>
+                  <p class="m-0 text-truncate">{{ order.deliveryAddress.street }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-1 d-flex d-md-none justify-content-end align-items-start">
+              <img [src]="getDeliveryModeIcon(order)" style="width: 100%;" alt="delivery mode icon" />
+            </div>
+          </div>
+
+          <div class="container-fluid">
+            <div class="row" style="row-gap: 10px;">
+              <div class="col-6">
+                <label class="form-label fs-6 m-0">Package details</label>
+                <p class="m-0 fw-medium">{{ order.itemName }}</p>
+                <small class="text-muted text-capitalize" [innerHTML]="order.itemType"></small>
+              </div>
+              <div class="col-6">
+                <label class="form-label fs-6 m-0">Receipient</label>
+                <p class="m-0 fw-medium">{{ order.recipient.firstName }} {{ order.recipient.lastName }}</p>
+              </div>
+              <div class="col-12">
+                <label class="form-label fs-6 m-0">Receipient contact number</label>
+                <p class="m-0 fw-medium">{{ order.recipient.phone }}</p>
+              </div>
+              <div class="col-6">
+                <label class="form-label fs-6 m-0">Payment</label>
+                <p class="m-0 fw-medium">Card</p>
+              </div>
+              <div class="col-6">
+                <label class="form-label fs-6 m-0">Estimated Fee</label>
+                <p class="m-0 fw-bold text-green fs-5">{{ order.price | currency: order.currency }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!['delivered','failed','cancelled'].includes(order.status.toLowerCase())" class="col-12 last text-center p-4">
+            <a class="text-danger">Cancel</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

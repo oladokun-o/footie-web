@@ -4,44 +4,26 @@
     <div class="header-item default">
       Welcome back, <br />
       <span class="text-capitalize">{{ user.firstName }}</span>
-    </div></ng-container>
+    </div>
+  </ng-container>
 
   <!-- Orders Header Item -->
   <div class="header-item">
-    <span class="text-capitalize fw-normal">{{ currentPage }}</span>
+    <span class="text-capitalize fw-normal fw-bold fs-5 d-flex justify-content-between align-items-center gap-3"
+      [innerHTML]="sanitizePageName(innerPage === '' ? currentPage : innerPage)"></span>
   </div>
 
-  <div class="header-item">
-    <img
-      role="button"
-      [mat-menu-trigger-for]="MatMenu"
-      [src]="user.profilePicture"
-      *ngIf="user.profilePicture"
-      alt="Profile Icon"
-      class="profile-icon"
-    />
-    <img
-      role="button"
-      [mat-menu-trigger-for]="MatMenu"
-      src="assets/images/icons/profile-icon.svg"
-      alt="Profile Icon"
-      class="profile-icon"
-      *ngIf="!user.profilePicture"
-    />
+  <div class="header-item" *ngIf="!hideProfileIcon">
+    <img role="button" [mat-menu-trigger-for]="MatMenu" [src]="user.profilePicture" *ngIf="user.profilePicture"
+      alt="Profile Icon" class="profile-icon" />
+    <img role="button" [mat-menu-trigger-for]="MatMenu" src="assets/images/icons/profile-icon.svg" alt="Profile Icon"
+      class="profile-icon" *ngIf="!user.profilePicture" />
     <!-- Use Mat Menu for dropdown -->
     <mat-menu #MatMenu class="profile-menu">
-      <div
-        mat-menu-item
-        class="profile-menu-item"
-        routerLink="./settings/profile"
-      >
+      <div mat-menu-item class="profile-menu-item" routerLink="./settings/profile">
         <span>Profile</span>
       </div>
-      <div
-        mat-menu-item
-        class="profile-menu-item"
-        routerLink="./settings/payment"
-      >
+      <div mat-menu-item class="profile-menu-item" routerLink="./settings/payment">
         <span>Payment</span>
       </div>
       <div mat-menu-item class="profile-menu-item" routerLink="./settings">

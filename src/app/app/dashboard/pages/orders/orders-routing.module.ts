@@ -14,7 +14,7 @@ const routes: Routes = [
         component: SummaryComponent
       },
       {
-        path: ':id  ',
+        path: ':id',
         component: ManageComponent,
         pathMatch: 'full'
       }

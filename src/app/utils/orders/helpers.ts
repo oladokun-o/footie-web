@@ -62,21 +62,27 @@ export class OrdersHelpers {
   getEstimatedDeliveryTime(order: Order): string {
     // format: Delivery Time Left: 30 minutes | Order Placed: 1 hour ago based on whether the order has been accepted and in progress or completed
     if (order.status === "Accepted") {
-      return "Awaiting Pickup"
+      return "Awaiting pickup"
     } else if(order.status === "InProgress") {
       // Calculate the time left for delivery
       const estimatedDeliveryTime = new Date(order.estimatedDeliveryTime as Date).getTime();
       const currentTime = new Date().getTime();
       const timeLeft = estimatedDeliveryTime - currentTime;
       const minutesLeft = Math.floor(timeLeft / 60000);
-      return `Time Left: ${minutesLeft} minutes`;
+      return `Time left: ${minutesLeft} minutes`;
+    } else if (order.status === "Delivered") {
+      return `Order completed`
+    } else if (order.status === "Cancelled") {
+      return `Order was cancelled`
+    } else if (order.status === "Failed") {
+      return `Order failed`
     } else {
       // Calculate the time since the order was placed
       const createdAt = new Date(order.createdAt).getTime();
       const currentTime = new Date().getTime();
       const timePassed = currentTime - createdAt;
       const hoursPassed = Math.floor(timePassed / 3600000);
-      return `Order Placed: ${hoursPassed} hours ago`;
+      return `Order placed: ${hoursPassed} hours ago`;
     }
   }
 }

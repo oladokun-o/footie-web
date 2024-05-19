@@ -9,6 +9,21 @@ export enum OrderStatus {
   Failed = 'Failed'              // Order delivery failed
 }
 
+export enum ItemType {
+  gadget = "gadget",
+  clothing = "clothing",
+  food = "food",
+  furniture = "furniture",
+  book = "book",
+  appliance = "appliance",
+  beauty = "beauty",
+  sport = "sport",
+  tool = "tool",
+  electronics = "electronics",
+  jewelry = "jewelry",
+  other = "other"
+}
+
 export interface Address {
   street: string;
   city: string;
@@ -35,6 +50,7 @@ export interface Order {
   trackingNumber?: string;      // Tracking number for the order
   deliveryMode?: 'feet' | 'bike' | 'car' | 'van' | 'truck'; // Mode of delivery
   currency?: string;            // Currency of the price
+  itemType?: ItemType;
 }
 
 export type Orders = Order[];

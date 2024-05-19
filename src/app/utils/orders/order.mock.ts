@@ -1,5 +1,5 @@
 import * as Chance from 'chance';
-import { Order, OrderStatus, Address } from '../../core/interfaces/order.interface';
+import { Order, OrderStatus, Address, ItemType } from '../../core/interfaces/order.interface';
 import { User } from '../../core/interfaces/user.interface';
 const chance = new Chance();
 
@@ -57,6 +57,7 @@ const generateMockOrder = (): Order => ({
   trackingNumber: chance.guid(),
   deliveryMode: 'feet',
   currency: 'RUB',
+  itemType: chance.pickone(Object.values(ItemType)) as ItemType
 });
 
 // Generate a list of mock orders

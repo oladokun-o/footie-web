@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Orders } from '../interfaces/order.interface';
+import { Order, Orders } from '../interfaces/order.interface';
 import { mockOrders } from 'src/app/utils/orders/order.mock';
 
 @Injectable({
@@ -12,5 +12,9 @@ export class OrdersService {
 
   getOrders(): Observable<Orders> {
     return of(mockOrders);
+  }
+
+  getOrder(id: string): Observable<Order | undefined> {
+    return of(mockOrders.find(order => order.id === id));
   }
 }

@@ -1,11 +1,11 @@
 <div class="container-fluid position-relative h-100">
   <div class="row h-100">
-    <div class="col-md-3 d-none d-md-block p-0 shadow">
+    <div class="col-md-3 d-none d-md-block p-0 shadow-sm" style="position: relative;z-index: 999;">
       <footiedrop-web-side-navigation [currentPage]="currentPage"></footiedrop-web-side-navigation>
     </div>
     <div class="col-12 px-0 col-md-9 d-flex flex-column" style="height: inherit;">
-      <footiedrop-web-dashboard-header [currentPage]="currentPage"></footiedrop-web-dashboard-header>
-      <div class="container-fluid px-md-5 pt-md-4 h-100 main" style="padding-top: 15px;padding-bottom: 75px;flex: 1;">
+      <footiedrop-web-dashboard-header [currentPage]="currentPage" [innerPage]="innerPage" [hideProfileIcon]="hideProfileIcon"></footiedrop-web-dashboard-header>
+      <div class="container-fluid px-md-5 pt-md-4 h-100 main position-relative" style="padding-top: 15px;padding-bottom: 75px;flex: 1;">
         <ng-container *ngIf="!loading; else loadingScreen">
           <router-outlet></router-outlet>
         </ng-container>
@@ -19,7 +19,7 @@
           </div>
         </ng-template>
       </div>
-      <footiedrop-web-bottom-navigation class="d-block d-md-none" [currentPage]="currentPage"></footiedrop-web-bottom-navigation>
+      <footiedrop-web-bottom-navigation class="d-block d-md-none" *ngIf="!hideBottomNav" [currentPage]="currentPage"></footiedrop-web-bottom-navigation>
     </div>
   </div>
 </div>

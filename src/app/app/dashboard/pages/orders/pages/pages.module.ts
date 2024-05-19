@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SummaryComponent } from './summary/summary.component';
 import { ManageComponent } from './manage/manage.component';
 import { RouterModule } from '@angular/router';
+import { MatRippleModule } from '@angular/material/core';
 
 
 
@@ -13,7 +14,8 @@ import { RouterModule } from '@angular/router';
   ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    MatRippleModule
   ]
 })
 export class PagesModule { }
