@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { OrdersComponent } from './orders.component';
 import { SummaryComponent } from './pages/summary/summary.component';
 import { ManageComponent } from './pages/manage/manage.component';
+import { NewComponent } from './pages/new/new.component';
 
 const routes: Routes = [
   {
@@ -14,10 +15,14 @@ const routes: Routes = [
         component: SummaryComponent
       },
       {
+        path: 'new',
+        component: NewComponent
+      },
+      {
         path: ':id',
         component: ManageComponent,
         pathMatch: 'full'
-      }
+      },
     ]
   }
 ];

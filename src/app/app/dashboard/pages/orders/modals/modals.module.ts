@@ -5,10 +5,13 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NewOrderComponent } from './new-order/new-order.component';
+import { HomeComponentsModule } from '../../home/components/components.module';
 
 @NgModule({
   declarations: [
-    CancelOrderComponent
+    CancelOrderComponent,
+    NewOrderComponent,
   ],
   imports: [
     CommonModule,
@@ -16,7 +19,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatButtonModule,
     MatRadioModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HomeComponentsModule
   ]
 })
 export class ModalsModule { }

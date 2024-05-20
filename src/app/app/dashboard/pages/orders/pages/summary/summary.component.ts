@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Orders } from 'src/app/core/interfaces/order.interface';
 import { OrdersService } from 'src/app/core/services/orders.service';
 import { OrdersHelpers } from 'src/app/utils/orders/helpers';
+import { NewOrderComponent } from '../../modals/new-order/new-order.component';
 
 @Component({
   selector: 'footiedrop-web-summary',
@@ -14,7 +16,8 @@ export class SummaryComponent extends OrdersHelpers implements OnInit {
 
   constructor(
     private ordersService: OrdersService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    public dialog: MatDialog
   ) {
     super();
     // Fetch orders from the resolver, if available (pre-fetched data)
@@ -32,5 +35,9 @@ export class SummaryComponent extends OrdersHelpers implements OnInit {
     this.ordersService.getOrders().subscribe((orders) => {
       this.orders = orders;
     });
+  }
+
+  openNewOrderModal(): void {
+    const ref = this.dialog.open(NewOrderComponent);
   }
 }

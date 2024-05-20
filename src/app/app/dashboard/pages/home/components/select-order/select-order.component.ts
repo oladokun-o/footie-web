@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'footiedrop-web-select-order',
@@ -6,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./select-order.component.scss']
 })
 export class SelectOrderComponent {
+  constructor(
+    public activeDialog: MatDialog
+  ) {
 
+  }
 }
