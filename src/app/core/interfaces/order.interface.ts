@@ -1,5 +1,11 @@
 import { Courier, User } from "./user.interface";
 
+/**
+ * Order status
+ * @enum {string}
+ * @readonly
+ * @description The status of an order
+ */
 export enum OrderStatus {
   Pending = 'Pending',           // Order is created but not yet accepted by any courier
   Accepted = 'Accepted',         // Order is accepted by a courier

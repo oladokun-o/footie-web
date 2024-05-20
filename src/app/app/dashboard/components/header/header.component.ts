@@ -20,4 +20,10 @@ export class HeaderComponent {
   sanitizePageName(page: string): string {
     return this.sanitizer.bypassSecurityTrustHtml(page) as string;
   }
+
+  // capitalize string forcefully
+  capitalizeString(str: string): string {
+    str = str.toLowerCase();
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 }

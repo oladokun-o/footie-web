@@ -3,7 +3,7 @@
   <ng-container *ngIf="currentPage === ''">
     <div class="header-item default">
       Welcome back, <br />
-      <span class="text-capitalize">{{ user.firstName }}</span>
+      <span class="text-capitalize">{{ capitalizeString(user.firstName) }}</span>
     </div>
   </ng-container>
 

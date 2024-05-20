@@ -48,6 +48,7 @@ export class RegisterComponent {
           }
         },
         (error) => {
+          console.log(error)
           if (error && error.message) {
             if (Array.isArray(error.message)) {
               error.message.forEach((err: string) => {
