@@ -7,12 +7,14 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SharedComponentsModule } from 'src/shared/components/components.module';
 import { MatBadgeModule } from '@angular/material/badge';
+import { NewComponent } from './new/new.component';
 
 
 @NgModule({
   declarations: [
     SummaryComponent,
-    ManageComponent
+    ManageComponent,
+    NewComponent
   ],
   imports: [
     CommonModule,
