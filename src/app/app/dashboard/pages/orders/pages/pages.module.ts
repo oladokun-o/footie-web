@@ -8,6 +8,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { SharedComponentsModule } from 'src/shared/components/components.module';
 import { MatBadgeModule } from '@angular/material/badge';
 import { NewComponent } from './new/new.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -22,7 +23,9 @@ import { NewComponent } from './new/new.component';
     MatRippleModule,
     MatDialogModule,
     SharedComponentsModule,
-    MatBadgeModule
+    MatBadgeModule,
+    FormsModule,
+    ReactiveFormsModule,
   ]
 })
 export class PagesModule { }

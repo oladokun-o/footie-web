@@ -4,7 +4,7 @@
 
     <div class="container-fluid">
       <div class="row" style="gap: 18px">
-        <div role="button" class="option option-1" matRipple routerLink="dashboard/orders/new"
+        <div role="button" class="option option-1" matRipple routerLink="/dashboard/orders/new"
           [queryParams]="{ type: 'instant' }"
           (click)="activeDialog.closeAll()"
           >
@@ -21,7 +21,7 @@
           </p>
           <img src="assets/images/icons/bolt-bg-icon.svg">
         </div>
-        <div class="option option-2" matRipple routerLink="dashboard/orders/new" [queryParams]="{ type: 'scheduled' }"
+        <div class="option option-2" matRipple routerLink="/dashboard/orders/new" [queryParams]="{ type: 'scheduled' }"
           (click)="activeDialog.closeAll()">
           <div class="d-flex">
             <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">

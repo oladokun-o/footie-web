@@ -1,4 +1,4 @@
-import { OrderStatus } from "./order.interface"
+import { Orders, OrderStatus } from "./order.interface"
 
 export interface User {
   id: string
@@ -20,6 +20,7 @@ export interface User {
   lastLogin: string
   token: string
   settings: Settings
+  orders?: Orders
 }
 
 export interface Order {
@@ -59,7 +60,26 @@ export enum UserRole {
   COURIER = 'courier',
 }
 
-export interface Courier extends User {
+export interface Courier {
+  id: string
+  firstName: string
+  middleName: string
+  lastName: string
+  email: string
+  password: string
+  phone: string
+  profilePicture: any
+  addressStreet: any
+  addressCity: any
+  addressState: any
+  addressPostalCode: any
+  addressCountry: any
+  role: string
+  createdAt: string
+  updatedAt: string
+  lastLogin: string
+  token: string
+  settings: Settings
   orders: Delivery[];
   vehicleType: string; // e.g., bike, car, van
   licensePlate: string;

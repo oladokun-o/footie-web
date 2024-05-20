@@ -21,7 +21,7 @@ const generateMockUser = (): User => ({
   addressState: chance.state(),
   addressPostalCode: chance.zip(),
   addressCountry: 'Russia',
-  role: chance.pickone(['Customer', 'Courier']),
+  role: chance.pickone(['customer', 'courier']),
   createdAt: chance.date({ month: 3, year: 2024 }).toString(),
   updatedAt: chance.date({ month: 3, year: 2024 }).toString(),
   lastLogin: chance.date({ month: 3, year: 2024 }).toString(),
@@ -111,7 +111,6 @@ const assignOrdersToCouriers = (orders: Orders, couriers: Courier[]): void => {
         order.chat = generateMockMessage(order.sender, selectedCourier);
         selectedCourier.orders.push({ orderId: order.id });
         selectedCourier.availabilityStatus = 'busy'; // Update status to busy
-        console.log(order)
       }
     }
 
@@ -127,7 +126,15 @@ const mockOrders = generateMockOrders(10);
 const mockCouriers = generateMockCouriers(5);
 assignOrdersToCouriers(mockOrders, mockCouriers);
 
+// assign orders to user in local storage
+const user: User = JSON.parse(localStorage.getItem('user') as string);
+if (user && user.role === 'customer') {
+  user.orders = mockOrders;
+};
+
 export const mockData = {
   orders: mockOrders,
   couriers: mockCouriers,
+  user: user,
 };
+

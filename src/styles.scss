@@ -123,6 +123,13 @@ input {
   }
 }
 
+.bg-input {
+  background-color: #F7F7F7 !important;
+  border: 1px solid transparent !important;
+  outline: none;
+  border-radius: var(--bs-border-radius);
+}
+
 /* Button Styles */
 .btn-primary {
   background-color: #E36F00 !important;

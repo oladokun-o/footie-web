@@ -62,6 +62,36 @@ export class DashboardComponent {
           this.hideBottomNav = true;
           this.hideProfileIcon = true;
         }
+
+        // check if url contains /new, if it does, show currentPage as "Create {{currentPage}}", set currentPage as a singular form
+        // Also add the back button to the innerPage with the svg icon
+        // Also check if a query param type is present, if it is, show currentPage as "Create {{type}} {{currentPage}}", set currentPage as a singular form
+        if (event.url.split('/').length > 3 && event.url.includes('/new')) {
+          this.innerPage = event.url.split('/')[2];
+          if (this.innerPage.includes('s')) {
+            this.innerPage = this.innerPage.slice(0, -1);
+          }
+
+          if (event.url.includes('type')) {
+            this.innerPage = `
+            <a onclick="window.history.back()" style="cursor: pointer;">
+              <svg width="14" height="26" viewBox="0 0 14 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.999 0L0 13L11.999 26L14 23.8336L3.99919 13L14 2.16641L11.999 0Z" fill="#01674F"/>
+              </svg>
+            </a>
+            Create ${this.activatedRoute.snapshot.queryParams['type']} ${this.innerPage}
+            `;
+          } else {
+            this.innerPage = `
+            <a onclick="window.history.back()" style="cursor: pointer;">
+              <svg width="14" height="26" viewBox="0 0 14 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.999 0L0 13L11.999 26L14 23.8336L3.99919 13L14 2.16641L11.999 0Z" fill="#01674F"/>
+              </svg>
+            </a>
+            Create ${this.innerPage}
+            `;
+          }
+        }
       }
     })
 

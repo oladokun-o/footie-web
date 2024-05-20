@@ -5,6 +5,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { RouterModule } from '@angular/router';
 import { RecentDeliveriesComponent } from './recent-deliveries/recent-deliveries.component';
 import { CurrentDeliveriesComponent } from './current-deliveries/current-deliveries.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 
@@ -17,7 +18,8 @@ import { CurrentDeliveriesComponent } from './current-deliveries/current-deliver
   imports: [
     CommonModule,
     MatRippleModule,
-    RouterModule
+    RouterModule,
+    MatDialogModule
   ],
   exports: [
     SelectOrderComponent,

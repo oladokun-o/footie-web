@@ -1,0 +1,24 @@
+.addon {
+  height: 51px;
+  right: 1px;
+  top: 1px;
+}
+
+.patch {
+  height: 51px;
+  width: 100%;
+  right: 0;
+  top: -40px;
+  position: absolute;
+  background: white;
+}
+
+.search-contn {
+  position: relative;
+  height: 700px;
+}
+
+.sticky-top {
+  top: -15px;
+  z-index: 998;
+}
