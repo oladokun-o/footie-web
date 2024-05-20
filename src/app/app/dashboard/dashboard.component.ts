@@ -27,6 +27,7 @@ export class DashboardComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
+    document.body.classList.add('dashboard-body');
     this.loading = true;
     this.fadeOut = false;
     router.events.subscribe((event) => {
