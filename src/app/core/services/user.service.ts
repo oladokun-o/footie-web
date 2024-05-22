@@ -10,7 +10,14 @@ import { User } from '../interfaces/user.interface';
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private httpClient: HttpClient) { }
+  constructor(
+    private httpClient: HttpClient,
+    private userHelperService: UserHelperService
+  ) { }
+
+  get user(): User {
+    return JSON.parse(localStorage.getItem('user') as string);
+  }
 
   create(payload: CreateUserDto): Observable<any> {
     return this.httpClient.post<RequestResponse>(ApiEndpoints.users.create(), payload).pipe(
@@ -37,13 +44,16 @@ export class UserService {
 
   verifyOTP(payload: { email: string, otp: number }): Observable<any> {
     return this.httpClient.post<RequestResponse>(ApiEndpoints.users.verifyOTP(), payload).pipe(
-      switchMap(response => response.result === "success" ? of(response.data) : throwError(response.message)),
-      catchError(error => throwError(error.error)),
+      switchMap(response => {
+        if (response.result === "success") this.getUserByEmail(payload.email).subscribe(user => localStorage.setItem("user", JSON.stringify(user)));
+        return response.result === "success" ? of(response.data) : throwError(response.message);
+      }),
+      catchError(error => throwError(error)),
     );
   }
 
   resendOtp(email: string): Observable<any> {
-    return this.httpClient.post<RequestResponse>(ApiEndpoints.users.resendOtp(), email).pipe(
+    return this.httpClient.post<RequestResponse>(ApiEndpoints.users.resendOtp(), { email: email }).pipe(
       switchMap(response => response.result === "success" ? of(response.data) : throwError(response.message)),
       catchError(error => throwError(error.error)),
     );
@@ -51,14 +61,14 @@ export class UserService {
 
   getUserById(id: string): Observable<User> {
     return this.httpClient.get<RequestResponse>(ApiEndpoints.users.getById(id)).pipe(
-      switchMap(response => response.result === "success" ? of(response.data) : throwError(response.message)),
+      switchMap(response => response.result === "success" ? of(this.userHelperService.CheckUserSettings(response.data)) : throwError(response.message)),
       catchError(error => throwError(error.error)),
     );
   }
 
   getUserByEmail(email: string): Observable<User> {
     return this.httpClient.get<RequestResponse>(ApiEndpoints.users.getByEmail(email)).pipe(
-      switchMap(response => response.result === "success" ? of(response.data) : throwError(response.message)),
+      switchMap(response => response.result === "success" ? of(this.userHelperService.CheckUserSettings(response.data)) : throwError(response.message)),
       catchError(error => throwError(error)),
     );
   }
@@ -96,5 +106,36 @@ export class UserService {
       switchMap(response => response.result === "success" ? of(response) : throwError(response.message)),
       catchError(error => throwError(error)),
     );
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+class UserHelperService {
+
+  /**
+   * Check the user settings for any warnings
+   * @param user The user to check
+   * @returns The user with any warnings
+   */
+  CheckUserSettings(user: User): User {
+    let warnings: string[] = [];
+    // 1. Check if the user is verified, if not, add a warning and include link to verify
+    if (!user.settings.verified) {
+      warnings.push("Your email is not verified. <br> Please verify your email to continue using the platform. <a href='dashboard/settings/verifyOTP?resendOTP=true'>Resend verification email</a>");
+    }
+
+    // 2. Check if the user has activated 2FA, if not, add a warning
+    // if (!user.settings.securityTwoFactorAuth) {
+    //   warnings.push("You have not activated two-factor authentication. <br> Please activate two-factor authentication to secure your account.");
+    // }
+
+    // 3. Check if the user has disabled email notifications, if not, add a warning
+    if (!user.settings.notificationsEmail) {
+      warnings.push("You have disabled email notifications. <br> Please enable email notifications to receive important updates.");
+    }
+
+    return { ...user, warnings };
   }
 }

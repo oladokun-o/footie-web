@@ -39,10 +39,13 @@ export class AppComponent {
     this.authService.checkIfLoggedIn().subscribe(
       response => {
         // If the user is logged in, and is not in the dashboard, then redirect to the dashboard
-        if (response && !this.router.url.includes('dashboard')) {
-          this.router.navigate(['/dashboard']);
-        } else
-        if (!response) {
+        if (response && !this.router.url.includes('dashboard') && this.router.url !== '/') {
+          if (this.router.url.includes('/verifyOTP')) {
+            this.router.navigate(['/dashboard/settings/verifyOTP']);
+          } else {
+            this.router.navigate(['/dashboard']);
+          }
+        } else if (!response) {
           localStorage.clear();
           // If the user is not logged in, and is in the dashboard, then redirect to the login page
           this.router.navigate(['/login']);

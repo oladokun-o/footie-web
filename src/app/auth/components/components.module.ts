@@ -36,7 +36,8 @@ const COMPONENTS = [
     SharedDirectivesModule,
     SharedComponentsModule,
     MatTooltipModule,
-    NgSelectModule
+    NgSelectModule,
+    SharedDirectivesModule
   ],
   exports: [
     ...COMPONENTS,

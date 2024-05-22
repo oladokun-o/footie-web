@@ -14,7 +14,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: HomeComponent
+        component: HomeComponent,
       },
       {
         path: 'orders',
@@ -27,7 +27,7 @@ const routes: Routes = [
       {
         path: 'settings',
         loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule)
-      }
+      },
     ]
   }
 ];

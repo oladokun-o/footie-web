@@ -38,6 +38,7 @@ export class DashboardComponent implements OnDestroy {
         }, 1000);
 
         this.currentPage = this.router.url.endsWith('/dashboard') ? '' : this.router.url.split('/')[2];
+        if (this.currentPage === undefined) this.currentPage = '';
         this.innerPage = '';
         this.hideBottomNav = false;
         this.hideProfileIcon = false;

@@ -21,6 +21,7 @@ export interface User {
   token: string
   settings: Settings
   orders?: Orders
+  warnings?: string[];
 }
 
 export interface Order {

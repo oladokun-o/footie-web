@@ -2,50 +2,42 @@
   <ul class="nav justify-content-between w-100">
     <li class="nav-item">
       <a class="nav-link active" routerLink="./" title="Home">
-        <img
-          [src]="
+        <img [src]="
             currentPage === ''
               ? 'assets/images/icons/home-icon-active.svg'
               : 'assets/images/icons/home-icon.svg'
-          "
-          alt="Home"
-        />
+          " alt="Home" />
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" routerLink="./orders" title="Orders">
-        <img
-          [src]="
+        <img [src]="
             currentPage === 'orders'
               ? 'assets/images/icons/orders-icon-active.svg'
               : 'assets/images/icons/orders-icon.svg'
-          "
-          alt="Orders"
-        />
+          " alt="Orders" />
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" routerLink="./notifications" title="Notifications">
-        <img
-          [src]="
+        <img [src]="
             currentPage === 'notifications'
-              ? 'assets/images/icons/notifications-icon-active.svg'
-              : 'assets/images/icons/notifications-icon.svg'
-          "
-          alt="Notifications"
-        />
+              ? 'assets/images/icons/notifications-icon-warning-active.svg'
+                            : currentPage === 'notifications'
+                            ? 'assets/images/icons/notifications-icon-active.svg'
+                            : user && user.warnings && user.warnings.length > 0
+                            ? 'assets/images/icons/notifications-warning-icon.svg'
+                            : 'assets/images/icons/notifications-icon.svg'
+          " alt="Notifications" />
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" routerLink="./settings" title="Settings">
-        <img
-          [src]="
+        <img [src]="
             currentPage === 'settings'
               ? 'assets/images/icons/settings-icon-active.svg'
               : 'assets/images/icons/settings-icon.svg'
-          "
-          alt="Settings"
-        />
+          " alt="Settings" />
       </a>
     </li>
   </ul>

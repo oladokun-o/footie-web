@@ -7,6 +7,6 @@ import { User } from 'src/app/core/interfaces/user.interface';
   styleUrls: ['./bottom-navigation.component.scss']
 })
 export class BottomNavigationComponent {
-  user: User = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string) : null;
+  get user(): User { return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string) : null };
   @Input() currentPage: string = '';
 }

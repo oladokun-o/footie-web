@@ -1,5 +1,18 @@
 <div class="container-fluid px-1">
   <div class="row" style="gap: 20px;">
+    <!-- Warnings -->
+    <div *ngIf="user && user.warnings && user.warnings.length > 0" class="alerts col-12">
+      <div class="row" style="row-gap: 15px;">
+        <div *ngFor="let warning of user.warnings" #alert class="col-12">
+          <div class="alert alert-warning alert-dismissible fade show m-0" role="alert">
+            <p class="m-0" [innerHTML]="warning"></p>
+            <!-- close button -->
+            <button type="button" class="close btn btn-close" data-dismiss="alert" aria-label="Close"
+              (click)="alert.remove()"></button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- What would you like to do? -->
     <footiedrop-web-select-order></footiedrop-web-select-order>
 

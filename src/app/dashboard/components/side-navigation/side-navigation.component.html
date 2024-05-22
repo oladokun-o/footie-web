@@ -12,34 +12,41 @@
                       ? 'assets/images/icons/home-icon-active.svg'
                       : 'assets/images/icons/home-icon.svg'
                   " alt="Home" />
-                  <span>Home</span>
+        <span>Home</span>
       </mat-list-item>
       <mat-divider></mat-divider>
-      <mat-list-item role="button" matRipple routerLink="./orders" title="Orders" [class.active]="currentPage === 'orders'">
+      <mat-list-item role="button" matRipple routerLink="./orders" title="Orders"
+        [class.active]="currentPage === 'orders'">
         <img [src]="
                           currentPage === 'orders'
                             ? 'assets/images/icons/orders-icon-active.svg'
                             : 'assets/images/icons/orders-icon.svg'
                         " alt="Orders" />
-                        <span>Orders</span>
+        <span>Orders</span>
       </mat-list-item>
       <mat-divider></mat-divider>
-      <mat-list-item role="button" matRipple routerLink="./notifications" title="Notifications" [class.active]="currentPage === 'notifications'">
+      <mat-list-item role="button" matRipple routerLink="./notifications" title="Notifications"
+        [class.active]="currentPage === 'notifications'">
         <img [src]="
-                          currentPage === 'notifications'
+                          user && user.warnings && user.warnings.length > 0 && currentPage === 'notifications'
+                           ? 'assets/images/icons/notifications-icon-warning-active.svg'
+                            : currentPage === 'notifications'
                             ? 'assets/images/icons/notifications-icon-active.svg'
+                            : user && user.warnings && user.warnings.length > 0
+                            ? 'assets/images/icons/notifications-warning-icon.svg'
                             : 'assets/images/icons/notifications-icon.svg'
                         " alt="Notifications" />
-                        <span>Notifications</span>
+        <span>Notifications</span>
       </mat-list-item>
       <mat-divider></mat-divider>
-      <mat-list-item role="button" matRipple routerLink="./settings" title="Settings" [class.active]="currentPage === 'settings'">
+      <mat-list-item role="button" matRipple routerLink="./settings" title="Settings"
+        [class.active]="currentPage === 'settings'">
         <img [src]="
                           currentPage === 'settings'
                             ? 'assets/images/icons/settings-icon-active.svg'
                             : 'assets/images/icons/settings-icon.svg'
                         " alt="Settings" />
-                        <span>Settings</span>
+        <span>Settings</span>
       </mat-list-item>
     </mat-list>
   </ul>

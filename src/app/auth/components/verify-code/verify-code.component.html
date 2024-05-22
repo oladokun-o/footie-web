@@ -9,19 +9,19 @@
 
       <div class="form-group">
         <label for="otp" class="form-label">
-          <a routerLink="/changeEmail">Change Email?</a>
+          <a routerLink="settings/changeEmail">Change Email?</a>
         </label>
-        <input footiedropWebInputMask="0  0  0  0" type="tel" class="form-control text-center fs-2" id="otp" formControlName="otp"
-          placeholder="--  --  --  --">
-        <small class="text-danger">{{ form.get('otp')?.touched && form.get('otp')?.errors?.['required'] ? 'otp is required' : '' }}</small>
+        <input footiedropWebInputMask="0  0  0  0" type="tel" footiedropWebNumbersOnly class="form-control text-center fs-2" id="otp" formControlName="otp"
+          placeholder="--  --  --  --" minlength="10" maxlength="10" [disabled]="resending || loading">
+        <small class="text-danger">{{ form.get('otp')?.touched && form.get('otp')?.errors?.['required'] ? 'OTP is required' : '' }}</small>
       </div>
       <div class="form-group text-end">
-        <small style="font-size: 13px !important;">Didn’t get any code yet? <a (click)="resendOTP()">{{ resending ? 'Resending' : 'Resend code' }}</a></small>
+        <small style="font-size: 16px !important;">Didn’t get any code yet? <a class="text-decoration-underline" role="button" (click)="resendOTP()">{{ resending ? 'Resending' : 'Resend code' }}</a></small>
       </div>
 
       <footiedrop-web-loading-button buttonText="Verify" [disabled]="form.invalid" [loading]="loading"
         class="primary"></footiedrop-web-loading-button>
-      <div class="form-group text-center mt-3">
+      <div *ngIf="!shouldResendOTP && !isSettings" class="form-group text-center mt-3">
         By signing up, you agree to Footiedrop’s <br>
         <a href="#">Terms of Service</a>
         and
@@ -29,5 +29,4 @@
       </div>
     </form>
   </div>
-
 </div>

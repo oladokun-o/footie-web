@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CreateUserDto } from 'src/app/core/dto/user.dto';
 import { User } from 'src/app/core/interfaces/user.interface';
@@ -13,23 +13,47 @@ import { UserService } from 'src/app/core/services/user.service';
 })
 export class VerifyCodeComponent {
 
-  userData: { email: string, userId: string } = JSON.parse(localStorage.getItem('userSessionData') as string);
+  get userData(): { email: string, userId: string } { return JSON.parse(localStorage.getItem('userSessionData') as string); }
+  shouldResendOTP: boolean = false;
+  isSettings: boolean = false;
 
   constructor(
     private userService: UserService,
     private toastr: ToastrService,
     private router: Router,
+    private route: ActivatedRoute,
   ) {
     if (this.userData) {
       this.checkIfUserIsVerified();
     } else {
       this.router.navigate(['/login']);
-    }
+    };
+
+    route.queryParams.subscribe(data => {
+      if (data['resendOTP'] && data['resendOTP'] === 'true') {
+        window.history.replaceState({}, document.title, window.location.pathname);
+        this.shouldResendOTP = true;
+        this.resendVerificationEmail();
+      }
+    });
+
+    route.data.subscribe(data => {
+      if (data['settings']) {
+        this.isSettings = true;
+      }
+    });
+
+    this.form.valueChanges.subscribe(val => {
+      let otp = val.otp.replace(/\D/g, '');
+      if (otp && otp.length === 4) {
+        this.verify();
+      }
+    });
   }
 
   form: FormGroup = new FormGroup({
     email: new FormControl(this.userData ? this.userData.email : null, [Validators.required, Validators.email]),
-    otp: new FormControl(null, [Validators.required]),
+    otp: new FormControl(null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
   });
   loading = false;
 
@@ -60,11 +84,15 @@ export class VerifyCodeComponent {
       this.loading = true;
       this.userService.verifyOTP(payload).subscribe(
         (response) => {
+          this.loading = false;
+          this.form.get('otp')?.reset();
           this.toastr.success('OTP verified successfully');
-          if (this.isLoggedIn) {
-            this.router.navigate(['/dashboard']);
-          } else {
-            this.router.navigate(['/login']);
+          if (!this.shouldResendOTP) {
+            if (this.isLoggedIn) {
+              this.router.navigate(['/dashboard']);
+            } else {
+              this.router.navigate(['/login']);
+            }
           }
         },
         (error) => {
@@ -102,6 +130,27 @@ export class VerifyCodeComponent {
       (error) => {
         this.toastr.error(error);
         this.resending = false;
+      }
+    );
+  }
+
+  resendingEmail: boolean = false;
+  resendVerificationEmail(): void {
+    this.resendingEmail = true;
+    this.toastr.info('Sending verification email, please wait', '', { disableTimeOut: true });
+    this.userService.resendOtp(this.userData.email).subscribe(
+      response => {
+        this.toastr.clear();
+        this.resendingEmail = false;
+        if (response) {
+          setTimeout(() => {
+            this.toastr.success('Verification email sent successfully');
+          }, 500);
+        }
+      },
+      error => {
+        this.resendingEmail = false;
+        this.toastr.error('Failed to send verification email');
       }
     );
   }
