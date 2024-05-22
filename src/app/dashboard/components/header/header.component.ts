@@ -8,7 +8,7 @@ import { User } from 'src/app/core/interfaces/user.interface';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  user: User = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string) : null;
+  get user(): User { return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string) : null };
   @Input() currentPage: string = '';
   @Input() hideProfileIcon: boolean = false;
   @Input() innerPage: string = '';

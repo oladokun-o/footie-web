@@ -15,16 +15,23 @@ export class UserService {
   create(payload: CreateUserDto): Observable<any> {
     return this.httpClient.post<RequestResponse>(ApiEndpoints.users.create(), payload).pipe(
       tap(response => {
-        console.log(response)
         if (response.result === "success") {
           localStorage.setItem("userSessionData", JSON.stringify({
             email: response.data.email,
-            userId: response.data.user.id,
+            userId: response.data.id,
           }));
         }
       }),
-      switchMap(response => response.result === "success" ? of(response.data) : throwError(response)),
-      catchError(error => throwError(error.error)),
+      switchMap(response => {
+        if (response.result === "success") {
+          return of(response.data); // Return the data if successful
+        } else {
+          return throwError(response.message); // Throw an error if not successful
+        }
+      }),
+      catchError(error => {
+        return throwError(error.error)
+      }) // Handle any HTTP error
     );
   }
 
@@ -35,7 +42,7 @@ export class UserService {
     );
   }
 
-  resendOtp( email: string ): Observable<any> {
+  resendOtp(email: string): Observable<any> {
     return this.httpClient.post<RequestResponse>(ApiEndpoints.users.resendOtp(), email).pipe(
       switchMap(response => response.result === "success" ? of(response.data) : throwError(response.message)),
       catchError(error => throwError(error.error)),
@@ -52,7 +59,14 @@ export class UserService {
   getUserByEmail(email: string): Observable<User> {
     return this.httpClient.get<RequestResponse>(ApiEndpoints.users.getByEmail(email)).pipe(
       switchMap(response => response.result === "success" ? of(response.data) : throwError(response.message)),
-      catchError(error => throwError(error.error)),
+      catchError(error => throwError(error)),
+    );
+  }
+
+  getUserByEmailForVerification(email: string): Observable<User> {
+    return this.httpClient.get<RequestResponse>(ApiEndpoints.users.getByEmailForVerification(email)).pipe(
+      switchMap(response => response.result === "success" ? of(response.data) : throwError(response.message)),
+      catchError(error => throwError(error)),
     );
   }
 

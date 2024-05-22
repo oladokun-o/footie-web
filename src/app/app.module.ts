@@ -11,10 +11,11 @@ import { RouterModule } from '@angular/router';
 import { ToastrModule } from "ngx-toastr";
 import { NgSelectModule } from '@ng-select/ng-select';
 import { OnlineStatusModule } from 'ngx-online-status';
-import { AuthModule } from './app/auth/auth.module';
+import { AuthModule } from './auth/auth.module';
 import { SharedComponentsModule } from 'src/shared/components/components.module';
 import { SharedDirectivesModule } from 'src/shared/directives/directives.module';
-import { PageNotFoundComponent } from './app/page-not-found/page-not-found.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { PageNotFoundComponent } from './app/page-not-found/page-not-found.compo
     NgSelectModule,
     OnlineStatusModule,
     AuthModule,
+    DashboardModule,
     SharedComponentsModule,
     SharedDirectivesModule
   ],

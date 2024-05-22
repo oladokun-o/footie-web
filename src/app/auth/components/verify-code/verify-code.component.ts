@@ -34,7 +34,7 @@ export class VerifyCodeComponent {
   loading = false;
 
   checkIfUserIsVerified() {
-    this.userService.getUserByEmail(this.userData.email).subscribe(
+    this.userService.getUserByEmailForVerification(this.userData.email).subscribe(
       (response) => {
         const user: User = response;
         if (user.settings.verified) {

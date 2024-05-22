@@ -3,7 +3,7 @@
   <ng-container *ngIf="currentPage === ''">
     <div class="header-item default">
       Welcome back, <br />
-      <span class="text-capitalize">{{ capitalizeString(user.firstName) }}</span>
+      <span class="text-capitalize">{{ capitalizeString(user ? user.firstName : '') }}</span>
     </div>
   </ng-container>
 
@@ -14,10 +14,10 @@
   </div>
 
   <div class="header-item" *ngIf="!hideProfileIcon">
-    <img role="button" [mat-menu-trigger-for]="MatMenu" [src]="user.profilePicture" *ngIf="user.profilePicture"
+    <img *ngIf="user && user.profilePicture" role="button" [mat-menu-trigger-for]="MatMenu" [src]="user.profilePicture"
       alt="Profile Icon" class="profile-icon" />
-    <img role="button" [mat-menu-trigger-for]="MatMenu" src="assets/images/icons/profile-icon.svg" alt="Profile Icon"
-      class="profile-icon" *ngIf="!user.profilePicture" />
+    <img *ngIf="user && !user.profilePicture" role="button" [mat-menu-trigger-for]="MatMenu" src="assets/images/icons/profile-icon.svg" alt="Profile Icon"
+      class="profile-icon" />
     <!-- Use Mat Menu for dropdown -->
     <mat-menu #MatMenu class="profile-menu">
       <div mat-menu-item class="profile-menu-item" routerLink="./settings/profile">

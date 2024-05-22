@@ -17,7 +17,7 @@
         <div class="form-group col-6">
           <label for="middleName">Middle Name <small>(optional)</small></label>
           <input type="text" class="form-control" id="middleName"
-            formControlName="middleName" placeholder="Enter your first name">
+            formControlName="middleName" placeholder="Enter your middle name">
           <small class="text-danger">{{ form.get('middleName')?.touched && form.get('middleName')?.errors?.['required'] ?
             'Your middle name is required' : '' }}</small>
         </div>

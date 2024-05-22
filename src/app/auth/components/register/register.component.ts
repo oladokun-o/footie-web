@@ -48,7 +48,6 @@ export class RegisterComponent {
           }
         },
         (error) => {
-          console.log(error)
           if (error && error.message) {
             if (Array.isArray(error.message)) {
               error.message.forEach((err: string) => {
@@ -58,7 +57,6 @@ export class RegisterComponent {
               this.toastr.error(error.message);
             }
           } else {
-            console.log(error)
             this.toastr.error(error);
           }
 

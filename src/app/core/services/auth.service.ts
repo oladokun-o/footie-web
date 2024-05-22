@@ -56,8 +56,7 @@ export class AuthService {
     return this.httpClient.get<RequestResponse>(ApiEndpoints.auth.login.logout(), { headers }).pipe(
       tap((response) => {
         if (response.result === 'success') {
-          localStorage.removeItem("token");
-          localStorage.removeItem("userSessionData");
+          localStorage.clear();
         }
       }),
       switchMap(response => response.result === "success" ? of(true) : throwError(response.message)),

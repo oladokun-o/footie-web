@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ActivationEnd, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { User, UserRole } from 'src/app/core/interfaces/user.interface';
@@ -10,7 +10,7 @@ import { UserService } from 'src/app/core/services/user.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnDestroy {
   userSession: { email: string, role: UserRole } = localStorage.getItem('userSessionData') ? JSON.parse(localStorage.getItem('userSessionData') as string) : null;
   currentPage: string = '';
   innerPage: string = '';
@@ -104,5 +104,9 @@ export class DashboardComponent {
         authService.logout();
       }
     });
+  }
+
+  ngOnDestroy() {
+    document.body.classList.remove('dashboard-body');
   }
 }

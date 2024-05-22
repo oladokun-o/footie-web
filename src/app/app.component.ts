@@ -20,7 +20,7 @@ export class AppComponent {
     private authService: AuthService,
   ) {
     // check if user is already logged in
-    this.checkIfUserIsLoggedIn();
+    if (localStorage.getItem('token')) this.checkIfUserIsLoggedIn();
 
     toastr.toastrConfig.preventDuplicates = true;
     this.onlineStatusService.status.subscribe((status: OnlineStatusType) => {
@@ -39,10 +39,11 @@ export class AppComponent {
     this.authService.checkIfLoggedIn().subscribe(
       response => {
         // If the user is logged in, and is not in the dashboard, then redirect to the dashboard
-        // if (response && !this.router.url.includes('dashboard')) {
-        //   this.router.navigate(['/dashboard']);
-        // } else
+        if (response && !this.router.url.includes('dashboard')) {
+          this.router.navigate(['/dashboard']);
+        } else
         if (!response) {
+          localStorage.clear();
           // If the user is not logged in, and is in the dashboard, then redirect to the login page
           this.router.navigate(['/login']);
         }
