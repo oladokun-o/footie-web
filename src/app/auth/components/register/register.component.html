@@ -9,21 +9,21 @@
       <div class="row">
         <div class="form-group col-6">
           <label for="lastName">Surname</label>
-          <input type="text" class="form-control" id="lastName"
+          <input type="text" class="form-control text-capitalize" id="lastName"
             formControlName="lastName" placeholder="Enter your surname">
           <small class="text-danger">{{ form.get('lastName')?.touched && form.get('lastName')?.errors?.['required'] ?
             'Your surname is required' : '' }}</small>
         </div>
         <div class="form-group col-6">
           <label for="middleName">Middle Name <small>(optional)</small></label>
-          <input type="text" class="form-control" id="middleName"
+          <input type="text" class="form-control text-capitalize" id="middleName"
             formControlName="middleName" placeholder="Enter your middle name">
           <small class="text-danger">{{ form.get('middleName')?.touched && form.get('middleName')?.errors?.['required'] ?
             'Your middle name is required' : '' }}</small>
         </div>
         <div class="form-group col-6">
           <label for="firstName">First Name</label>
-          <input type="text" class="form-control" id="firstName"
+          <input type="text" class="form-control text-capitalize" id="firstName"
             formControlName="firstName" placeholder="Enter your first name">
           <small class="text-danger">{{ form.get('firstName')?.touched && form.get('firstName')?.errors?.['required'] ? 'Your first name is required' : '' }}</small>
         </div>

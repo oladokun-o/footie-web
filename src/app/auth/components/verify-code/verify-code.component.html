@@ -11,7 +11,7 @@
         <label for="otp" class="form-label">
           <a routerLink="settings/changeEmail">Change Email?</a>
         </label>
-        <input footiedropWebInputMask="0  0  0  0" type="tel" footiedropWebNumbersOnly class="form-control text-center fs-2" id="otp" formControlName="otp"
+        <input autofocus footiedropWebInputMask="0  0  0  0" type="tel" footiedropWebNumbersOnly class="form-control text-center fs-2" id="otp" formControlName="otp"
           placeholder="--  --  --  --" minlength="10" maxlength="10" [disabled]="resending || loading">
         <small class="text-danger">{{ form.get('otp')?.touched && form.get('otp')?.errors?.['required'] ? 'OTP is required' : '' }}</small>
       </div>

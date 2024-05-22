@@ -30,13 +30,22 @@ export class RegisterComponent {
     private userService: UserService,
     private toastr: ToastrService,
     private router: Router,
-  ) { }
+  ) {}
 
   Signup() {
     if (this.form.invalid) {
       return;
     } else {
-      const payload: CreateUserDto = { ...this.form.value, phone: this.form.value.phone.replace(/[\s-]/g, '') };
+      // make sure form values such as first name, middle name, and last name are in Capitalized form
+      // convert all letters to lowercase and then capitalize the first letter
+      const formvalue = {
+        ...this.form.value,
+        firstName: this.form.value.firstName.toLowerCase().replace(/^\w/, (c: string) => c.toUpperCase()),
+        lastName: this.form.value.lastName.toLowerCase().replace(/^\w/, (c: string) => c.toUpperCase()),
+        middleName: this.form.value.middleName ? this.form.value.middleName.toLowerCase().replace(/^\w/, (c: string) => c.toUpperCase()) : null,
+      };
+
+      const payload: CreateUserDto = { ...formvalue, phone: this.form.value.phone.replace(/[\s-]/g, '') };
       this.loading = true;
       this.userService.create(payload).subscribe(
         (response) => {
