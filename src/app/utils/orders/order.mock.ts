@@ -169,6 +169,8 @@ const generateMockLocations = (count: number): Address[] => {
 
 export const mockLocations = generateMockLocations(10);
 
+export const mockLocation = generateMockLocation();
+
 // mock a search query API request, return a list of locations
 // simulate a delay of 1 second
 export const searchLocationsMockAPI = (query: string): Promise<Address[]> => {

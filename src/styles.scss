@@ -1,6 +1,6 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -19,10 +19,15 @@ $footiedrop-web-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$footiedrop-web-theme: mat.define-light-theme((color: (primary: $footiedrop-web-primary,
-        accent: $footiedrop-web-accent,
-        warn: $footiedrop-web-warn,
-      )));
+$footiedrop-web-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $footiedrop-web-primary,
+      accent: $footiedrop-web-accent,
+      warn: $footiedrop-web-warn,
+    ),
+  )
+);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -32,8 +37,8 @@ $footiedrop-web-theme: mat.define-light-theme((color: (primary: $footiedrop-web-
 /* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
-@import 'bootstrap/scss/bootstrap';
-@import 'bootstrap-icons/';
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap-icons/";
 
 @import "ngx-toastr/toastr";
 @import "@ng-select/ng-select/themes/default.theme.css";
@@ -49,7 +54,7 @@ body {
 
 body {
   margin: 0;
-  font-family: 'Inter', Roboto, "Helvetica Neue", sans-serif;
+  font-family: "Inter", Roboto, "Helvetica Neue", sans-serif;
 }
 
 body.dashboard-body {
@@ -81,7 +86,6 @@ form {
   }
 
   &.loading {
-
     input,
     button,
     textarea,
@@ -102,9 +106,9 @@ label {
 
 input {
   font-size: 14px !important;
-  border: 1px solid #EDEDED !important;
+  border: 1px solid #ededed !important;
   padding: 15px 10px !important;
-  background-color: #F7F7F7 !important;
+  background-color: #f7f7f7 !important;
 
   &::placeholder {
     color: #00000034;
@@ -127,7 +131,7 @@ input {
 }
 
 .bg-input {
-  background-color: #F7F7F7 !important;
+  background-color: #f7f7f7 !important;
   border: 1px solid transparent !important;
   outline: none;
   border-radius: var(--bs-border-radius);
@@ -135,7 +139,7 @@ input {
 
 /* Button Styles */
 .btn-primary {
-  background-color: #E36F00 !important;
+  background-color: #e36f00 !important;
   color: #fff !important;
   font-size: 14px !important;
   border: none !important;
@@ -147,14 +151,14 @@ input {
 }
 
 a {
-  color: #01674F !important;
+  color: #01674f !important;
   font-size: 14px;
   font-weight: 500;
 }
 
 .btn-transparent {
   background-color: transparent !important;
-  color: #01674F !important;
+  color: #01674f !important;
   font-size: 14px !important;
   border: none !important;
   font-weight: normal;
@@ -237,31 +241,31 @@ button:disabled {
 }
 
 .orange {
-  background-color: #E36F00;
+  background-color: #e36f00;
 }
 
 .text-orange {
-  color: #E36F00 !important;
+  color: #e36f00 !important;
 }
 
 .green {
-  background-color: #01674F;
+  background-color: #01674f;
 }
 
 .text-green {
-  color: #01674F !important;
+  color: #01674f !important;
 }
 
 .red {
-  background-color: #DC2836;
+  background-color: #dc2836;
 }
 
 .blue {
-  background-color: #0000FF;
+  background-color: #0000ff;
 }
 
 .yellow {
-  background-color: #FFD700;
+  background-color: #ffd700;
 }
 
 .purple {
@@ -281,19 +285,20 @@ p.status {
   padding: 5px 15px;
 }
 
+div {
+  .card.order {
+    cursor: pointer;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid #c6c6c6;
+  }
+
+  &:last-child > .card.order {
+    border: none !important;
+  }
+}
 .card.order {
   cursor: pointer;
-  border: none;
-  border-radius: 0;
-
-  &::after {
-    content: '';
-    display: block;
-    clear: both;
-    width: 100%;
-    height: 1px;
-    background-color: #C6C6C6;
-  }
 
   &:hover,
   &:focus,
@@ -332,7 +337,7 @@ p.status {
 }
 
 .loading-screen {
-  background-color: #01674F;
+  background-color: #01674f;
   position: fixed;
   top: 0;
   left: 0;

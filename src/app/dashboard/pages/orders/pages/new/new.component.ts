@@ -3,12 +3,16 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Address } from 'src/app/core/interfaces/order.interface';
 import { User } from 'src/app/core/interfaces/user.interface';
-import { mockData } from 'src/app/utils/orders/order.mock';
+import { mockData, mockLocation } from 'src/app/utils/orders/order.mock';
 import * as Chance from 'chance';
 import { OrdersService } from 'src/app/core/services/orders.service';
 import { OrdersHelpers } from 'src/app/utils/orders/helpers';
 import { LocationService } from 'src/app/core/services/location.service';
 const chance = new Chance();
+
+interface Stage {
+  value: 'location' | 'details' | 'confirmation', label: string, visited: boolean
+}
 
 @Component({
   selector: 'footiedrop-web-new',
@@ -19,8 +23,14 @@ export class NewComponent extends OrdersHelpers {
   type: 'instant' | 'scheduled' = 'instant';
   user: User = mockData.user; // JSON.parse(localStorage.getItem('user') as string);
   recentDeliveriesLocation: Address[] = [];
-  newOrderStages: 'location' | 'details' | 'confirmation' = 'location';
+  newOrderStages: Stage[] = [
+    { value: 'location', label: 'Delivery route', visited: true },
+    { value: 'details', label: 'Details', visited: false },
+    { value: 'confirmation', label: 'Confirm order', visited: false }
+  ];
+  newOrderStage = this.newOrderStages[0];
   newOrderForm!: FormGroup;
+  userCurrentLocation: Address = mockLocation;
 
   @ViewChild('pickup') pickupAddressInput: ElementRef<HTMLInputElement> | undefined;
 
@@ -43,6 +53,46 @@ export class NewComponent extends OrdersHelpers {
     if (this.user) {
       this.initUserDetails();
     };
+  }
+
+  handleStageChange(stage: Stage): void {
+    // Find the index of the stage to be updated
+    const stageIndex = this.newOrderStages.findIndex(s => s.value === stage.value);
+
+    // Create a new Stage object with 'visited' set to true
+    const updatedStage = { ...this.newOrderStages[stageIndex], visited: true };
+
+    // Update the specific stage in the array
+    const updatedStages = [
+      ...this.newOrderStages.slice(0, stageIndex),
+      updatedStage,
+      ...this.newOrderStages.slice(stageIndex + 1)
+    ];
+
+    // Update the current stage and the stages array
+    this.newOrderStage = updatedStage;
+    this.newOrderStages = updatedStages;
+  }
+
+  goToStage(value: 'location' | 'details' | 'confirmation') {
+    const stageIndex = this.newOrderStages.findIndex(stage => stage.value === value);
+
+    if (value !== 'location' && this.newOrderForm.get('location')?.invalid) {
+      return;
+    }
+
+    if (value !== 'details' && this.newOrderForm.get('details')?.invalid) {
+      return;
+    }
+
+    if (stageIndex !== -1) {
+      this.newOrderStages = this.newOrderStages.map((stage, index) => ({
+        ...stage,
+        visited: index <= stageIndex
+      }));
+
+      this.newOrderStage = this.newOrderStages[stageIndex];
+    }
   }
 
   initUserDetails(): void {
@@ -69,21 +119,37 @@ export class NewComponent extends OrdersHelpers {
           locationType: new FormControl(null, [Validators.required]),
         }),
       }),
-      details: new FormGroup({}),
+      details: new FormGroup({
+        title: new FormControl(null, Validators.required)
+      }),
     });
 
-    this.newOrderForm.valueChanges.subscribe(value => {
-      // when either pickup or delivery address is selected, focus on the invalid form control between the two
-      if (this.newOrderForm.get('location.delivery.address')?.valid && !this.newOrderForm.get('location.pickup.address')?.valid) {
-        this.pickupAddressInput?.nativeElement.focus();
-      } else if (this.newOrderForm.get('location.pickup.address')?.valid) {
+    if (this.userCurrentLocation) {
+      this.newOrderForm.get('location.pickup.address')?.patchValue(this.userCurrentLocation.street);
+      this.newOrderForm.get('location.pickup')?.patchValue(this.userCurrentLocation);
+      setTimeout(() => {
         this.deliveryAddressInput?.nativeElement.focus();
+      }, 500);
+    }
+
+    this.newOrderForm.valueChanges.subscribe(value => {
+      const pickupAddressControl = this.newOrderForm.get('location.pickup');
+      const deliveryAddressControl = this.newOrderForm.get('location.delivery');
+
+      if (pickupAddressControl?.valid && !deliveryAddressControl?.valid) {
+        setTimeout(() => {
+          this.deliveryAddressInput?.nativeElement.focus();
+        }, 500);
+      } else if (!pickupAddressControl?.valid) {
+        setTimeout(() => {
+          this.pickupAddressInput?.nativeElement.focus();
+        }, 500);
       } else {
-        // blur the input fields
+        // Both addresses are valid, blur the inputs and move to the next stage
         this.pickupAddressInput?.nativeElement.blur();
         this.deliveryAddressInput?.nativeElement.blur();
-        // go to the next stage
-      }
+        this.goToStage('details');
+      };
     });
 
     if (this.type === "scheduled") {
@@ -104,6 +170,7 @@ export class NewComponent extends OrdersHelpers {
 
   clearAddress(type: 'pickup' | 'delivery'): void {
     if (type === 'pickup') {
+      console.log('pickup')
       this.newOrderForm.get('location.pickup')?.reset();
     } else {
       this.newOrderForm.get('location.delivery')?.reset();
@@ -112,20 +179,28 @@ export class NewComponent extends OrdersHelpers {
 
   pickupIsFocused: boolean = false;
   pickupOnFocus(): void {
-    this.pickupIsFocused = true;
+    setTimeout(() => {
+      this.pickupIsFocused = true;
+    }, 1000);
   }
 
   pickupOnBlur(): void {
-    this.pickupIsFocused = false;
+    setTimeout(() => {
+      this.pickupIsFocused = false;
+    }, 1000);
   }
 
   deliveryIsFocused: boolean = false;
   deliveryOnFocus(): void {
-    this.deliveryIsFocused = true;
+    setTimeout(() => {
+      this.deliveryIsFocused = true;
+    }, 1000);
   }
 
   deliveryOnBlur(): void {
-    this.deliveryIsFocused = false;
+    setTimeout(() => {
+      this.deliveryIsFocused = false;
+    }, 1000);
   }
 
   searchingPickup: boolean = false;
@@ -171,25 +246,49 @@ export class NewComponent extends OrdersHelpers {
   }
 
   selectAddress(address: Address): void {
-    if (this.pickupAddress !== '' && this.searchedForPickupAddress) {
-      this.newOrderForm.get('location.pickup.address')?.patchValue(address.street);
-      this.newOrderForm.get('location.pickup')?.patchValue(address);
-    } else if (this.deliveryAddress !== '' && this.searchedForDeliveryAddress) {
-      this.newOrderForm.get('location.delivery.address')?.patchValue(address.street);
-      this.newOrderForm.get('location.delivery')?.patchValue(address);
-    } else if (this.pickupAddress === '') {
-      this.newOrderForm.get('location.pickup.address')?.patchValue(address.street);
-      this.newOrderForm.get('location.pickup')?.patchValue(address);
-    } else if (this.deliveryAddress === '') {
-      this.newOrderForm.get('location.delivery.address')?.patchValue(address.street);
-      this.newOrderForm.get('location.delivery')?.patchValue(address);
+    const { pickupAddress, deliveryAddress, searchedForPickupAddress, searchedForDeliveryAddress, newOrderForm } = this;
+
+    if (this.deliveryIsFocused) {
+      newOrderForm.get('location.delivery.address')?.patchValue(address.street);
+      newOrderForm.get('location.delivery')?.patchValue(address);
+      return;
+    }
+
+    if (this.pickupIsFocused) {
+      newOrderForm.get('location.pickup.address')?.patchValue(address.street);
+      newOrderForm.get('location.pickup')?.patchValue(address);
+      return;
+    }
+
+    if ((pickupAddress !== '' && searchedForPickupAddress) || pickupAddress === '') {
+      newOrderForm.get('location.pickup.address')?.patchValue(address.street);
+      newOrderForm.get('location.pickup')?.patchValue(address);
+    } else if ((deliveryAddress !== '' && searchedForDeliveryAddress) || deliveryAddress === '') {
+      newOrderForm.get('location.delivery.address')?.patchValue(address.street);
+      newOrderForm.get('location.delivery')?.patchValue(address);
     } else {
-      this.newOrderForm.get('location.pickup.address')?.patchValue(address.street);
-      this.newOrderForm.get('location.pickup')?.patchValue(address);
+      // Default case: if neither specific condition is met, default to pickup
+      newOrderForm.get('location.pickup.address')?.patchValue(address.street);
+      newOrderForm.get('location.pickup')?.patchValue(address);
     }
 
     this.foundLocations = [];
+  }
 
-    console.log(this.newOrderForm.value, address);
+  get selectedType(): 'pickup' | 'delivery' {
+    return this.deliveryIsFocused ? 'delivery' : this.pickupIsFocused ? 'pickup' : 'pickup';
+  }
+
+  getStageIcon(stage: Stage, index: number): string {
+    let icon = '';
+    switch (stage.visited) {
+      case false:
+        icon = `bi-${index}-circle`
+        break;
+      default:
+        icon = 'bi-check-circle-fill'
+        break;
+    };
+    return icon;
   }
 }

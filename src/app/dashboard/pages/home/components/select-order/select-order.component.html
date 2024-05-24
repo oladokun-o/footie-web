@@ -21,8 +21,7 @@
           </p>
           <img src="assets/images/icons/bolt-bg-icon.svg">
         </div>
-        <div class="option option-2" matRipple routerLink="/dashboard/orders/new" [queryParams]="{ type: 'scheduled' }"
-          (click)="activeDialog.closeAll()">
+        <div class="option option-2" matRipple (click)="openComingSoonToast();activeDialog.closeAll();">
           <div class="d-flex">
             <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path

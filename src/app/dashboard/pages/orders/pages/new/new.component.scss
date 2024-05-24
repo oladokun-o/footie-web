@@ -1,7 +1,5 @@
 .addon {
-  height: 51px;
-  right: -35px;
-  top: 1px;
+  right: 1px;
 
   button {
     width: 44px;
@@ -36,5 +34,11 @@
     font-size: 25px;
     margin-right: 10px;
     color: #00000061;
+  }
+}
+
+.stages {
+  button {
+    transition: all .50s;
   }
 }

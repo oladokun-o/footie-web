@@ -9,6 +9,8 @@ import { SharedComponentsModule } from 'src/shared/components/components.module'
 import { MatBadgeModule } from '@angular/material/badge';
 import { NewComponent } from './new/new.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { SharedPipesModule } from 'src/shared/pipes/shared-pipes.module';
 
 
 @NgModule({
@@ -26,6 +28,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatBadgeModule,
     FormsModule,
     ReactiveFormsModule,
+    MatDividerModule,
+    SharedPipesModule
   ]
 })
 export class PagesModule { }

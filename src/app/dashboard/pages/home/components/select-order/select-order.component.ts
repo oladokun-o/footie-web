@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'footiedrop-web-select-order',
@@ -8,8 +9,13 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class SelectOrderComponent {
   constructor(
-    public activeDialog: MatDialog
+    public activeDialog: MatDialog,
+    private toastr: ToastrService
   ) {
 
+  }
+
+  openComingSoonToast() {
+    this.toastr.info('This feature is unavailable!')
   }
 }
