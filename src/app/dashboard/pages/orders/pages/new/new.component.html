@@ -18,7 +18,7 @@
               <input type="text" class="form-control" #pickup formControlName="address" placeholder="Pickup Address"
                 (input)="searchAddress('pickup')" (focus)="searchAddress('pickup')" (blur)="searchingPickup = false"
                 (keyup)="searchingPickup = false">
-              <div class="addon col-auto position-absolute bg-input d-flex justify-content-center align-items-center">
+              <div class="addon col-auto position-absolute top-50 translate-middle bg-input d-flex justify-content-center align-items-center">
                 <!-- clear button bootstrap icon -->
                 <button *ngIf="pickupAddress && pickupAddress.length > 3 && !searchingPickup" type="button"
                   (click)="clearAddress('pickup');pickup.focus()" class="btn btn-light bg-transparent border-0">
@@ -51,7 +51,7 @@
               <input type="text" class="form-control" #dropoff formControlName="address" placeholder="Dropoff Address"
                 (input)="searchAddress('delivery')" (focus)="searchAddress('delivery')" (blur)="searchingDelivery = false"
                 (keyup)="searchingDelivery = false">
-              <div class="addon col-auto position-absolute bg-input d-flex justify-content-center align-items-center">
+              <div class="addon col-auto position-absolute top-50 translate-middle bg-input d-flex justify-content-center align-items-center">
                 <!-- clear button bootstrap icon -->
                 <button *ngIf="deliveryAddress && deliveryAddress.length > 3&& !searchingDelivery" type="button"
                   (click)="clearAddress('delivery');dropoff.focus()" class="btn btn-light bg-transparent

@@ -1,7 +1,11 @@
 .addon {
   height: 51px;
-  right: 1px;
+  right: -35px;
   top: 1px;
+
+  button {
+    width: 44px;
+  }
 }
 
 .patch {
