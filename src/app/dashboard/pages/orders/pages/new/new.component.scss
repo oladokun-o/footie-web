@@ -26,3 +26,15 @@
   top: -15px;
   z-index: 998;
 }
+
+.card.order {
+  .card-body {
+    padding: 15px 0px !important;
+  }
+
+  .icon {
+    font-size: 25px;
+    margin-right: 10px;
+    color: #00000061;
+  }
+}

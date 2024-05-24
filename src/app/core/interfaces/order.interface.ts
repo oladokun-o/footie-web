@@ -37,6 +37,19 @@ export interface Address {
   state?: string;
   postalCode: string;
   country: string;
+  locationType?: LocationType;
+}
+
+export enum LocationType {
+  mall = "mall",
+  office = "office",
+  home = "home",
+  airport = "airport",
+  hospital = "hospital",
+  school = "school",
+  restaurant = "restaurant",
+  hotel = "hotel",
+  other = "other"
 }
 
 export interface Order {

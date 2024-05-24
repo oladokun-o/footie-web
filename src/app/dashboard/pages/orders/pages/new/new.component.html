@@ -18,9 +18,10 @@
               <input type="text" class="form-control" #pickup formControlName="address" placeholder="Pickup Address"
                 (input)="searchAddress('pickup')" (focus)="searchAddress('pickup')" (blur)="searchingPickup = false"
                 (keyup)="searchingPickup = false">
-              <div class="addon col-auto position-absolute top-50 translate-middle bg-input d-flex justify-content-center align-items-center">
+              <div
+                class="addon col-auto position-absolute top-50 translate-middle bg-input d-flex justify-content-center align-items-center">
                 <!-- clear button bootstrap icon -->
-                <button *ngIf="pickupAddress && pickupAddress.length > 3 && !searchingPickup" type="button"
+                <button *ngIf="pickup" type="button"
                   (click)="clearAddress('pickup');pickup.focus()" class="btn btn-light bg-transparent border-0">
                   <i class="bi bi-x-circle-fill" style="color: #818181;font-size: 20px;"></i>
                 </button>
@@ -30,6 +31,9 @@
                     <span class="visually-hidden">Loading...</span>
                   </div>
                 </button>
+                <!-- empty button when not searchingPickup or pickupAddress is empty -->
+                <button *ngIf="!searchingPickup && (!pickupAddress || pickupAddress.length < 3)"
+                  class="btn btn-light bg-transparent border-0"></button>
                 <!-- map button bootstrap icon -->
                 <button class="btn btn-light bg-transparent border-0 d-flex">
                   <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,9 +53,10 @@
             <div class="form-group position-relative" formGroupName="delivery">
               <!-- address form control -->
               <input type="text" class="form-control" #dropoff formControlName="address" placeholder="Dropoff Address"
-                (input)="searchAddress('delivery')" (focus)="searchAddress('delivery')" (blur)="searchingDelivery = false"
-                (keyup)="searchingDelivery = false">
-              <div class="addon col-auto position-absolute top-50 translate-middle bg-input d-flex justify-content-center align-items-center">
+                (input)="searchAddress('delivery')" (focus)="searchAddress('delivery')"
+                (blur)="searchingDelivery = false" (keyup)="searchingDelivery = false">
+              <div
+                class="addon col-auto position-absolute top-50 translate-middle bg-input d-flex justify-content-center align-items-center">
                 <!-- clear button bootstrap icon -->
                 <button *ngIf="deliveryAddress && deliveryAddress.length > 3&& !searchingDelivery" type="button"
                   (click)="clearAddress('delivery');dropoff.focus()" class="btn btn-light bg-transparent
@@ -64,6 +69,9 @@
                     <span class="visually-hidden">Loading...</span>
                   </div>
                 </button>
+                <!-- empty button when not searchingDelivery or deliveryAddress is empty -->
+                <button *ngIf="!searchingDelivery && (!deliveryAddress || deliveryAddress.length < 3)"
+                  class="btn btn-light bg-transparent border-0"></button>
                 <!-- map button bootstrap icon -->
                 <button class="btn btn-light bg-transparent border-0 d-flex">
                   <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -86,5 +94,87 @@
     </div>
   </div>
 
-  <div class="container-fluid search-contn mt-md-4"></div>
-</div>
+  <div class="container-fluid search-contn mt-md-4 px-md-5 pt-md p-3 position-relative">
+    <div class="row" style="row-gap: 15px;">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12" *ngIf="foundLocations.length > 0;">
+            <div class="d-flex flex-column" style="gap: 10px;">
+              <div class="container-fluid d-flex justify-content-between align-items-center px-0">
+                <p class="m-0 fw-medium">Found locations</p>
+              </div>
+
+              <div class="container-fluid px-0">
+                <div class="row">
+                  <ng-container>
+                    <div class="col-12" *ngFor="let location of foundLocations">
+                      <div class="card order" role="button" (click)="selectAddress(location)" [class.disabled]="searchingDelivery || searchingPickup"
+                        matRipple>
+                        <div class="card-body" style="gap: 10px;">
+                          <div class="d-flex justify-content-start align-items-center">
+                            <div class="icon">
+                              <!-- location type icon using getLocationIcon helper function -->
+                              <i [ngClass]="getLocationIcon(location.locationType || '')"></i>
+                            </div>
+
+                            <div class="col-auto">
+                              <p class="m-0">{{ location.street }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12">
+            <div class="d-flex flex-column" style="gap: 10px;">
+              <div class="container-fluid d-flex justify-content-between align-items-center px-0">
+                <p class="m-0 fw-medium">Recent locations</p>
+              </div>
+
+              <div class="container-fluid px-0">
+                <div class="row">
+                  <ng-container *ngIf="recentDeliveriesLocation.length > 0; else noOrders">
+                    <div class="col-12" *ngFor="let location of recentDeliveriesLocation">
+                      <div class="card order" role="button" (click)="selectAddress(location)" [class.disabled]="searchingDelivery || searchingPickup"
+                        matRipple>
+                        <div class="card-body" style="gap: 10px;">
+                          <div class="d-flex justify-content-start align-items-center">
+                            <div class="icon">
+                              <!-- location type icon using getLocationIcon helper function -->
+                              <i [ngClass]="getLocationIcon(location.locationType || '')"></i>
+                            </div>
+
+                            <div class="col-auto">
+                              <p class="m-0">{{ location.street }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <ng-template #noOrders>
+                    <div class="col-12">
+                      <div class="card">
+                        <div class="card-body">
+                          <p class="m-0">No deliveries yet</p>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

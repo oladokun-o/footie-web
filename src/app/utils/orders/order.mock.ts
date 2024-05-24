@@ -1,5 +1,5 @@
 import * as Chance from 'chance';
-import { Order, OrderStatus, Address, ItemType, Orders, Chat } from '../../core/interfaces/order.interface';
+import { Order, OrderStatus, Address, ItemType, Orders, Chat, LocationType } from '../../core/interfaces/order.interface';
 import { Courier, User } from '../../core/interfaces/user.interface';
 const chance = new Chance();
 
@@ -41,6 +41,7 @@ const generateMockAddress = (): Address => ({
   state: chance.state(),
   postalCode: chance.zip(),
   country: 'Russia',
+  locationType: chance.pickone(Object.values(LocationType)) as LocationType,
 });
 
 
@@ -138,3 +139,40 @@ export const mockData = {
   user: user,
 };
 
+
+// Location
+// Generate mock locations data for mock API requests
+
+/**
+ * Generate a mock location object
+ * @returns {Address} - A mock location object
+ */
+const generateMockLocation = (): Address => ({
+  street: chance.address(),
+  city: chance.city(),
+  state: chance.state(),
+  postalCode: chance.zip(),
+  country: 'Russia',
+  locationType: chance.pickone(Object.values(LocationType)) as LocationType,
+});
+
+/**
+ * Generate a list of mock locations
+ * @param {number} count - The number of locations to generate
+ * @returns {Address[]} - A list of mock locations
+ */
+const generateMockLocations = (count: number): Address[] => {
+  return Array.from({ length: count }, generateMockLocation);
+};
+
+export const mockLocations = generateMockLocations(10);
+
+// mock a search query API request, return a list of locations
+// simulate a delay of 1 second
+export const searchLocationsMockAPI = (query: string): Promise<Address[]> => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(mockLocations.filter(location => location.street.toLowerCase().includes(query.toLowerCase())));
+    }, 1000);
+  });
+};

@@ -85,4 +85,31 @@ export class OrdersHelpers {
       return `Order placed: ${hoursPassed} hours ago`;
     }
   }
+
+  // Get the order location icon based on the location type
+  getLocationIcon(locationType: string): string {
+    // use bootstrap icons for location types
+    switch (locationType) {
+      case "mall":
+        return "bi bi-shop";
+      case "office":
+        return "bi bi-briefcase";
+      case "home":
+        return "bi bi-house";
+      case "airport":
+        return "bi bi-airplane";
+      case "hospital":
+        return "bi bi-hospital";
+      case "school":
+        return "bi bi-book";
+      case "restaurant":
+        return "bi bi-egg-fried";
+      case "hotel":
+        return "bi bi-building-fill-check";
+      case "others":
+        return "bi bi-geo-alt";
+      default:
+        return "bi bi-clock";
+    }
+  }
 }
