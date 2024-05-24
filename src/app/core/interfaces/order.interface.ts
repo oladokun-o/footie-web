@@ -38,6 +38,7 @@ export interface Address {
   postalCode: string;
   country: string;
   locationType?: LocationType;
+  type: 'pickup' | 'delivery';
 }
 
 export enum LocationType {

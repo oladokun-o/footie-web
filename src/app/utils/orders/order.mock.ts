@@ -41,6 +41,7 @@ const generateMockAddress = (): Address => ({
   state: chance.state(),
   postalCode: chance.zip(),
   country: 'Russia',
+  type: chance.pickone(['pickup', 'delivery']),
   locationType: chance.pickone(Object.values(LocationType)) as LocationType,
 });
 
@@ -123,7 +124,7 @@ const assignOrdersToCouriers = (orders: Orders, couriers: Courier[]): void => {
   });
 };
 
-const mockOrders = generateMockOrders(10);
+const mockOrders = generateMockOrders(30);
 const mockCouriers = generateMockCouriers(5);
 assignOrdersToCouriers(mockOrders, mockCouriers);
 
@@ -153,6 +154,7 @@ const generateMockLocation = (): Address => ({
   state: chance.state(),
   postalCode: chance.zip(),
   country: 'Russia',
+  type: chance.pickone(['pickup', 'delivery']),
   locationType: chance.pickone(Object.values(LocationType)) as LocationType,
 });
 

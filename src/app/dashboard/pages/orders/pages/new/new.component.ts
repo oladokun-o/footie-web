@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Address } from 'src/app/core/interfaces/order.interface';
@@ -21,6 +21,10 @@ export class NewComponent extends OrdersHelpers {
   recentDeliveriesLocation: Address[] = [];
   newOrderStages: 'location' | 'details' | 'confirmation' = 'location';
   newOrderForm!: FormGroup;
+
+  @ViewChild('pickup') pickupAddressInput: ElementRef<HTMLInputElement> | undefined;
+
+  @ViewChild('dropoff') deliveryAddressInput: ElementRef<HTMLInputElement> | undefined;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -68,6 +72,20 @@ export class NewComponent extends OrdersHelpers {
       details: new FormGroup({}),
     });
 
+    this.newOrderForm.valueChanges.subscribe(value => {
+      // when either pickup or delivery address is selected, focus on the invalid form control between the two
+      if (this.newOrderForm.get('location.delivery.address')?.valid && !this.newOrderForm.get('location.pickup.address')?.valid) {
+        this.pickupAddressInput?.nativeElement.focus();
+      } else if (this.newOrderForm.get('location.pickup.address')?.valid) {
+        this.deliveryAddressInput?.nativeElement.focus();
+      } else {
+        // blur the input fields
+        this.pickupAddressInput?.nativeElement.blur();
+        this.deliveryAddressInput?.nativeElement.blur();
+        // go to the next stage
+      }
+    });
+
     if (this.type === "scheduled") {
       this.newOrderForm.addControl('schedule', new FormGroup({
         date: new FormControl('', [Validators.required]),
@@ -90,6 +108,24 @@ export class NewComponent extends OrdersHelpers {
     } else {
       this.newOrderForm.get('location.delivery')?.reset();
     }
+  }
+
+  pickupIsFocused: boolean = false;
+  pickupOnFocus(): void {
+    this.pickupIsFocused = true;
+  }
+
+  pickupOnBlur(): void {
+    this.pickupIsFocused = false;
+  }
+
+  deliveryIsFocused: boolean = false;
+  deliveryOnFocus(): void {
+    this.deliveryIsFocused = true;
+  }
+
+  deliveryOnBlur(): void {
+    this.deliveryIsFocused = false;
   }
 
   searchingPickup: boolean = false;
@@ -135,16 +171,16 @@ export class NewComponent extends OrdersHelpers {
   }
 
   selectAddress(address: Address): void {
-    if (this.pickupAddress === '') {
-      this.newOrderForm.get('location.pickup.address')?.patchValue(address.street);
-      this.newOrderForm.get('location.pickup')?.patchValue(address);
-    } else if (this.deliveryAddress === '') {
-      this.newOrderForm.get('location.delivery.address')?.patchValue(address.street);
-      this.newOrderForm.get('location.delivery')?.patchValue(address);
-    } else if (this.pickupAddress !== '' && this.searchedForPickupAddress) {
+    if (this.pickupAddress !== '' && this.searchedForPickupAddress) {
       this.newOrderForm.get('location.pickup.address')?.patchValue(address.street);
       this.newOrderForm.get('location.pickup')?.patchValue(address);
     } else if (this.deliveryAddress !== '' && this.searchedForDeliveryAddress) {
+      this.newOrderForm.get('location.delivery.address')?.patchValue(address.street);
+      this.newOrderForm.get('location.delivery')?.patchValue(address);
+    } else if (this.pickupAddress === '') {
+      this.newOrderForm.get('location.pickup.address')?.patchValue(address.street);
+      this.newOrderForm.get('location.pickup')?.patchValue(address);
+    } else if (this.deliveryAddress === '') {
       this.newOrderForm.get('location.delivery.address')?.patchValue(address.street);
       this.newOrderForm.get('location.delivery')?.patchValue(address);
     } else {

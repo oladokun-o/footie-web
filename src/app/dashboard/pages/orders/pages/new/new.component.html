@@ -16,12 +16,12 @@
             <div class="form-group position-relative" formGroupName="pickup">
               <!-- address form control -->
               <input type="text" class="form-control" #pickup formControlName="address" placeholder="Pickup Address"
-                (input)="searchAddress('pickup')" (focus)="searchAddress('pickup')" (blur)="searchingPickup = false"
+                (input)="searchAddress('pickup')" (focus)="searchAddress('pickup');pickupOnFocus()" (blur)="searchingPickup = false;pickupOnBlur()"
                 (keyup)="searchingPickup = false">
               <div
                 class="addon col-auto position-absolute top-50 translate-middle bg-input d-flex justify-content-center align-items-center">
                 <!-- clear button bootstrap icon -->
-                <button *ngIf="pickup" type="button"
+                <button *ngIf="pickupAddress.length && pickupIsFocused && !searchingPickup" type="button"
                   (click)="clearAddress('pickup');pickup.focus()" class="btn btn-light bg-transparent border-0">
                   <i class="bi bi-x-circle-fill" style="color: #818181;font-size: 20px;"></i>
                 </button>
@@ -32,7 +32,7 @@
                   </div>
                 </button>
                 <!-- empty button when not searchingPickup or pickupAddress is empty -->
-                <button *ngIf="!searchingPickup && (!pickupAddress || pickupAddress.length < 3)"
+                <button *ngIf="!pickupAddress.length"
                   class="btn btn-light bg-transparent border-0"></button>
                 <!-- map button bootstrap icon -->
                 <button class="btn btn-light bg-transparent border-0 d-flex">
@@ -53,12 +53,12 @@
             <div class="form-group position-relative" formGroupName="delivery">
               <!-- address form control -->
               <input type="text" class="form-control" #dropoff formControlName="address" placeholder="Dropoff Address"
-                (input)="searchAddress('delivery')" (focus)="searchAddress('delivery')"
-                (blur)="searchingDelivery = false" (keyup)="searchingDelivery = false">
+                (input)="searchAddress('delivery')" (focus)="searchAddress('delivery');deliveryOnFocus()"
+                (blur)="searchingDelivery = false;deliveryOnBlur()" (keyup)="searchingDelivery = false">
               <div
                 class="addon col-auto position-absolute top-50 translate-middle bg-input d-flex justify-content-center align-items-center">
                 <!-- clear button bootstrap icon -->
-                <button *ngIf="deliveryAddress && deliveryAddress.length > 3&& !searchingDelivery" type="button"
+                <button *ngIf="deliveryAddress.length && deliveryIsFocused && !searchingDelivery" type="button"
                   (click)="clearAddress('delivery');dropoff.focus()" class="btn btn-light bg-transparent
                 border-0">
                   <i class="bi bi-x-circle-fill" style="color: #818181;font-size: 20px;"></i>
@@ -70,7 +70,7 @@
                   </div>
                 </button>
                 <!-- empty button when not searchingDelivery or deliveryAddress is empty -->
-                <button *ngIf="!searchingDelivery && (!deliveryAddress || deliveryAddress.length < 3)"
+                <button *ngIf="!deliveryAddress.length"
                   class="btn btn-light bg-transparent border-0"></button>
                 <!-- map button bootstrap icon -->
                 <button class="btn btn-light bg-transparent border-0 d-flex">
