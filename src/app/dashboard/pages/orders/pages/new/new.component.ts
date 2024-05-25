@@ -10,6 +10,8 @@ import { OrdersHelpers } from 'src/app/utils/orders/helpers';
 import { LocationService } from 'src/app/core/services/location.service';
 import { ToastrService } from 'ngx-toastr';
 import { YaGeocoderService } from 'angular8-yandex-maps';
+import { Subscription, switchMap, tap } from 'rxjs';
+import { UserLocation } from 'src/app/core/interfaces/location.interface';
 const chance = new Chance();
 
 interface Stage {
@@ -32,7 +34,7 @@ export class NewComponent extends OrdersHelpers implements OnInit {
   ];
   newOrderStage = this.newOrderStages[0];
   newOrderForm!: FormGroup;
-  userCurrentLocation: Address = mockLocation;
+  userCurrentLocation: Address = JSON.parse(localStorage.getItem('userCurrentLocation') as string);
 
   @ViewChild('pickup') pickupAddressInput: ElementRef<HTMLInputElement> | undefined;
 
@@ -63,9 +65,7 @@ export class NewComponent extends OrdersHelpers implements OnInit {
     };
   }
 
-  ngOnInit(): void {
-    this.getLocation();
-  }
+  ngOnInit(): void { }
 
   handleStageChange(stage: Stage): void {
     // Find the index of the stage to be updated
@@ -139,6 +139,7 @@ export class NewComponent extends OrdersHelpers implements OnInit {
     });
 
     if (this.userCurrentLocation) {
+      console.log(this.userCurrentLocation);
       this.newOrderForm.get('location.pickup.address')?.patchValue(this.userCurrentLocation.street);
       this.newOrderForm.get('location.pickup')?.patchValue(this.userCurrentLocation);
       setTimeout(() => {
@@ -327,25 +328,5 @@ export class NewComponent extends OrdersHelpers implements OnInit {
     setTimeout(() => {
       this.showMap = false;
     }, 1000);
-  }
-
-  public lat: number = 0;
-  public lng: number = 0;
-
-  getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position: any) => {
-        if (position) {
-          this.lat = position.coords.latitude;
-          this.lng = position.coords.longitude;
-          this.yaGeocoderService.geocode([this.lat, this.lng]).subscribe(data => {
-            console.log(data);
-          })
-        }
-      },
-        (error: any) => console.log(error));
-    } else {
-      alert("Geolocation is not supported by this browser.");
-    }
   }
 }

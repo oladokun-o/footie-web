@@ -4,6 +4,9 @@ import { ToastrService } from 'ngx-toastr';
 import { User, UserRole } from 'src/app/core/interfaces/user.interface';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { Address } from '../core/interfaces/order.interface';
+import { YaGeocoderService } from 'angular8-yandex-maps';
+import { UserLocation } from '../core/interfaces/location.interface';
 
 @Component({
   selector: 'footiedrop-web-dashboard',
@@ -25,9 +28,14 @@ export class DashboardComponent implements OnDestroy {
     private toastr: ToastrService,
     private authService: AuthService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private yaGeocoderService: YaGeocoderService
   ) {
-    document.body.classList.add('dashboard-body');
+    if (!this.userCurrentLocation) {
+      this.getLocation();
+    }
+
+      document.body.classList.add('dashboard-body');
     this.loading = true;
     this.fadeOut = false;
     router.events.subscribe((event) => {
@@ -109,5 +117,45 @@ export class DashboardComponent implements OnDestroy {
 
   ngOnDestroy() {
     document.body.classList.remove('dashboard-body');
+    if (this.geoLocationSub) this.geoLocationSub.unsubscribe();
   }
+
+  get userCurrentLocation(): Address { return JSON.parse(JSON.stringify(localStorage.getItem('userCurrentLocation'))) };
+  public lat: number = 0;
+  public lng: number = 0;
+
+geoLocationSub: any;
+
+getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position: any) => {
+      if (position) {
+        this.lat = position.coords.latitude;
+        this.lng = position.coords.longitude;
+        this.geoLocationSub = this.yaGeocoderService.geocode([this.lat, this.lng], { results: 10 });
+        this.toastr.info('Fetching your current location...');
+        this.geoLocationSub.subscribe((result: any) => {
+          // Selecting the first result of geocoding.
+          const firstGeoObject = result.geoObjects.get(0);
+          let location: UserLocation = firstGeoObject.properties.getAll();
+          let userLocation = {
+            city: location.metaDataProperty.GeocoderMetaData.AddressDetails.Country.Locality.DependentLocality.DependentLocalityName,
+            country: location.metaDataProperty.GeocoderMetaData.Address.country_code,
+            street: location.metaDataProperty.GeocoderMetaData.AddressDetails.Country.AddressLine,
+            type: 'pickup',
+            locationType: location.metaDataProperty.GeocoderMetaData.kind,
+            state: location.metaDataProperty.GeocoderMetaData.AddressDetails.Country.Locality.LocalityName
+          };
+          localStorage.setItem('userCurrentLocation', JSON.stringify(userLocation));
+        },
+          (error: any) => {
+            this.toastr.error('An error occurred while updating location')
+          })
+      }
+    },
+      (error: any) => console.log(error));
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+}
 }
