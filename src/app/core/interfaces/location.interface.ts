@@ -41,6 +41,7 @@ export interface Country {
   CountryNameCode: string
   CountryName: string
   Locality: Locality
+  AdministrativeArea: AdministrativeArea
 }
 
 export interface Locality {
@@ -63,4 +64,13 @@ export interface Uri {
 
 export interface Uri2 {
   uri: string
+}
+
+export interface AdministrativeArea {
+  AdministrativeAreaName: string
+  Locality: Locality
+}
+
+export interface Locality {
+  LocalityName: string
 }

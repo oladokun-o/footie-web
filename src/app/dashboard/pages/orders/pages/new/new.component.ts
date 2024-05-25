@@ -118,9 +118,9 @@ export class NewComponent extends OrdersHelpers implements OnInit {
       location: new FormGroup({
         pickup: new FormGroup({
           address: new FormControl(null, [Validators.required]),
-          city: new FormControl(null, [Validators.required]),
-          state: new FormControl(null, [Validators.required]),
-          postalCode: new FormControl(null, [Validators.required]),
+          city: new FormControl(null),
+          state: new FormControl(null),
+          postalCode: new FormControl(null),
           country: new FormControl('Russia', [Validators.required]),
           locationType: new FormControl(null, [Validators.required]),
         }),
@@ -128,7 +128,7 @@ export class NewComponent extends OrdersHelpers implements OnInit {
           address: new FormControl(null, [Validators.required]),
           city: new FormControl(null, [Validators.required]),
           state: new FormControl(null, [Validators.required]),
-          postalCode: new FormControl(null, [Validators.required]),
+          postalCode: new FormControl(null),
           country: new FormControl('Russia', [Validators.required]),
           locationType: new FormControl(null, [Validators.required]),
         }),
@@ -139,7 +139,6 @@ export class NewComponent extends OrdersHelpers implements OnInit {
     });
 
     if (this.userCurrentLocation) {
-      console.log(this.userCurrentLocation);
       this.newOrderForm.get('location.pickup.address')?.patchValue(this.userCurrentLocation.street);
       this.newOrderForm.get('location.pickup')?.patchValue(this.userCurrentLocation);
       setTimeout(() => {
@@ -236,13 +235,10 @@ export class NewComponent extends OrdersHelpers implements OnInit {
         this.searchingPickup = true;
         this.searchedForPickupAddress = true;
         this.searchedForDeliveryAddress = false;
-        this.locationService.searchLocations(searchvalue).then((locations) => {
+        this.locationService.searchLocations(searchvalue, 'pickup').subscribe((locations) => {
           this.searchingPickup = false;
           this.foundLocations = locations;
         });
-        this.yaGeocoderService.geocode(searchvalue).subscribe((results) => {
-          console.log(results);
-        })
       }
     } else {
       let searchvalue = this.newOrderForm.get('location.delivery.address')?.value;
@@ -254,7 +250,7 @@ export class NewComponent extends OrdersHelpers implements OnInit {
         this.searchingDelivery = true;
         this.searchedForDeliveryAddress = true;
         this.searchedForPickupAddress = false;
-        this.locationService.searchLocations(searchvalue).then((locations) => {
+        this.locationService.searchLocations(searchvalue, 'delivery').subscribe((locations) => {
           this.searchingDelivery = false;
           this.foundLocations = locations;
         });
@@ -268,13 +264,30 @@ export class NewComponent extends OrdersHelpers implements OnInit {
     if (this.deliveryIsFocused) {
       newOrderForm.get('location.delivery.address')?.patchValue(address.street);
       newOrderForm.get('location.delivery')?.patchValue(address);
+      this.foundLocations = [];
       return;
     }
 
     if (this.pickupIsFocused) {
       newOrderForm.get('location.pickup.address')?.patchValue(address.street);
       newOrderForm.get('location.pickup')?.patchValue(address);
+      this.foundLocations = [];
+      console.log(newOrderForm.value);
       return;
+    }
+
+    if (!this.pickupIsFocused && !this.deliveryIsFocused) {
+      if (address.type === 'pickup') {
+        newOrderForm.get('location.pickup.address')?.patchValue(address.street);
+        newOrderForm.get('location.pickup')?.patchValue(address);
+        this.foundLocations = [];
+        return;
+      } else {
+        newOrderForm.get('location.delivery.address')?.patchValue(address.street);
+        newOrderForm.get('location.delivery')?.patchValue(address);
+        this.foundLocations = [];
+        return;
+      }
     }
 
     if ((pickupAddress !== '' && searchedForPickupAddress) || pickupAddress === '') {
@@ -290,6 +303,7 @@ export class NewComponent extends OrdersHelpers implements OnInit {
     }
 
     this.foundLocations = [];
+    console.log(newOrderForm.value);
   }
 
   get selectedType(): 'pickup' | 'delivery' {
