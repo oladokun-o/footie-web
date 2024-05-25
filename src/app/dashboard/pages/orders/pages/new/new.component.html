@@ -5,10 +5,10 @@
     <div class="row">
       <div class="col-12 d-flex justify-content-start align-items-center pb-3 flex-wrap">
         <!-- close button bootstrap icon -->
-        <button class="btn btn-light bg-transparent border-0 ps-0" routerLink="/dashboard/orders">
+        <!-- <button class="btn btn-light bg-transparent border-0 ps-0" routerLink="/dashboard/orders">
           <i class="bi bi-x-lg"></i>
         </button>
-        <p class="m-0 fw-medium">{{ newOrderStage.label }}</p>
+        <p class="m-0 fw-medium">{{ newOrderStage.label }}</p> -->
 
         <div class="col-12 d-flex gap-auto px-0 flex-wrap stages justify-content-between">
           <ng-container *ngFor="let stage of newOrderStages; let i = index">
@@ -47,7 +47,7 @@
                   </div>
                 </button>
                 <!-- map button bootstrap icon -->
-                <button class="btn btn-light bg-transparent border-0 d-flex">
+                <button class="btn btn-light bg-transparent border-0 d-flex" type="button" (click)="openMap('pickup')">
                   <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M1 4.02222C1 2.96444 1 2.43556 1.20589 2.03133C1.38698 1.67593 1.67593 1.38698 2.03133 1.20589C2.43556 1 2.96444 1 4.02222 1H14.9778C16.0356 1 16.5644 1 16.9687 1.20589C17.3241 1.38698 17.613 1.67593 17.7941 2.03133C18 2.43556 18 2.96444 18 4.02222V14.9778C18 16.0356 18 16.5644 17.7941 16.9687C17.613 17.3241 17.3241 17.613 16.9687 17.7941C16.5644 18 16.0356 18 14.9778 18H4.02222C2.96444 18 2.43556 18 2.03133 17.7941C1.67593 17.613 1.38698 17.3241 1.20589 16.9687C1 16.5644 1 16.0356 1 14.9778V4.02222Z"
@@ -85,7 +85,7 @@
                   </div>
                 </button>
                 <!-- map button bootstrap icon -->
-                <button class="btn btn-light bg-transparent border-0 d-flex">
+                <button class="btn btn-light bg-transparent border-0 d-flex" type="button" (click)="openMap('dropoff')">
                   <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M1 4.02222C1 2.96444 1 2.43556 1.20589 2.03133C1.38698 1.67593 1.67593 1.38698 2.03133 1.20589C2.43556 1 2.96444 1 4.02222 1H14.9778C16.0356 1 16.5644 1 16.9687 1.20589C17.3241 1.38698 17.613 1.67593 17.7941 2.03133C18 2.43556 18 2.96444 18 4.02222V14.9778C18 16.0356 18 16.5644 17.7941 16.9687C17.613 17.3241 17.3241 17.613 16.9687 17.7941C16.5644 18 16.0356 18 14.9778 18H4.02222C2.96444 18 2.43556 18 2.03133 17.7941C1.67593 17.613 1.38698 17.3241 1.20589 16.9687C1 16.5644 1 16.0356 1 14.9778V4.02222Z"
@@ -202,3 +202,7 @@
     </div>
   </ng-container>
 </div>
+
+<ng-container *ngIf="showMap && newOrderStage.value === 'location'">
+  <footiedrop-web-select-location-on-map [mapFor]="mapFor" [slideOut]="hideMap" (closeMap)="closeMap()"></footiedrop-web-select-location-on-map>
+</ng-container>

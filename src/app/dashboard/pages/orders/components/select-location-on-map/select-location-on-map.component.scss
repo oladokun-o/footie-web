@@ -1,0 +1,75 @@
+.map {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: azure;
+  z-index: 999;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.veil {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #0000002a;
+  z-index: 999;
+}
+
+.btn-close-map {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background-color: #FFF;
+  z-index: 999;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+
+  i {
+    font-size: 25px;
+  }
+}
+
+.btn-select-map {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  z-index: 999;
+  padding: 0px;
+  width: 50px;
+  height: 50px;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@media (min-width: 767px) {
+  .btn-close-map {
+    top: 40px !important;
+    left: 40px !important;
+  }
+
+  .btn-select-map {
+    bottom: 40px;
+    right: 40px;
+  }
+}

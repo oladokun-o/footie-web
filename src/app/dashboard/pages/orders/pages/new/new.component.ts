@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Address } from 'src/app/core/interfaces/order.interface';
@@ -8,6 +8,8 @@ import * as Chance from 'chance';
 import { OrdersService } from 'src/app/core/services/orders.service';
 import { OrdersHelpers } from 'src/app/utils/orders/helpers';
 import { LocationService } from 'src/app/core/services/location.service';
+import { ToastrService } from 'ngx-toastr';
+import { YaGeocoderService } from 'angular8-yandex-maps';
 const chance = new Chance();
 
 interface Stage {
@@ -19,7 +21,7 @@ interface Stage {
   templateUrl: './new.component.html',
   styleUrls: ['./new.component.scss']
 })
-export class NewComponent extends OrdersHelpers {
+export class NewComponent extends OrdersHelpers implements OnInit {
   type: 'instant' | 'scheduled' = 'instant';
   user: User = mockData.user; // JSON.parse(localStorage.getItem('user') as string);
   recentDeliveriesLocation: Address[] = [];
@@ -36,10 +38,16 @@ export class NewComponent extends OrdersHelpers {
 
   @ViewChild('dropoff') deliveryAddressInput: ElementRef<HTMLInputElement> | undefined;
 
+  showMap: boolean = false;
+  hideMap: boolean = false;
+  mapFor: 'pickup' | 'dropoff' = 'pickup';
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private orderService: OrdersService,
     private locationService: LocationService,
+    private toastr: ToastrService,
+    private yaGeocoderService: YaGeocoderService
   ) {
     super();
     this.activatedRoute.queryParams.subscribe(params => {
@@ -53,6 +61,10 @@ export class NewComponent extends OrdersHelpers {
     if (this.user) {
       this.initUserDetails();
     };
+  }
+
+  ngOnInit(): void {
+    this.getLocation();
   }
 
   handleStageChange(stage: Stage): void {
@@ -78,10 +90,12 @@ export class NewComponent extends OrdersHelpers {
     const stageIndex = this.newOrderStages.findIndex(stage => stage.value === value);
 
     if (value !== 'location' && this.newOrderForm.get('location')?.invalid) {
+      this.toastr.info('Please complete the delivery route information before proceeding.');
       return;
     }
 
-    if (value !== 'details' && this.newOrderForm.get('details')?.invalid) {
+    if (!['details', 'location'].includes(value) && this.newOrderForm.get('details')?.invalid) {
+      this.toastr.info('Please complete the order details before proceeding.');
       return;
     }
 
@@ -170,7 +184,6 @@ export class NewComponent extends OrdersHelpers {
 
   clearAddress(type: 'pickup' | 'delivery'): void {
     if (type === 'pickup') {
-      console.log('pickup')
       this.newOrderForm.get('location.pickup')?.reset();
     } else {
       this.newOrderForm.get('location.delivery')?.reset();
@@ -226,6 +239,9 @@ export class NewComponent extends OrdersHelpers {
           this.searchingPickup = false;
           this.foundLocations = locations;
         });
+        this.yaGeocoderService.geocode(searchvalue).subscribe((results) => {
+          console.log(results);
+        })
       }
     } else {
       let searchvalue = this.newOrderForm.get('location.delivery.address')?.value;
@@ -290,5 +306,46 @@ export class NewComponent extends OrdersHelpers {
         break;
     };
     return icon;
+  }
+
+  openMap(isFor: 'pickup' | 'dropoff'): void {
+    this.mapFor = isFor;
+
+    if (this.showMap) {
+      this.hideMap = true;
+      setTimeout(() => {
+        this.showMap = false;
+      }, 1000);
+    } else {
+      this.hideMap = false;
+      this.showMap = true;
+    }
+  }
+
+  closeMap() {
+    this.hideMap = true;
+    setTimeout(() => {
+      this.showMap = false;
+    }, 1000);
+  }
+
+  public lat: number = 0;
+  public lng: number = 0;
+
+  getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position: any) => {
+        if (position) {
+          this.lat = position.coords.latitude;
+          this.lng = position.coords.longitude;
+          this.yaGeocoderService.geocode([this.lat, this.lng]).subscribe(data => {
+            console.log(data);
+          })
+        }
+      },
+        (error: any) => console.log(error));
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
   }
 }

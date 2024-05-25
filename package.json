@@ -25,6 +25,7 @@
     "@ng-bootstrap/ng-bootstrap": "^14.2.0",
     "@ng-select/ng-select": "^10.0.4",
     "@popperjs/core": "^2.11.6",
+    "angular8-yandex-maps": "^15.1.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "chance": "^1.1.11",

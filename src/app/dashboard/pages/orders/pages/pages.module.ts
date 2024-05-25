@@ -11,7 +11,13 @@ import { NewComponent } from './new/new.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { SharedPipesModule } from 'src/shared/pipes/shared-pipes.module';
+import { OrdersComponentsModule } from '../components/components.module';
+import { YaConfig, AngularYandexMapsModule } from 'angular8-yandex-maps';
 
+const mapConfig: YaConfig = {
+  apikey: '2215fdbd-83bb-4c46-9c52-faffd29f5d91',
+  lang: 'en_US',
+};
 
 @NgModule({
   declarations: [
@@ -29,7 +35,9 @@ import { SharedPipesModule } from 'src/shared/pipes/shared-pipes.module';
     FormsModule,
     ReactiveFormsModule,
     MatDividerModule,
-    SharedPipesModule
+    SharedPipesModule,
+    OrdersComponentsModule,
+    AngularYandexMapsModule.forRoot(mapConfig),
   ]
 })
 export class PagesModule { }
