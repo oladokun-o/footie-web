@@ -74,3 +74,8 @@ export interface AdministrativeArea {
 export interface Locality {
   LocalityName: string
 }
+
+export interface Region {
+  code: string;
+  name: string;
+}

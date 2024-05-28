@@ -39,6 +39,7 @@ export interface Address {
   country: string;
   locationType?: LocationType | string;
   type: 'pickup' | 'delivery';
+  coordinates?: number[];
 }
 
 export enum LocationType {

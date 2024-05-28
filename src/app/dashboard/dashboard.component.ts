@@ -35,7 +35,7 @@ export class DashboardComponent implements OnDestroy {
       this.getLocation();
     }
 
-      document.body.classList.add('dashboard-body');
+    document.body.classList.add('dashboard-body');
     this.loading = true;
     this.fadeOut = false;
     router.events.subscribe((event) => {
@@ -124,38 +124,41 @@ export class DashboardComponent implements OnDestroy {
   public lat: number = 0;
   public lng: number = 0;
 
-geoLocationSub: any;
+  geoLocationSub: any;
 
-getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position: any) => {
-      if (position) {
-        this.lat = position.coords.latitude;
-        this.lng = position.coords.longitude;
-        this.geoLocationSub = this.yaGeocoderService.geocode([this.lat, this.lng], { results: 10 });
-        this.toastr.info('Fetching your current location...');
-        this.geoLocationSub.subscribe((result: any) => {
-          // Selecting the first result of geocoding.
-          const firstGeoObject = result.geoObjects.get(0);
-          let location: UserLocation = firstGeoObject.properties.getAll();
-          let userLocation = {
-            city: location.metaDataProperty.GeocoderMetaData.AddressDetails.Country.Locality.DependentLocality.DependentLocalityName,
-            country: location.metaDataProperty.GeocoderMetaData.Address.country_code,
-            street: location.metaDataProperty.GeocoderMetaData.AddressDetails.Country.AddressLine,
-            type: 'pickup',
-            locationType: location.metaDataProperty.GeocoderMetaData.kind,
-            state: location.metaDataProperty.GeocoderMetaData.AddressDetails.Country.Locality.LocalityName
-          };
-          localStorage.setItem('userCurrentLocation', JSON.stringify(userLocation));
-        },
-          (error: any) => {
-            this.toastr.error('An error occurred while updating location')
-          })
-      }
-    },
-      (error: any) => console.log(error));
-  } else {
-    alert("Geolocation is not supported by this browser.");
+  getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position: any) => {
+        if (position) {
+          this.lat = position.coords.latitude;
+          this.lng = position.coords.longitude;
+          this.geoLocationSub = this.yaGeocoderService.geocode([this.lat, this.lng], { results: 10 });
+          this.toastr.info('Fetching your current location...');
+          this.geoLocationSub.subscribe((result: any) => {
+            const geoObject = result.geoObjects.get(1);
+            const properties: UserLocation = geoObject.properties.getAll();
+            const metaData = properties.metaDataProperty.GeocoderMetaData.AddressDetails.Country;
+
+            let userLocation = {
+              street: metaData.AddressLine,
+              city: metaData.Locality?.DependentLocality?.DependentLocalityName || metaData.Locality?.LocalityName || metaData?.AdministrativeArea?.AdministrativeAreaName || '',
+              state: metaData.Locality?.LocalityName || metaData.Locality?.DependentLocality?.DependentLocalityName || metaData?.AdministrativeArea?.AdministrativeAreaName || '',
+              postalCode: '',
+              country: metaData.CountryNameCode,
+              locationType: properties.metaDataProperty.GeocoderMetaData.kind,
+              coordinates: [this.lat, this.lng]
+            };
+
+            localStorage.setItem('userCurrentLocation', JSON.stringify(userLocation));
+          },
+            (error: any) => {
+              this.toastr.error('An error occurred while updating location')
+            })
+        }
+      },
+        (error: any) => console.log(error));
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
   }
-}
 }

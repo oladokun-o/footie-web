@@ -17,9 +17,10 @@ import { SharedDirectivesModule } from 'src/shared/directives/directives.module'
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { AngularYandexMapsModule, YaConfig } from 'angular8-yandex-maps';
+import { ApiEndpoints } from 'src/app/core/configs/api.config';
 
 const mapConfig: YaConfig = {
-  apikey: '2215fdbd-83bb-4c46-9c52-faffd29f5d91',
+  apikey: ApiEndpoints.map.yandex_key,
   lang: 'en_US',
 };
 

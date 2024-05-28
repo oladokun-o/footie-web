@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Address } from 'src/app/core/interfaces/order.interface';
@@ -11,7 +11,7 @@ import { LocationService } from 'src/app/core/services/location.service';
 import { ToastrService } from 'ngx-toastr';
 import { YaGeocoderService } from 'angular8-yandex-maps';
 import { Subscription, switchMap, tap } from 'rxjs';
-import { UserLocation } from 'src/app/core/interfaces/location.interface';
+import { Region, UserLocation } from 'src/app/core/interfaces/location.interface';
 const chance = new Chance();
 
 interface Stage {
@@ -23,7 +23,7 @@ interface Stage {
   templateUrl: './new.component.html',
   styleUrls: ['./new.component.scss']
 })
-export class NewComponent extends OrdersHelpers implements OnInit {
+export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
   type: 'instant' | 'scheduled' = 'instant';
   user: User = mockData.user; // JSON.parse(localStorage.getItem('user') as string);
   recentDeliveriesLocation: Address[] = [];
@@ -52,6 +52,12 @@ export class NewComponent extends OrdersHelpers implements OnInit {
     private yaGeocoderService: YaGeocoderService
   ) {
     super();
+
+    // check if the service is available in the region
+    if (this.userCurrentLocation) {
+      this.checkIfServiceAvailableForUserCurrentLocation();
+    }
+
     this.activatedRoute.queryParams.subscribe(params => {
       if (params["type"]) {
         this.type = params["type"];
@@ -66,6 +72,29 @@ export class NewComponent extends OrdersHelpers implements OnInit {
   }
 
   ngOnInit(): void { }
+
+  ngOnDestroy(): void {
+    this.toastr.clear();
+  }
+
+  checkIfServiceAvailableForUserCurrentLocation(): void {
+    const allowedRegions: Region[] = [
+      {
+        name: 'Russia',
+        code: 'rus',
+      }
+    ];
+
+    const location = this.userCurrentLocation;
+    const isAllowed = allowedRegions.some(region => location.country.toLowerCase().includes(region.code.toLowerCase()));
+
+    if (!isAllowed) {
+      this.toastr.warning('Service is not available in your current location.','', {
+        disableTimeOut: true,
+        tapToDismiss: false,
+      });
+    }
+  }
 
   handleStageChange(stage: Stage): void {
     // Find the index of the stage to be updated
@@ -123,6 +152,7 @@ export class NewComponent extends OrdersHelpers implements OnInit {
           postalCode: new FormControl(null),
           country: new FormControl('Russia', [Validators.required]),
           locationType: new FormControl(null, [Validators.required]),
+          coordinates: new FormControl(null, [Validators.required]),
         }),
         delivery: new FormGroup({
           address: new FormControl(null, [Validators.required]),
@@ -131,6 +161,7 @@ export class NewComponent extends OrdersHelpers implements OnInit {
           postalCode: new FormControl(null),
           country: new FormControl('Russia', [Validators.required]),
           locationType: new FormControl(null, [Validators.required]),
+          coordinates: new FormControl(null, [Validators.required]),
         }),
       }),
       details: new FormGroup({
@@ -308,6 +339,14 @@ export class NewComponent extends OrdersHelpers implements OnInit {
 
   get selectedType(): 'pickup' | 'delivery' {
     return this.deliveryIsFocused ? 'delivery' : this.pickupIsFocused ? 'pickup' : 'pickup';
+  }
+
+  get selectedTypeAddress(): Address {
+    if (this.selectedType === 'pickup') {
+      return this.newOrderForm.get('location.pickup')?.value as Address;
+    } else {
+      return this.newOrderForm.get('location.delivery')?.value as Address;
+    }
   }
 
   getStageIcon(stage: Stage, index: number): string {

@@ -4,17 +4,17 @@
     <i class="bi bi-x-lg"></i>
   </button>
 
-  <button *ngIf="!loadingMap" (click)="selectCurrentLocation()" type="button" class="btn btn-select-map shadow"
-    title="Close map">
+  <button *ngIf="!loadingMap" type="button" class="btn btn-select-map shadow" title="Close map">
     <img src="assets/images/icons/my-location.svg" alt="current location">
   </button>
 
-  <!-- <iframe #map sandbox="allow-scripts allow-same-origin"
-    src="https://yandex.com/map-widget/v1/?um=constructor%3A6de7b1c9a53eb01b3167ebc9dd587958a7c9bd3ca0dae77c8cb5d8f250347727&amp;source=constructor"
-    width="500" height="400" frameborder="0"></iframe> -->
-
-  <div class="map">
-    <ya-map [center]="[55, 34]" (ready)="onMapReady($event)"></ya-map>
+  <div class="map" *ngIf="selectedTypeAddress">
+    <ya-map
+    (ready)="onMapReady($event)"
+    (yaclick)="selectCurrentLocation($event)"
+    [state]="mapState"
+    #map
+    ></ya-map>
   </div>
 
   <div class="veil" [class.fade-out]="!loadingMap" [ngStyle]="{ 'z-index': loadingMap ? 999 : -1 }">

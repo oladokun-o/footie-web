@@ -5,6 +5,9 @@ import { CreateUserDto } from '../dto/user.dto';
 import { Observable, tap, switchMap, of, throwError, catchError } from 'rxjs';
 import { ApiEndpoints } from '../configs/api.config';
 import { User } from '../interfaces/user.interface';
+import { Address } from '../interfaces/order.interface';
+import { Region } from '../interfaces/location.interface';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -114,6 +117,8 @@ export class UserService {
 })
 class UserHelperService {
 
+  userCurrentLocation: Address = JSON.parse(localStorage.getItem('userCurrentLocation') as string);
+
   /**
    * Check the user settings for any warnings
    * @param user The user to check
@@ -134,6 +139,18 @@ class UserHelperService {
     // 3. Check if the user has disabled email notifications, if not, add a warning
     if (!user.settings.notificationsEmail) {
       warnings.push("You have disabled email notifications. <br> Please enable email notifications to receive important updates.");
+    }
+
+    // 4. Check if the user's current location is available for the service
+    if (this.userCurrentLocation) {
+      const allowedRegions: Region[] = [{ name: 'Russia', code: 'rus', }];
+
+      const location = this.userCurrentLocation;
+      const isAllowed = allowedRegions.some(region => location.country.toLowerCase().includes(region.code.toLowerCase()));
+
+      if (!isAllowed) {
+        warnings.push('Service is not available in your current location.');
+      }
     }
 
     return { ...user, warnings };

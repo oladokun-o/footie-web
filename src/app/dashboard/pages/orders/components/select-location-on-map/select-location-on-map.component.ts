@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { YaGeocoderService, YaReadyEvent } from 'angular8-yandex-maps';
+import { YaGeocoderService, YaMapComponent, YaReadyEvent,  } from 'angular8-yandex-maps';
+import { Address } from 'src/app/core/interfaces/order.interface';
+import { LocationService } from 'src/app/core/services/location.service';
 
 @Component({
   selector: 'footiedrop-web-select-location-on-map',
@@ -15,13 +17,28 @@ export class SelectLocationOnMapComponent implements AfterViewInit, OnChanges {
 
   @Output() closeMap: EventEmitter<any> = new EventEmitter();
 
+  userCurrentLocation: Address = JSON.parse(localStorage.getItem('userCurrentLocation') as string);
+  @Input() selectedTypeAddress!: Address;
 
-  constructor(private yaGeocoderService: YaGeocoderService) { }
+  constructor(
+    private yaGeocoderService: YaGeocoderService,
+    private locationService: LocationService
+  ) {
+    this.locationService.userCoordinates
+      .then((coordinates) => {
+        this.userCurrentLocation.coordinates = coordinates;
+      })
+      .catch((error) => {
+        console.error('Error fetching user coordinates:', error);
+      });
+  }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.loadingMap = false;
     }, 1500);
+
+    console.log('Map loaded', this.Map.yacontextmenu.forEach(item => item ));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -34,11 +51,24 @@ export class SelectLocationOnMapComponent implements AfterViewInit, OnChanges {
     };
   }
 
-  @ViewChild('map') map!: ElementRef<HTMLIFrameElement>;
-  selectCurrentLocation() {
-
+  selectCurrentLocation(event: any): void {
+    console.log("selectCurrentLocation', event: " + event);
   }
 
+  get userCoordinates(): number[] {
+    return this.userCurrentLocation.coordinates || [0,0];
+  }
+
+  get mapState(): any {
+    let state = {
+      center: this.selectedTypeAddress.coordinates || this.userCoordinates,
+      controls: ['geolocationControl']
+    };
+    console.log("get mapState", state);
+    return state;
+  }
+
+  @ViewChild('map') Map!: YaMapComponent;
 
   onMapReady(event: YaReadyEvent<ymaps.Map>): void {
     const map = event.target;

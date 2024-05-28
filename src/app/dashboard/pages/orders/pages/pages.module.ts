@@ -13,9 +13,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { SharedPipesModule } from 'src/shared/pipes/shared-pipes.module';
 import { OrdersComponentsModule } from '../components/components.module';
 import { YaConfig, AngularYandexMapsModule } from 'angular8-yandex-maps';
+import { ApiEndpoints } from 'src/app/core/configs/api.config';
 
 const mapConfig: YaConfig = {
-  apikey: '2215fdbd-83bb-4c46-9c52-faffd29f5d91',
+  apikey: ApiEndpoints.map.yandex_key,
   lang: 'en_US',
 };
 

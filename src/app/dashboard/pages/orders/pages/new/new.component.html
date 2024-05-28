@@ -204,5 +204,5 @@
 </div>
 
 <ng-container *ngIf="showMap && newOrderStage.value === 'location'">
-  <footiedrop-web-select-location-on-map [mapFor]="mapFor" [slideOut]="hideMap" (closeMap)="closeMap()"></footiedrop-web-select-location-on-map>
+  <footiedrop-web-select-location-on-map [mapFor]="mapFor" [slideOut]="hideMap" (closeMap)="closeMap()" [selectedTypeAddress]="selectedTypeAddress"></footiedrop-web-select-location-on-map>
 </ng-container>
