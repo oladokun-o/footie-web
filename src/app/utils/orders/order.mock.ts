@@ -43,6 +43,7 @@ const generateMockAddress = (): Address => ({
   country: 'Russia',
   type: chance.pickone(['pickup', 'delivery']),
   locationType: chance.pickone(Object.values(LocationType)) as LocationType,
+  coordinates: [0, 0],
 });
 
 
@@ -156,6 +157,7 @@ const generateMockLocation = (): Address => ({
   country: 'Russia',
   type: chance.pickone(['pickup', 'delivery']),
   locationType: chance.pickone(Object.values(LocationType)) as LocationType,
+  coordinates: [0, 0],
 });
 
 /**

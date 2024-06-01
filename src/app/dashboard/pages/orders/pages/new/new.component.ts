@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Address } from 'src/app/core/interfaces/order.interface';
+import { Address, ItemType } from 'src/app/core/interfaces/order.interface';
 import { User } from 'src/app/core/interfaces/user.interface';
 import { mockData, mockLocation } from 'src/app/utils/orders/order.mock';
 import * as Chance from 'chance';
@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { YaGeocoderService } from 'angular8-yandex-maps';
 import { Subscription, switchMap, tap } from 'rxjs';
 import { Region, UserLocation } from 'src/app/core/interfaces/location.interface';
+import { NgxFileDropEntry } from 'ngx-file-drop';
 const chance = new Chance();
 
 interface Stage {
@@ -43,6 +44,12 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
   showMap: boolean = false;
   hideMap: boolean = false;
   mapFor: 'pickup' | 'dropoff' = 'pickup';
+
+  prohibitedItems: string[] = ['lorem','ipsum','carte'];
+  showProhibitedItems: boolean = false;
+
+  itemTypes: string[] = Object.values(ItemType).map(i => i.toUpperCase());
+  deliveryModes: string[] = ['Foot'];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -125,6 +132,7 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
 
     if (!['details', 'location'].includes(value) && this.newOrderForm.get('details')?.invalid) {
       this.toastr.info('Please complete the order details before proceeding.');
+      this.newOrderForm.get('details')?.markAllAsTouched();
       return;
     }
 
@@ -140,6 +148,7 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
 
   initUserDetails(): void {
     this.recentDeliveriesLocation = this.user.orders?.filter(order => order.status === 'Delivered').map(order => order.deliveryAddress) || [];
+    console.log(this.recentDeliveriesLocation);
   }
 
   initForm(): void {
@@ -150,6 +159,7 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
           city: new FormControl(null),
           state: new FormControl(null),
           postalCode: new FormControl(null),
+          floorOrApartment: new FormControl(null),
           country: new FormControl('Russia', [Validators.required]),
           locationType: new FormControl(null, [Validators.required]),
           coordinates: new FormControl(null, [Validators.required]),
@@ -159,14 +169,35 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
           city: new FormControl(null),
           state: new FormControl(null),
           postalCode: new FormControl(null),
+          floorOrApartment: new FormControl(null),
           country: new FormControl('Russia', [Validators.required]),
           locationType: new FormControl(null, [Validators.required]),
           coordinates: new FormControl(null, [Validators.required]),
         }),
       }),
       details: new FormGroup({
-        title: new FormControl(null, Validators.required)
+        sender: new FormGroup({
+          name: new FormControl(this.user.firstName + ' ' + this.user.lastName, [Validators.required]),
+          phone: new FormControl(this.user.phone, [Validators.required]),
+          email: new FormControl(this.user.email, [Validators.required]),
+          userId: new FormControl(this.user.id, [Validators.required]),
+        }),
+        recipient: new FormGroup({
+          name: new FormControl(null, [Validators.required]),
+          phone: new FormControl(null, [Validators.required]),
+          email: new FormControl(null),
+        }),
+        package: new FormGroup({
+          title: new FormControl(null, [Validators.required]),
+          type: new FormControl(null, [Validators.required]),
+          quantity: new FormControl(1, [Validators.required, Validators.min(1)]),
+          size: new FormControl('1KG', [Validators.required]),
+          image: new FormControl(null, [Validators.required]),
+          modeOfDelivery: new FormControl('foot', [Validators.required]),
+          message: new FormControl(null)
+        })
       }),
+      payment: new FormGroup({})
     });
 
     if (this.userCurrentLocation) {
@@ -205,6 +236,10 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
     }
   }
 
+  setPackageSize(value: string): void {
+    this.newOrderForm.get('details.package.size')?.setValue(value);
+  }
+
   get pickupAddress(): string {
     return this.newOrderForm.get('location.pickup.address')?.value || '';
   }
@@ -225,6 +260,7 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
   pickupOnFocus(): void {
     setTimeout(() => {
       this.pickupIsFocused = true;
+      this.mapFor = 'pickup'
     }, 1000);
   }
 
@@ -238,6 +274,7 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
   deliveryOnFocus(): void {
     setTimeout(() => {
       this.deliveryIsFocused = true;
+      this.mapFor = 'dropoff'
     }, 1000);
   }
 
@@ -386,5 +423,27 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
   closeMap() {
     this.hideMap = true;
     this.showMap = false;
+  }
+
+  public files: NgxFileDropEntry[] = [];
+  public filedroperrormessage: string = '';
+
+  public dropped(files: NgxFileDropEntry[]) {
+    this.files = files;
+    for (const droppedFile of files) {
+
+      // Is it a file?
+      if (droppedFile.fileEntry.isFile) {
+        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+        fileEntry.file((file: File) => {
+
+          // Here you can access the real file
+          console.log(droppedFile.relativePath, file);
+        });
+      } else {
+        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
+        console.log(droppedFile.relativePath, fileEntry);
+      }
+    }
   }
 }

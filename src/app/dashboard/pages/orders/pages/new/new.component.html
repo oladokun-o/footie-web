@@ -1,8 +1,9 @@
 <div class="container-fluid position-absolute top-0 start-0 p-0">
   <!-- Select location on map -->
   <ng-container *ngIf="showMap && newOrderStage.value === 'location'">
-    <footiedrop-web-select-location-on-map [mapFor]="mapFor" class="sticky-top" [slideOut]="hideMap" (closeMap)="closeMap()"
-      [address]="selectedTypeAddress" (setMapLocationToAddress)="selectAddress($event)"></footiedrop-web-select-location-on-map>
+    <footiedrop-web-select-location-on-map [mapFor]="mapFor" class="sticky-top" [slideOut]="hideMap"
+      (closeMap)="closeMap()" [address]="selectedTypeAddress"
+      (setMapLocationToAddress)="selectAddress($event)"></footiedrop-web-select-location-on-map>
   </ng-container>
 
   <!-- Delivery Route Form Container -->
@@ -207,5 +208,234 @@
         </div>
       </div>
     </div>
+  </ng-container>
+
+  <!-- Details -->
+  <ng-container *ngIf="newOrderForm && newOrderStage.value === 'details'">
+    <form [formGroup]="newOrderForm"
+      class="container-fluid search-contn details mt-md-4 px-md-5 pt-md p-3 position-relative">
+      <div class="row" style="row-gap: 15px">
+        <mat-accordion>
+          <!-- Sender -->
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title> Where to pick up? </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="col-12">
+              <div class="row">
+                <ng-container formGroupName="location">
+                  <div formGroupName="pickup" class="col-12 col-md-6 form-group">
+                    <input type="text" readonly class="form-control" formControlName="address"
+                      (focus)="goToStage('location')">
+                  </div>
+                  <div formGroupName="pickup" class="col-12 col-md-6 form-group">
+                    <input type="text" class="form-control" formControlName="floorOrApartment"
+                      placeholder="Floor, apartment (optional)">
+                  </div>
+                </ng-container>
+
+                <ng-container formGroupName="details">
+                  <div formGroupName="sender" class="col-12 col-md-6 form-group">
+                    <label for="sender-phone" class="form-label text-capitalize">Sender contact number</label>
+                    <input footiedropWebInputMask="+0 000 000-00-00" type="tel" class="form-control" id="sender-phone"
+                      formControlName="phone" placeholder="Enter a phone number">
+                    <small class="text-danger"
+                      *ngIf="newOrderForm.get('details.sender.phone')?.hasError('required') && newOrderForm.get('details.sender.phone')?.touched">
+                      Sender's contact number is required!
+                    </small>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </mat-expansion-panel>
+
+          <!-- Recipient -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Where to deliver? </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="col-12">
+              <div class="row">
+                <ng-container formGroupName="location">
+                  <div formGroupName="delivery" class="col-12 col-md-6 form-group">
+                    <input type="text" readonly class="form-control" formControlName="address"
+                      (focus)="goToStage('location')">
+                  </div>
+                  <div formGroupName="delivery" class="col-12 col-md-6 form-group">
+                    <input type="text" class="form-control" formControlName="floorOrApartment"
+                      placeholder="Floor, apartment (optional)">
+                  </div>
+                </ng-container>
+
+                <ng-container formGroupName="details">
+                  <ng-container formGroupName="recipient">
+                    <div class="col-12 col-md-6 form-group">
+                      <label for="recipient-name" class="form-label text-capitalize">Recipient Name</label>
+                      <input type="text" class="form-control" id="recipient-name" formControlName="name"
+                        placeholder="Enter receiver's full name">
+                      <small class="text-danger"
+                        *ngIf="newOrderForm.get('details.recipient.name')?.hasError('required') && newOrderForm.get('details.recipient.name')?.touched">
+                        Recipient's full name is required!
+                      </small>
+                    </div>
+                    <div class="col-12 col-md-6 form-group">
+                      <label for="recipient-phone" class="form-label text-capitalize">Recipient contact number</label>
+                      <input footiedropWebInputMask="+0 000 000-00-00" type="tel" class="form-control"
+                        id="recipient-phone" formControlName="phone" placeholder="Enter receiver's phone number">
+                      <small class="text-danger"
+                        *ngIf="newOrderForm.get('details.recipient.phone')?.hasError('required') && newOrderForm.get('details.recipient.phone')?.touched">
+                        Recipient's contact number is required!
+                      </small>
+                    </div>
+                    <div class="col-12 col-md-6 form-group">
+                      <label for="recipient-email" class="form-label text-capitalize">Recipient email address</label>
+                      <input type="text" class="form-control" id="recipient-email" formControlName="email"
+                        placeholder="Enter receiver's email address (optional)">
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </div>
+          </mat-expansion-panel>
+
+          <!-- Package --><mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> What are you sending? </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="col-12">
+              <div class="row">
+                <ng-container formGroupName="details">
+                  <ng-container formGroupName="package">
+                    <div class="col-12 form-group">
+                      <div class="textarea">
+                        <textarea type="text" class="form-control" formControlName="title"
+                          placeholder="E.g A box of glass cups (fragile)" rows="3" maxlength="100"></textarea>
+                        <div class="chars">
+                          <small class="text-muted">{{ newOrderForm.get('details.package.title')?.value?.length || 0
+                            }}/100</small>
+                        </div>
+                      </div>
+                      <small class="text-danger"
+                        *ngIf="newOrderForm.get('details.package.title')?.hasError('required') && newOrderForm.get('details.package.title')?.touched">
+                        Courier needs to know what you are sending! <br>
+                      </small>
+                      <small class="text-muted">
+                        <svg role="button" width="15" height="15" viewBox="0 0 15 15" fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M7.5 1.25C4.05375 1.25 1.25 4.05375 1.25 7.5C1.25 10.9463 4.05375 13.75 7.5 13.75C10.9462 13.75 13.75 10.9463 13.75 7.5C13.75 4.05375 10.9462 1.25 7.5 1.25ZM8.125 11.25H6.875V10H8.125V11.25ZM8.735 8.19688C8.6125 8.29563 8.49438 8.39 8.40063 8.48375C8.14563 8.73813 8.12563 8.96938 8.125 8.97938V9.0625H6.875V8.95813C6.875 8.88438 6.89313 8.2225 7.51625 7.59938C7.63812 7.4775 7.78937 7.35375 7.94812 7.225C8.40688 6.85313 8.70812 6.58188 8.70812 6.20813C8.70086 5.89239 8.57031 5.59203 8.34441 5.37132C8.11851 5.15062 7.8152 5.02709 7.49938 5.02717C7.18356 5.02725 6.88031 5.15094 6.65453 5.37176C6.42874 5.59259 6.29835 5.89301 6.29125 6.20875H5.04125C5.04125 4.85313 6.14437 3.75 7.5 3.75C8.85563 3.75 9.95875 4.85313 9.95875 6.20875C9.95875 7.20688 9.22187 7.8025 8.735 8.19688Z"
+                            fill="#DC2836" />
+                        </svg>
+
+                        <ng-container>
+                          Our Prohibited Items include:
+                          <span *ngFor="let item of prohibitedItems">
+                            {{ item }},
+                          </span> etc. <a href="/help" style="font-size: inherit;">Learn more</a>
+                        </ng-container>
+                      </small>
+                    </div>
+
+                    <div class="col-12 col-md-4 form-group">
+                      <label for="package-category" class="form-label">Category</label>
+                      <ng-select [items]="itemTypes" formControlName="type" id="package-category" [searchable]="false"
+                        [clearable]="false" appendTo=".details" placeholder="Select a category"></ng-select>
+                    </div>
+
+                    <div class="col-12 col-md-4 form-group">
+                      <label for="package-quantity" class="form-label">Quanity</label>
+                      <input type="number" class="form-control" formControlName="quantity" id="package-quantity"
+                        placeholder="Item quanity" min="1" max="50">
+                      <small class="text-danger"
+                        *ngIf="newOrderForm.get('details.package.quantity')?.hasError('min') && newOrderForm.get('details.package.quantity')?.touched">
+                        Minimum quantity is 1
+                      </small>
+                    </div>
+
+                    <div class="col-12 col-md-4 form-group">
+                      <label for="package-mode" class="form-label">How to deliver</label>
+                      <ng-select [items]="deliveryModes" formControlName="modeOfDelivery" id="package-mode"
+                        [searchable]="false" [clearable]="false" appendTo=".details"
+                        placeholder="Select delivery mode"></ng-select>
+                    </div>
+
+                    <div class="col-12 col-md-6 form-group">
+                      <label for="package-size" class="form-label">Package Size</label>
+                      <div class="sizes">
+                        <button type="button" [class.active]="newOrderForm.get('details.package.size')?.value === '1KG'"
+                          (click)="setPackageSize('1KG')">
+                          <svg width="33" height="35" viewBox="0 0 33 35" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                              d="M31.078 8.07798L17.6702 0.741777C17.312 0.543832 16.9094 0.440002 16.5001 0.440002C16.0908 0.440002 15.6882 0.543832 15.33 0.741777L1.92219 8.08102C1.53929 8.29053 1.21965 8.59899 0.996671 8.9742C0.773688 9.34941 0.655532 9.77761 0.654541 10.2141V24.7859C0.655532 25.2224 0.773688 25.6506 0.996671 26.0258C1.21965 26.401 1.53929 26.7095 1.92219 26.919L15.33 34.2582C15.6882 34.4562 16.0908 34.56 16.5001 34.56C16.9094 34.56 17.312 34.4562 17.6702 34.2582L31.078 26.919C31.4609 26.7095 31.7806 26.401 32.0036 26.0258C32.2265 25.6506 32.3447 25.2224 32.3457 24.7859V10.2156C32.3455 9.77836 32.2278 9.34921 32.0047 8.97312C31.7817 8.59703 31.4616 8.28785 31.078 8.07798ZM16.5001 2.87484L28.7423 9.57873L24.205 12.0607L11.9628 5.3568L16.5001 2.87484ZM16.5001 16.2826L4.25789 9.57873L9.42446 6.74938L21.6667 13.4533L16.5001 16.2826ZM29.9079 24.792L17.719 31.4639V18.3898L22.5946 15.7219V21.1582C22.5946 21.4815 22.723 21.7915 22.9516 22.0201C23.1802 22.2487 23.4902 22.3771 23.8135 22.3771C24.1367 22.3771 24.4468 22.2487 24.6753 22.0201C24.9039 21.7915 25.0323 21.4815 25.0323 21.1582V14.3873L29.9079 11.7194V24.7859V24.792Z"
+                              fill="#707070" />
+                          </svg>
+
+                          < 1KG </button>
+                            <button type="button"
+                              [class.active]="newOrderForm.get('details.package.size')?.value === '3KG - 10KG'"
+                              (click)="setPackageSize('3KG - 10KG')">
+                              <svg width="62" height="29" viewBox="0 0 62 29" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  d="M24.9924 7.01098L14.3353 1.17987C14.0506 1.02253 13.7306 0.940002 13.4053 0.940002C13.0799 0.940002 12.7599 1.02253 12.4752 1.17987L1.81812 7.0134C1.51378 7.17993 1.25972 7.42511 1.08249 7.72334C0.90525 8.02158 0.811334 8.36193 0.810547 8.70885V20.2912C0.811334 20.6381 0.90525 20.9784 1.08249 21.2767C1.25972 21.5749 1.51378 21.8201 1.81812 21.9866L12.4752 27.8201C12.7599 27.9775 13.0799 28.06 13.4053 28.06C13.7306 28.06 14.0506 27.9775 14.3353 27.8201L24.9924 21.9866C25.2968 21.8201 25.5508 21.5749 25.728 21.2767C25.9053 20.9784 25.9992 20.6381 26 20.2912V8.71006C25.9998 8.36252 25.9062 8.02141 25.729 7.72248C25.5517 7.42355 25.2973 7.1778 24.9924 7.01098ZM13.4053 2.87531L23.1359 8.20385L19.5294 10.1766L9.79882 4.84808L13.4053 2.87531ZM13.4053 13.5324L3.67463 8.20385L7.78124 5.95496L17.5119 11.2835L13.4053 13.5324ZM24.0623 20.296L14.3741 25.5991V15.2072L18.2494 13.0867V17.4077C18.2494 17.6646 18.3515 17.9111 18.5331 18.0928C18.7148 18.2744 18.9613 18.3765 19.2182 18.3765C19.4752 18.3765 19.7216 18.2744 19.9033 18.0928C20.085 17.9111 20.187 17.6646 20.187 17.4077V12.0259L24.0623 9.90535V20.296Z"
+                                  fill="#707070" />
+                                <path
+                                  d="M60.1818 7.01098L49.5248 1.17987C49.24 1.02253 48.92 0.940002 48.5947 0.940002C48.2694 0.940002 47.9494 1.02253 47.6646 1.17987L37.0076 7.0134C36.7032 7.17993 36.4492 7.42511 36.2719 7.72334C36.0947 8.02158 36.0008 8.36193 36 8.70885V20.2912C36.0008 20.6381 36.0947 20.9784 36.2719 21.2767C36.4492 21.5749 36.7032 21.8201 37.0076 21.9866L47.6646 27.8201C47.9494 27.9775 48.2694 28.06 48.5947 28.06C48.92 28.06 49.24 27.9775 49.5248 27.8201L60.1818 21.9866C60.4862 21.8201 60.7402 21.5749 60.9175 21.2767C61.0947 20.9784 61.1886 20.6381 61.1894 20.2912V8.71006C61.1893 8.36252 61.0957 8.02141 60.9184 7.72248C60.7411 7.42355 60.4867 7.1778 60.1818 7.01098ZM48.5947 2.87531L58.3253 8.20385L54.7189 10.1766L44.9883 4.84808L48.5947 2.87531ZM48.5947 13.5324L38.8641 8.20385L42.9707 5.95496L52.7013 11.2835L48.5947 13.5324ZM59.2518 20.296L49.5635 25.5991V15.2072L53.4388 13.0867V17.4077C53.4388 17.6646 53.5409 17.9111 53.7226 18.0928C53.9043 18.2744 54.1507 18.3765 54.4076 18.3765C54.6646 18.3765 54.911 18.2744 55.0927 18.0928C55.2744 17.9111 55.3765 17.6646 55.3765 17.4077V12.0259L59.2518 9.90535V20.296Z"
+                                  fill="#707070" />
+                              </svg>
+
+                              3KG - 10KG
+                            </button>
+                            <button type="button"
+                              [class.active]="newOrderForm.get('details.package.size')?.value === '10KG'"
+                              (click)="setPackageSize('10KG')">
+                              <svg width="53" height="48" viewBox="0 0 53 48" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  d="M36.3782 6.05556L27.293 1.08449C27.0502 0.950361 26.7774 0.880005 26.5001 0.880005C26.2227 0.880005 25.9499 0.950361 25.7072 1.08449L16.6219 6.05763C16.3625 6.19959 16.1459 6.40861 15.9948 6.66285C15.8437 6.9171 15.7636 7.20725 15.763 7.503V17.377C15.7636 17.6728 15.8437 17.9629 15.9948 18.2172C16.1459 18.4714 16.3625 18.6804 16.6219 18.8224L25.7072 23.7955C25.9499 23.9296 26.2227 24 26.5001 24C26.7774 24 27.0502 23.9296 27.293 23.7955L36.3782 18.8224C36.6376 18.6804 36.8542 18.4714 37.0053 18.2172C37.1564 17.9629 37.2365 17.6728 37.2372 17.377V7.50404C37.237 7.20776 37.1572 6.91696 37.0061 6.66212C36.855 6.40728 36.6381 6.19778 36.3782 6.05556ZM26.5001 2.52987L34.7955 7.07249L31.721 8.75429L23.4255 4.21167L26.5001 2.52987ZM26.5001 11.6151L18.2046 7.07249L21.7055 5.1553L30.001 9.69792L26.5001 11.6151ZM35.5853 17.3811L27.326 21.9021V13.0429L30.6297 11.2352V14.9188C30.6297 15.1379 30.7167 15.348 30.8716 15.5029C31.0265 15.6577 31.2366 15.7448 31.4556 15.7448C31.6747 15.7448 31.8848 15.6577 32.0397 15.5029C32.1946 15.348 32.2816 15.1379 32.2816 14.9188V10.3308L35.5853 8.52303V17.3811Z"
+                                  fill="#707070" />
+                                <path
+                                  d="M20.6411 29.1756L11.5559 24.2045C11.3131 24.0704 11.0403 24 10.763 24C10.4856 24 10.2128 24.0704 9.97008 24.2045L0.884846 29.1776C0.625389 29.3196 0.408804 29.5286 0.257709 29.7829C0.106614 30.0371 0.0265502 30.3273 0.0258789 30.623V40.497C0.0265502 40.7928 0.106614 41.0829 0.257709 41.3372C0.408804 41.5914 0.625389 41.8004 0.884846 41.9424L9.97008 46.9155C10.2128 47.0496 10.4856 47.12 10.763 47.12C11.0403 47.12 11.3131 47.0496 11.5559 46.9155L20.6411 41.9424C20.9005 41.8004 21.1171 41.5914 21.2682 41.3372C21.4193 41.0829 21.4994 40.7928 21.5001 40.497V30.624C21.4999 30.3278 21.4201 30.037 21.269 29.7821C21.1179 29.5273 20.901 29.3178 20.6411 29.1756ZM10.763 25.6499L19.0584 30.1925L15.9839 31.8743L7.68845 27.3317L10.763 25.6499ZM10.763 34.7351L2.46753 30.1925L5.96845 28.2753L14.2639 32.8179L10.763 34.7351ZM19.8482 40.5011L11.5889 45.0221V36.1629L14.8926 34.3552V38.0388C14.8926 38.2579 14.9796 38.468 15.1345 38.6229C15.2894 38.7777 15.4995 38.8648 15.7185 38.8648C15.9376 38.8648 16.1477 38.7777 16.3026 38.6229C16.4575 38.468 16.5445 38.2579 16.5445 38.0388V33.4508L19.8482 31.643V40.5011Z"
+                                  fill="#707070" />
+                                <path
+                                  d="M52.1153 29.1756L43.03 24.2045C42.7873 24.0704 42.5145 24 42.2372 24C41.9598 24 41.687 24.0704 41.4443 24.2045L32.359 29.1776C32.0996 29.3196 31.883 29.5286 31.7319 29.7829C31.5808 30.0371 31.5007 30.3273 31.5001 30.623V40.497C31.5007 40.7928 31.5808 41.0829 31.7319 41.3372C31.883 41.5914 32.0996 41.8004 32.359 41.9424L41.4443 46.9155C41.687 47.0496 41.9598 47.12 42.2372 47.12C42.5145 47.12 42.7873 47.0496 43.03 46.9155L52.1153 41.9424C52.3747 41.8004 52.5913 41.5914 52.7424 41.3372C52.8935 41.0829 52.9736 40.7928 52.9742 40.497V30.624C52.9741 30.3278 52.8943 30.037 52.7432 29.7821C52.5921 29.5273 52.3752 29.3178 52.1153 29.1756ZM42.2372 25.6499L50.5326 30.1925L47.4581 31.8743L39.1626 27.3317L42.2372 25.6499ZM42.2372 34.7351L33.9417 30.1925L37.4426 28.2753L45.7381 32.8179L42.2372 34.7351ZM51.3224 40.5011L43.0631 45.0221V36.1629L46.3668 34.3552V38.0388C46.3668 38.2579 46.4538 38.468 46.6087 38.6229C46.7636 38.7777 46.9737 38.8648 47.1927 38.8648C47.4118 38.8648 47.6219 38.7777 47.7768 38.6229C47.9316 38.468 48.0187 38.2579 48.0187 38.0388V33.4508L51.3224 31.643V40.5011Z"
+                                  fill="#707070" />
+                              </svg>
+
+                              > 10KG
+                            </button>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 form-group">
+                      <label for="package-image" class="form-label invisible d-md-block d-none">Package Details</label>
+                      <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)" accept=".png,.jpg" [directory]="false" [multiple]="false">
+                        <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                          <div class="image" role="button" (click)="openFileSelector()">
+                            <svg width="35" height="35" viewBox="0 0 35 35" fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <path
+                                d="M35 17.5C35 27.165 27.165 35 17.5 35C7.83502 35 0 27.165 0 17.5C0 7.83502 7.83502 0 17.5 0C27.165 0 35 7.83502 35 17.5Z"
+                                fill="#01674F" />
+                              <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M20.9405 13.3333H23.1896C23.97 13.3333 24.6086 13.9333 24.6086 14.6667V22.6667C24.6086 23.4 23.97 24 23.1896 24H11.8379C11.0575 24 10.419 23.4 10.419 22.6667V14.6667C10.419 13.9333 11.0575 13.3333 11.8379 13.3333H14.087L15.3853 12H19.6422L20.9405 13.3333ZM11.8379 22.6667H23.1896V14.6667H20.3162L19.0179 13.3333H16.0097L14.7113 14.6667H11.8379V22.6667ZM17.5138 15.3333C15.5556 15.3333 13.9664 16.8267 13.9664 18.6667C13.9664 20.5067 15.5556 22 17.5138 22C19.4719 22 21.0612 20.5067 21.0612 18.6667C21.0612 16.8267 19.4719 15.3333 17.5138 15.3333ZM15.3853 18.6667C15.3853 19.7667 16.3431 20.6667 17.5138 20.6667C18.6844 20.6667 19.6422 19.7667 19.6422 18.6667C19.6422 17.5667 18.6844 16.6667 17.5138 16.6667C16.3431 16.6667 15.3853 17.5667 15.3853 18.6667Z"
+                                fill="#F4F4F4" />
+                            </svg>
+
+                            <span>Take a picture of the package</span>
+                          </div>
+                        </ng-template>
+                      </ngx-file-drop>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </form>
   </ng-container>
 </div>

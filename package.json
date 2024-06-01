@@ -31,7 +31,7 @@
     "chance": "^1.1.11",
     "class-validator": "^0.14.1",
     "ngx-clipboard": "^16.0.0",
-    "ngx-file-drop": "^16.0.0",
+    "ngx-file-drop": "^15.0.0",
     "ngx-mask": "^15.1.5",
     "ngx-online-status": "^2.0.0",
     "ngx-toastr": "^16.2.0",
