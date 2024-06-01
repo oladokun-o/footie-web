@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { YaGeocoderService, YaMapComponent, YaReadyEvent,  } from 'angular8-yandex-maps';
+import { YaEvent } from 'angular8-yandex-maps';
+import { debounceTime } from 'rxjs';
+import { GeoObjectConstructor, UserLocation } from 'src/app/core/interfaces/location.interface';
 import { Address } from 'src/app/core/interfaces/order.interface';
 import { LocationService } from 'src/app/core/services/location.service';
 
@@ -12,33 +14,57 @@ export class SelectLocationOnMapComponent implements AfterViewInit, OnChanges {
   slideIn: boolean = true;
   @Input() slideOut: boolean = false;
   @Input() mapFor: 'pickup' | 'dropoff' = 'pickup';
+  @Input() address!: Address;
 
   loadingMap: boolean = true;
 
   @Output() closeMap: EventEmitter<any> = new EventEmitter();
 
-  userCurrentLocation: Address = JSON.parse(localStorage.getItem('userCurrentLocation') as string);
-  @Input() selectedTypeAddress!: Address;
+  @Output() setMapLocationToAddress: EventEmitter<Address> = new EventEmitter();
+
+  @ViewChild('map') map!: ElementRef<HTMLIFrameElement>;
 
   constructor(
-    private yaGeocoderService: YaGeocoderService,
     private locationService: LocationService
-  ) {
-    this.locationService.userCoordinates
-      .then((coordinates) => {
-        this.userCurrentLocation.coordinates = coordinates;
-      })
-      .catch((error) => {
-        console.error('Error fetching user coordinates:', error);
-      });
-  }
+  ) { }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.loadingMap = false;
-    }, 1500);
+      this.showButtonPickup = true;
 
-    console.log('Map loaded', this.Map.yacontextmenu.forEach(item => item ));
+      if (this.address) {
+        this.mapsControl = [];
+        this.mapState = {
+          center: this.address.coordinates || [0, 0],
+          controls: this.mapsControl
+        };
+
+        this.geoObject = {
+          feature: {
+            // The geometry description.
+            geometry: {
+              type: 'Point',
+              coordinates: this.address.coordinates || [0, 0],
+            },
+            // Properties.
+            properties: {
+              // The placemark content.
+              hintContent: "I'm draggable",
+            },
+          },
+          options: {
+            /**
+             * Options.
+             * The placemark's icon will stretch to fit its contents.
+             */
+            preset: 'islands#blackStretchyIcon',
+            // The placemark can be dragged.
+            draggable: true,
+          },
+        };
+      }
+    }, 2000);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -51,58 +77,78 @@ export class SelectLocationOnMapComponent implements AfterViewInit, OnChanges {
     };
   }
 
-  selectCurrentLocation(event: any): void {
-    console.log("selectCurrentLocation', event: " + event);
+  selectCurrentLocation() { }
+
+  showButtonPickup: boolean = false;
+
+  handleCloseMap() {
+    this.closeMap.emit();
+    if (this.map) this.map.nativeElement.remove();
   }
 
-  get userCoordinates(): number[] {
-    return this.userCurrentLocation.coordinates || [0,0];
+  handleMapChange() {
+    this.setMapLocationToAddress.emit(this.address);
+    this.handleCloseMap();
   }
 
-  get mapState(): any {
-    let state = {
-      center: this.selectedTypeAddress.coordinates || this.userCoordinates,
-      controls: ['geolocationControl']
-    };
-    console.log("get mapState", state);
-    return state;
+  mapsControl: ymaps.ControlKey[] = []
+
+  mapState!: ymaps.IMapState;
+
+  locatorButtonParameters: ymaps.control.IButtonParameters = {
+    data: {
+      image: 'assets/images/icons/my-location.svg'
+    },
+    options: {
+      position: {
+        bottom: 195,
+        right: 15
+      },
+      size: 'large',
+    },
+  };
+
+  searchButtonParameters: ymaps.control.ISearchControlParameters = {
+    options: {
+      position: {
+        top: 25,
+        right: 15,
+      },
+    },
+  };
+
+  geoObject!: GeoObjectConstructor;
+  searchingLocation: boolean = false;
+
+  handleGeometryChange(event: any): void {
+    const { originalEvent } = event.event.originalEvent.originalEvent;
+
+    if (originalEvent) {
+      this.searchingLocation = true;
+      setTimeout(() => {
+        this.locationService.searchLocation(originalEvent.newCoordinates).pipe(
+          debounceTime(1000) // Add debounce time to limit the number of API calls
+        ).subscribe(
+          (location) => {
+            this.searchingLocation = false;
+            if (location) this.address = location;
+          },
+          (error) => {
+            this.searchingLocation = false; // Reset searchingLocation on error
+            console.error('Error searching for location:', error);
+          }
+        );
+      }, 1000);
+    }
   }
 
-  @ViewChild('map') Map!: YaMapComponent;
+  enableSearchControl: boolean = false;
 
-  onMapReady(event: YaReadyEvent<ymaps.Map>): void {
-    const map = event.target;
-    /**
-     * Comparing the position calculated from the user's IP address
-     * and the position detected using the browser.
-     */
-    ymaps.geolocation
-      .get({
-        provider: 'yandex',
-        mapStateAutoApply: true,
-      })
-      .then((result) => {
-        // We'll mark the position calculated by IP in red.
-        result.geoObjects.options.set('preset', 'islands#redCircleIcon');
-        result.geoObjects.get(0).properties.set({
-          balloonContentBody: 'My location',
-        });
-
-        map.geoObjects.add(result.geoObjects);
-      });
-
-    ymaps.geolocation
-      .get({
-        provider: 'browser',
-        mapStateAutoApply: true,
-      })
-      .then((result) => {
-        /**
-         * We'll mark the position obtained through the browser in blue.
-         * If the browser does not support this functionality, the placemark will not be added to the map.
-         */
-        result.geoObjects.options.set('preset', 'islands#blueCircleIcon');
-        map.geoObjects.add(result.geoObjects);
-      });
+  toggleSearch() {
+    if (!this.enableSearchControl) {
+      this.enableSearchControl = true;
+    } else {
+      this.enableSearchControl = false;
+    }
   }
 }

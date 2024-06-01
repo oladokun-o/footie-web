@@ -79,3 +79,14 @@ export interface Region {
   code: string;
   name: string;
 }
+
+export interface GeoObjectConstructor {
+  feature: ymaps.IGeoObjectFeature;
+  options: ymaps.IGeoObjectOptions;
+}
+
+export interface PlacemarkConstructor {
+  geometry: number[];
+  properties: ymaps.IPlacemarkProperties;
+  options: ymaps.IPlacemarkOptions;
+}

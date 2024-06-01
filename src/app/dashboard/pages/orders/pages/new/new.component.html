@@ -1,6 +1,12 @@
 <div class="container-fluid position-absolute top-0 start-0 p-0">
+  <!-- Select location on map -->
+  <ng-container *ngIf="showMap && newOrderStage.value === 'location'">
+    <footiedrop-web-select-location-on-map [mapFor]="mapFor" class="sticky-top" [slideOut]="hideMap" (closeMap)="closeMap()"
+      [address]="selectedTypeAddress" (setMapLocationToAddress)="selectAddress($event)"></footiedrop-web-select-location-on-map>
+  </ng-container>
+
   <!-- Delivery Route Form Container -->
-  <div class="container-fluid sticky-top shadow-sm px-3 pt-3 px-md-5 px-lg-5 pt-md-4 bg-white">
+  <div class="container-fluid sticky-top shadow-sm px-3 pt-3 px-md-5 px-lg-5 pt-md-4 bg-white" style="z-index: 997;">
     <div class="patch"></div>
     <div class="row">
       <div class="col-12 d-flex justify-content-start align-items-center pb-3 flex-wrap">
@@ -106,6 +112,7 @@
     </div>
   </div>
 
+  <!-- Location results -->
   <ng-container *ngIf="newOrderForm && newOrderStage.value === 'location'">
     <div class="container-fluid search-contn mt-md-4 px-md-5 pt-md p-3 position-relative">
       <div class="row" style="row-gap: 15px">
@@ -134,7 +141,7 @@
                               </div>
 
                               <div class="col-auto">
-                                <p class="m-0">{{ location.street }}</p>
+                                <p class="m-0">{{ location.address }}</p>
                               </div>
                             </div>
                           </div>
@@ -175,7 +182,7 @@
                               </div>
 
                               <div class="col-auto">
-                                <p class="m-0">{{ location.street }}</p>
+                                <p class="m-0">{{ location.address }}</p>
                               </div>
                             </div>
                           </div>
@@ -184,7 +191,7 @@
                     </ng-container>
 
                     <ng-template #noOrders>
-                      <div class="col-12">
+                      <div class="col-12 mt-3">
                         <div class="card">
                           <div class="card-body">
                             <p class="m-0">No deliveries yet</p>
@@ -202,7 +209,3 @@
     </div>
   </ng-container>
 </div>
-
-<ng-container *ngIf="showMap && newOrderStage.value === 'location'">
-  <footiedrop-web-select-location-on-map [mapFor]="mapFor" [slideOut]="hideMap" (closeMap)="closeMap()" [selectedTypeAddress]="selectedTypeAddress"></footiedrop-web-select-location-on-map>
-</ng-container>

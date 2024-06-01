@@ -36,7 +36,7 @@ const generateMockUser = (): User => ({
 });
 
 const generateMockAddress = (): Address => ({
-  street: chance.address(),
+  address: chance.address(),
   city: chance.city(),
   state: chance.state(),
   postalCode: chance.zip(),
@@ -149,7 +149,7 @@ export const mockData = {
  * @returns {Address} - A mock location object
  */
 const generateMockLocation = (): Address => ({
-  street: chance.address(),
+  address: chance.address(),
   city: chance.city(),
   state: chance.state(),
   postalCode: chance.zip(),
@@ -176,7 +176,7 @@ export const mockLocation = generateMockLocation();
 export const searchLocationsMockAPI = (query: string): Promise<Address[]> => {
   return new Promise(resolve => {
     setTimeout(() => {
-      resolve(mockLocations.filter(location => location.street.toLowerCase().includes(query.toLowerCase())));
+      resolve(mockLocations.filter(location => location.address.toLowerCase().includes(query.toLowerCase())));
     }, 1000);
   });
 };

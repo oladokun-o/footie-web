@@ -34,7 +34,7 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
   ];
   newOrderStage = this.newOrderStages[0];
   newOrderForm!: FormGroup;
-  userCurrentLocation: Address = JSON.parse(localStorage.getItem('userCurrentLocation') as string);
+  get userCurrentLocation(): Address { return JSON.parse(localStorage.getItem('userCurrentLocation') as string) };
 
   @ViewChild('pickup') pickupAddressInput: ElementRef<HTMLInputElement> | undefined;
 
@@ -89,7 +89,7 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
     const isAllowed = allowedRegions.some(region => location.country.toLowerCase().includes(region.code.toLowerCase()));
 
     if (!isAllowed) {
-      this.toastr.warning('Service is not available in your current location.','', {
+      this.toastr.warning('Service is not available in your current location.', '', {
         disableTimeOut: true,
         tapToDismiss: false,
       });
@@ -156,8 +156,8 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
         }),
         delivery: new FormGroup({
           address: new FormControl(null, [Validators.required]),
-          city: new FormControl(null, [Validators.required]),
-          state: new FormControl(null, [Validators.required]),
+          city: new FormControl(null),
+          state: new FormControl(null),
           postalCode: new FormControl(null),
           country: new FormControl('Russia', [Validators.required]),
           locationType: new FormControl(null, [Validators.required]),
@@ -170,7 +170,7 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
     });
 
     if (this.userCurrentLocation) {
-      this.newOrderForm.get('location.pickup.address')?.patchValue(this.userCurrentLocation.street);
+      this.newOrderForm.get('location.pickup.address')?.patchValue(this.userCurrentLocation.address);
       this.newOrderForm.get('location.pickup')?.patchValue(this.userCurrentLocation);
       setTimeout(() => {
         this.deliveryAddressInput?.nativeElement.focus();
@@ -292,49 +292,56 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
   selectAddress(address: Address): void {
     const { pickupAddress, deliveryAddress, searchedForPickupAddress, searchedForDeliveryAddress, newOrderForm } = this;
 
-    if (this.deliveryIsFocused) {
-      newOrderForm.get('location.delivery.address')?.patchValue(address.street);
+    const updatePickupAddressForm = () => {
+      newOrderForm.get('location.pickup.address')?.patchValue(address.address);
+      newOrderForm.get('location.pickup')?.patchValue(address);
+      this.foundLocations = [];
+    }
+
+    const updateDeliveryAddressForm = () => {
+      newOrderForm.get('location.delivery.address')?.patchValue(address.address);
       newOrderForm.get('location.delivery')?.patchValue(address);
       this.foundLocations = [];
+      console.log(this.newOrderForm.value)
+    }
+
+    if (this.mapFor === 'pickup') {
+      updatePickupAddressForm();
+      return;
+    } else if (this.mapFor === 'dropoff') {
+      updateDeliveryAddressForm();
+      return;
+    }
+
+    if (this.deliveryIsFocused) {
+      updateDeliveryAddressForm();
       return;
     }
 
     if (this.pickupIsFocused) {
-      newOrderForm.get('location.pickup.address')?.patchValue(address.street);
-      newOrderForm.get('location.pickup')?.patchValue(address);
-      this.foundLocations = [];
+      updatePickupAddressForm();
       console.log(newOrderForm.value);
       return;
     }
 
     if (!this.pickupIsFocused && !this.deliveryIsFocused) {
       if (address.type === 'pickup') {
-        newOrderForm.get('location.pickup.address')?.patchValue(address.street);
-        newOrderForm.get('location.pickup')?.patchValue(address);
-        this.foundLocations = [];
+        updatePickupAddressForm();
         return;
       } else {
-        newOrderForm.get('location.delivery.address')?.patchValue(address.street);
-        newOrderForm.get('location.delivery')?.patchValue(address);
-        this.foundLocations = [];
+        updateDeliveryAddressForm();
         return;
       }
     }
 
     if ((pickupAddress !== '' && searchedForPickupAddress) || pickupAddress === '') {
-      newOrderForm.get('location.pickup.address')?.patchValue(address.street);
-      newOrderForm.get('location.pickup')?.patchValue(address);
+      updatePickupAddressForm();
     } else if ((deliveryAddress !== '' && searchedForDeliveryAddress) || deliveryAddress === '') {
-      newOrderForm.get('location.delivery.address')?.patchValue(address.street);
-      newOrderForm.get('location.delivery')?.patchValue(address);
+      updateDeliveryAddressForm();
     } else {
       // Default case: if neither specific condition is met, default to pickup
-      newOrderForm.get('location.pickup.address')?.patchValue(address.street);
-      newOrderForm.get('location.pickup')?.patchValue(address);
+      updatePickupAddressForm();
     }
-
-    this.foundLocations = [];
-    console.log(newOrderForm.value);
   }
 
   get selectedType(): 'pickup' | 'delivery' {
@@ -378,8 +385,6 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
 
   closeMap() {
     this.hideMap = true;
-    setTimeout(() => {
-      this.showMap = false;
-    }, 1000);
+    this.showMap = false;
   }
 }

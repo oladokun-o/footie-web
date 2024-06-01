@@ -32,7 +32,7 @@ export enum ItemType {
 }
 
 export interface Address {
-  street: string;
+  address: string;
   city: string;
   state?: string;
   postalCode?: string;

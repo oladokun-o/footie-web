@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Address } from '../interfaces/order.interface';
-import { catchError, map, Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { YaGeocoderService } from 'angular8-yandex-maps';
 import { UserLocation } from '../interfaces/location.interface';
 
@@ -16,10 +16,13 @@ export class LocationService {
   ) { }
 
   /**
-   * Search for locations based on the search query
-   * @param {string} query - The search query
-   * @returns {Promise<Address[]>} - A list of locations
-   */
+    * Search for locations based on the search query
+    * @param {string} query - The search query
+    * @param {string} type - The location type ('pickup' or 'delivery')
+    * @param {number[][]} boundedBy - The bounding box for search results
+    * @param {boolean} strictBounds - Whether to enforce strict bounds for search results
+    * @returns {Observable<Address[]>} - A list of locations
+    */
   searchLocations(query: string, type: 'pickup' | 'delivery', boundedBy?: number[][], strictBounds?: boolean): Observable<Address[]> {
     return this.yaGeocoderService.geocode(query, {
       boundedBy: boundedBy,
@@ -31,7 +34,7 @@ export class LocationService {
           const properties: UserLocation = geoObject.properties.getAll();
           const metaData = properties.metaDataProperty.GeocoderMetaData.AddressDetails.Country;
           const location: Address = {
-            street: metaData.AddressLine,
+            address: metaData.AddressLine,
             city: metaData.Locality?.DependentLocality?.DependentLocalityName || metaData.Locality?.LocalityName || metaData?.AdministrativeArea?.AdministrativeAreaName || '',
             state: metaData.Locality?.LocalityName || metaData.Locality?.DependentLocality?.DependentLocalityName || metaData?.AdministrativeArea?.AdministrativeAreaName || '',
             postalCode: '',
@@ -47,7 +50,31 @@ export class LocationService {
         console.error('An error occurred while searching for locations', error);
         return [];
       })
-    )
+    );
+  }
+
+  /**
+   * Search for a single location based on the search query
+   * @param {string} query - The search query
+   * @param {string} type - The location type ('pickup' or 'delivery')
+   * @param {number[][]} boundedBy - The bounding box for search results
+   * @param {boolean} strictBounds - Whether to enforce strict bounds for search results
+   * @returns {Observable<Address>} - A single location
+   */
+  searchLocation(query: string, boundedBy?: number[][], strictBounds?: boolean): Observable<Address> {
+    return this.searchLocations(query, 'pickup', boundedBy, strictBounds).pipe(
+      map((locations: Address[]) => {
+        if (locations.length > 0) {
+          return locations[0];
+        } else {
+          throw new Error('No locations found');
+        }
+      }),
+      catchError((error) => {
+        console.error('An error occurred while searching for a location', error);
+        return throwError(error);
+      })
+    );
   }
 
   get userCoordinates(): Promise<number[]> {

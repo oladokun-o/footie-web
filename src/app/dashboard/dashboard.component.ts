@@ -140,7 +140,7 @@ export class DashboardComponent implements OnDestroy {
             const metaData = properties.metaDataProperty.GeocoderMetaData.AddressDetails.Country;
 
             let userLocation = {
-              street: metaData.AddressLine,
+              address: metaData.AddressLine,
               city: metaData.Locality?.DependentLocality?.DependentLocalityName || metaData.Locality?.LocalityName || metaData?.AdministrativeArea?.AdministrativeAreaName || '',
               state: metaData.Locality?.LocalityName || metaData.Locality?.DependentLocality?.DependentLocalityName || metaData?.AdministrativeArea?.AdministrativeAreaName || '',
               postalCode: '',
