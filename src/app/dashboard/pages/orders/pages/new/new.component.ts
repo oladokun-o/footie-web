@@ -13,6 +13,8 @@ import { YaGeocoderService } from 'angular8-yandex-maps';
 import { Subscription, switchMap, tap } from 'rxjs';
 import { Region, UserLocation } from 'src/app/core/interfaces/location.interface';
 import { NgxFileDropEntry } from 'ngx-file-drop';
+import { MatDialog } from '@angular/material/dialog';
+import { CancelOrderComponent } from '../../modals/cancel-order/cancel-order.component';
 const chance = new Chance();
 
 interface Stage {
@@ -57,7 +59,8 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
     private locationService: LocationService,
     private toastr: ToastrService,
     private yaGeocoderService: YaGeocoderService,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog
   ) {
     super();
 
@@ -521,9 +524,18 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
 
       setTimeout(() => {
         this.toastr.info('Feature is ongoing development!');
+        this.router.navigate(['/dashboard']);
       }, 2000);
-
-      this.router.navigate(['/']);
     };
+  }
+
+  cancel(): void {
+    const ref = this.dialog.open(CancelOrderComponent);
+    ref.componentInstance.why = 'Are you sure you want to cancel? <br> You\' lose your changes.';
+    ref.afterClosed().subscribe((reason) => {
+      if (reason) {
+        this.router.navigate(['/dashboard']);
+      }
+    });
   }
 }

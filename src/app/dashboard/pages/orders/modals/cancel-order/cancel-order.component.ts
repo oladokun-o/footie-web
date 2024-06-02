@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./cancel-order.component.scss']
 })
 export class CancelOrderComponent {
+  why: string = 'Why do you want to cancel?';
   options: { value: string; viewValue: string; }[] = [
     { value: '1', viewValue: 'Delivery is too slow' },
     { value: '2', viewValue: 'I found a better price' },
