@@ -73,7 +73,7 @@
               </div>
             </div>
             <div class="col-1 d-flex d-md-none justify-content-end align-items-start">
-              <img [src]="getDeliveryModeIcon(order)" style="width: 100%;" alt="delivery mode icon" />
+              <img [src]="getDeliveryModeIcon(order.deliveryMode || 'foot')" style="width: 100%;" alt="delivery mode icon" />
             </div>
           </div>
 

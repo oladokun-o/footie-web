@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Address, ItemType } from 'src/app/core/interfaces/order.interface';
 import { User } from 'src/app/core/interfaces/user.interface';
 import { mockData, mockLocation } from 'src/app/utils/orders/order.mock';
@@ -45,7 +45,7 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
   hideMap: boolean = false;
   mapFor: 'pickup' | 'dropoff' = 'pickup';
 
-  prohibitedItems: string[] = ['lorem','ipsum','carte'];
+  prohibitedItems: string[] = ['lorem', 'ipsum', 'carte'];
   showProhibitedItems: boolean = false;
 
   itemTypes: string[] = Object.values(ItemType).map(i => i.toUpperCase());
@@ -56,7 +56,8 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
     private orderService: OrdersService,
     private locationService: LocationService,
     private toastr: ToastrService,
-    private yaGeocoderService: YaGeocoderService
+    private yaGeocoderService: YaGeocoderService,
+    private router: Router
   ) {
     super();
 
@@ -143,6 +144,9 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
       }));
 
       this.newOrderStage = this.newOrderStages[stageIndex];
+      if (this.newOrderStage.value === 'details') {
+        this.calculateTrip();
+      }
     }
   }
 
@@ -183,13 +187,14 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
           userId: new FormControl(this.user.id, [Validators.required]),
         }),
         recipient: new FormGroup({
-          name: new FormControl(null, [Validators.required]),
+          firstName: new FormControl(null, [Validators.required]),
+          lastName: new FormControl(null, [Validators.required]),
           phone: new FormControl(null, [Validators.required]),
-          email: new FormControl(null),
+          email: new FormControl(null, [Validators.email]),
         }),
         package: new FormGroup({
           title: new FormControl(null, [Validators.required]),
-          type: new FormControl(null, [Validators.required]),
+          type: new FormControl('GADGET', [Validators.required]),
           quantity: new FormControl(1, [Validators.required, Validators.min(1)]),
           size: new FormControl('1KG', [Validators.required]),
           image: new FormControl(null, [Validators.required]),
@@ -197,7 +202,9 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
           message: new FormControl(null)
         })
       }),
-      payment: new FormGroup({})
+      payment: new FormGroup({
+        price: new FormControl(0, [Validators.required]),
+      })
     });
 
     if (this.userCurrentLocation) {
@@ -234,6 +241,10 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
         time: new FormControl('', [Validators.required]),
       }));
     }
+  }
+
+  get estimatedFee(): number {
+    return this.newOrderForm.get('payment.price')?.value as number;
   }
 
   setPackageSize(value: string): void {
@@ -420,30 +431,99 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
     }
   }
 
+  calculateTrip() {
+    this.newOrderForm.get('payment.price')?.patchValue(2000, { emitEvent: false });
+  }
+
   closeMap() {
     this.hideMap = true;
     this.showMap = false;
   }
 
-  public files: NgxFileDropEntry[] = [];
-  public filedroperrormessage: string = '';
+  public file: File | null = null;
+  public fileUrl: string | null = null;
+  public fileDropErrorMessage: string = '';
+  private maxFileSize = 5242880; // 5MB
 
   public dropped(files: NgxFileDropEntry[]) {
-    this.files = files;
-    for (const droppedFile of files) {
+    this.handleFileDrop(files);
+  }
 
-      // Is it a file?
+  public changeFile(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.handleFile(file);
+    }
+  }
+
+  private handleFileDrop(files: NgxFileDropEntry[]) {
+    this.fileDropErrorMessage = '';
+
+    if (files.length > 0) {
+      const droppedFile = files[0];
+
       if (droppedFile.fileEntry.isFile) {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
-
-          // Here you can access the real file
-          console.log(droppedFile.relativePath, file);
+          this.handleFile(file);
         });
       } else {
         const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
         console.log(droppedFile.relativePath, fileEntry);
       }
     }
+  }
+
+  private handleFile(file: File) {
+    if (this.isFileTypeAccepted(file)) {
+      if (this.isFileSizeAccepted(file)) {
+        if (this.fileUrl) {
+          URL.revokeObjectURL(this.fileUrl);
+        }
+        this.file = file;
+        this.fileUrl = URL.createObjectURL(file);
+        this.newOrderForm.get('details.package.image')?.setValue(this.fileUrl);
+      } else {
+        this.fileDropErrorMessage = 'File size exceeds the 5MB limit.';
+      }
+    } else {
+      this.fileDropErrorMessage = 'Only image files (PNG, JPEG) are allowed.';
+    }
+  }
+
+  private isFileTypeAccepted(file: File): boolean {
+    const acceptedTypes = ['image/png', 'image/jpeg'];
+    return acceptedTypes.includes(file.type);
+  }
+
+  private isFileSizeAccepted(file: File): boolean {
+    return file.size <= this.maxFileSize;
+  }
+
+  public removeFile(): void {
+    if (this.fileUrl) {
+      URL.revokeObjectURL(this.fileUrl);
+    }
+    this.file = null;
+    this.fileUrl = null;
+    this.newOrderForm.get('details.package.image')?.setValue(null);
+  }
+
+  // Confirmation
+  confirming: boolean = false;
+
+  confirm(): void {
+    if (this.newOrderForm.valid) {
+      this.confirming = true;
+
+      console.log(this.newOrderForm.value)
+
+      setTimeout(() => {
+        this.toastr.info('Feature is ongoing development!');
+      }, 2000);
+
+      this.router.navigate(['/']);
+    };
   }
 }

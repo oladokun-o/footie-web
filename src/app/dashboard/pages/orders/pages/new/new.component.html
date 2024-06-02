@@ -1,4 +1,4 @@
-<div class="container-fluid position-absolute top-0 start-0 p-0">
+<div class="container-fluid position-absolute top-0 start-0 p-0 contn">
   <!-- Select location on map -->
   <ng-container *ngIf="showMap && newOrderStage.value === 'location'">
     <footiedrop-web-select-location-on-map [mapFor]="mapFor" class="sticky-top" [slideOut]="hideMap"
@@ -7,7 +7,10 @@
   </ng-container>
 
   <!-- Delivery Route Form Container -->
-  <div class="container-fluid sticky-top shadow-sm px-3 pt-3 px-md-5 px-lg-5 pt-md-4 bg-white" style="z-index: 997;">
+  <div class="container-fluid sticky-top shadow-sm px-3 pt-3 px-md-5 px-lg-5 pt-md-4 bg-white" style="z-index: 997;"
+    [class.slide-out-top]="newOrderForm && newOrderStage.value === 'confirmation'"
+    [class.slide-in-top]="newOrderForm && newOrderStage.value !== 'confirmation'"
+  >
     <div class="patch"></div>
     <div class="row">
       <div class="col-12 d-flex justify-content-start align-items-center pb-3 flex-wrap">
@@ -213,7 +216,7 @@
   <!-- Details -->
   <ng-container *ngIf="newOrderForm && newOrderStage.value === 'details'">
     <form [formGroup]="newOrderForm"
-      class="container-fluid search-contn details mt-md-4 px-md-5 pt-md p-3 position-relative">
+      class="container-fluid search-contn h-100 details mt-md-4 px-md-5 pt-md p-3 pb-5 position-relative">
       <div class="row" style="row-gap: 15px">
         <mat-accordion>
           <!-- Sender -->
@@ -272,11 +275,21 @@
                   <ng-container formGroupName="recipient">
                     <div class="col-12 col-md-6 form-group">
                       <label for="recipient-name" class="form-label text-capitalize">Recipient Name</label>
-                      <input type="text" class="form-control" id="recipient-name" formControlName="name"
-                        placeholder="Enter receiver's full name">
+                      <input type="text" class="form-control" id="recipient-name" formControlName="firstName"
+                        placeholder="Enter receiver's first name">
                       <small class="text-danger"
-                        *ngIf="newOrderForm.get('details.recipient.name')?.hasError('required') && newOrderForm.get('details.recipient.name')?.touched">
-                        Recipient's full name is required!
+                        *ngIf="newOrderForm.get('details.recipient.firstName')?.hasError('required') && newOrderForm.get('details.recipient.firstName')?.touched">
+                        Recipient's first name is required!
+                      </small>
+                    </div>
+                    <div class="col-12 col-md-6 form-group">
+                      <label for="recipient-lastname"
+                        class="form-label text-capitalize invisible d-none d-md-block">Recipient Last Name</label>
+                      <input type="text" class="form-control" id="recipient-lastname" formControlName="lastName"
+                        placeholder="Enter receiver's last name">
+                      <small class="text-danger"
+                        *ngIf="newOrderForm.get('details.recipient.lastName')?.hasError('required') && newOrderForm.get('details.recipient.lastName')?.touched">
+                        Recipient's last name is required!
                       </small>
                     </div>
                     <div class="col-12 col-md-6 form-group">
@@ -290,8 +303,12 @@
                     </div>
                     <div class="col-12 col-md-6 form-group">
                       <label for="recipient-email" class="form-label text-capitalize">Recipient email address</label>
-                      <input type="text" class="form-control" id="recipient-email" formControlName="email"
+                      <input type="email" class="form-control" id="recipient-email" formControlName="email"
                         placeholder="Enter receiver's email address (optional)">
+                      <small class="text-danger"
+                        *ngIf="newOrderForm.get('details.recipient.email')?.hasError('email') && newOrderForm.get('details.recipient.email')?.touched">
+                        Please enter a valid email address
+                      </small>
                     </div>
                   </ng-container>
                 </ng-container>
@@ -299,7 +316,8 @@
             </div>
           </mat-expansion-panel>
 
-          <!-- Package --><mat-expansion-panel>
+          <!-- Package -->
+          <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title> What are you sending? </mat-panel-title>
             </mat-expansion-panel-header>
@@ -332,7 +350,7 @@
                           Our Prohibited Items include:
                           <span *ngFor="let item of prohibitedItems">
                             {{ item }},
-                          </span> etc. <a href="/help" style="font-size: inherit;">Learn more</a>
+                          </span> etc. <a href="/" target="_blank" style="font-size: inherit;">Learn more</a>
                         </ng-container>
                       </small>
                     </div>
@@ -360,8 +378,8 @@
                         placeholder="Select delivery mode"></ng-select>
                     </div>
 
-                    <div class="col-12 col-md-6 form-group">
-                      <label for="package-size" class="form-label">Package Size</label>
+                    <div class="col-12 col-md-7 form-group">
+                      <label for="package-size" class="form-label">Package Details</label>
                       <div class="sizes">
                         <button type="button" [class.active]="newOrderForm.get('details.package.size')?.value === '1KG'"
                           (click)="setPackageSize('1KG')">
@@ -409,11 +427,11 @@
                       </div>
                     </div>
 
-                    <div class="col-12 col-md-6 form-group">
-                      <label for="package-image" class="form-label invisible d-md-block d-none">Package Details</label>
-                      <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)" accept=".png,.jpg" [directory]="false" [multiple]="false">
+                    <div class="col-12 col-md-12 form-group">
+                      <ngx-file-drop *ngIf="!fileUrl" dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)"
+                        accept=".png,.jpg,.jpeg" [directory]="false" [multiple]="false">
                         <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
-                          <div class="image" role="button" (click)="openFileSelector()">
+                          <div class="image text-center py-4" role="button" (click)="openFileSelector()">
                             <svg width="35" height="35" viewBox="0 0 35 35" fill="none"
                               xmlns="http://www.w3.org/2000/svg">
                               <path
@@ -424,10 +442,51 @@
                                 fill="#F4F4F4" />
                             </svg>
 
-                            <span>Take a picture of the package</span>
+                            <span class="d-block d-md-none">Take a picture of the package</span>
+                            <span class="d-md-block d-none">Upload <br> OR <br> Drag and drop image files here (PNG,
+                              JPEG)</span>
                           </div>
                         </ng-template>
                       </ngx-file-drop>
+
+                      <small class="text-danger d-flex gap-1"
+                        *ngIf="newOrderForm.get('details.package.image')?.hasError('required') && newOrderForm.get('details.package.image')?.touched">
+                        Please <span class="d-md-none d-block">take</span> <span class="d-md-block d-none">upload</span>
+                        a picture of the item!
+                      </small>
+
+                      <small *ngIf="fileDropErrorMessage" class="text-danger">
+                        {{ fileDropErrorMessage }}
+                      </small>
+
+                      <ng-container *ngIf="fileUrl">
+                        <div class="ngx-file-drop__drop-zone dropped">
+                          <img [src]="fileUrl" alt="{{ file?.name }}">
+                          <input type="file" #imageInput (change)="changeFile($event)" class="position-fixed invisible"
+                            style="z-index: 0;right: 10000px;" accept="image/png, image/jpeg">
+                        </div>
+
+                        <div class="dropped-controls mt-1">
+                          <button type="button" (click)="imageInput.click()" class="text-green">
+                            Change
+                          </button>
+                          <button type="button" (click)="removeFile()" class="text-danger pe-0">
+                            Remove
+                          </button>
+                        </div>
+                      </ng-container>
+                    </div>
+
+                    <div class="col-12 form-group">
+                      <label for="package-message" class="form-label">Leave a message (optional)</label>
+                      <div class="textarea">
+                        <textarea type="text" class="form-control" id="package-message" formControlName="message"
+                          placeholder="Enter your message" rows="3" maxlength="150"></textarea>
+                        <div class="chars">
+                          <small class="text-muted">{{ newOrderForm.get('details.package.message')?.value?.length || 0
+                            }}/150</small>
+                        </div>
+                      </div>
                     </div>
                   </ng-container>
                 </ng-container>
@@ -438,4 +497,109 @@
       </div>
     </form>
   </ng-container>
+</div>
+
+<!-- Confirmation -->
+<ng-container *ngIf="newOrderForm && newOrderStage.value === 'confirmation'">
+  <div class="container-fluid h-100 position-absolute top-0 start-0 map">
+    <iframe
+      src="https://yandex.com/map-widget/v1/?um=constructor%3A6de7b1c9a53eb01b3167ebc9dd587958a7c9bd3ca0dae77c8cb5d8f250347727&amp;source=constructor"
+      width="500" height="400" frameborder="0"></iframe>
+  </div>
+</ng-container>
+
+<!-- Bottom Navigations -->
+<div *ngIf="newOrderForm && newOrderStage.value === 'details'" class="button-pickup slide-in-bottom p-3 px-md-5 py-md-5"
+  role="button">
+  <div class="row">
+    <div class="col-12">
+      <div class="row gap-3">
+        <div class="col-12">
+          <div class="d-flex justify-content-between align-items-md-center first flex-column flex-md-row row-gap-1">
+            <h4 class="m-0 text-dark text-truncate" style="font-weight: 600;">Deliver to: {{ deliveryAddress }}</h4>
+            <h5 class="m-0 fw-medium text-dark">Estimated fee: {{ estimatedFee | currency: 'RUB' }}</h5>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <button type="button" (click)="goToStage('confirmation')" class="btn-primary">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="newOrderForm && newOrderStage.value === 'confirmation'"
+  class="button-pickup slide-in-bottom p-3 px-md-5 py-md-5" role="button">
+  <div class="row">
+    <div class="col-12">
+      <div class="row gap-3">
+        <div class="col-12">
+          <div class="d-flex justify-content-between align-items-md-center first flex-column flex-md-row row-gap-1">
+            <h4 class="m-0 text-dark" style="font-weight: 600;">Confirm details</h4>
+          </div>
+        </div>
+
+        <div class="col-12 d-flex">
+          <div class="col-1">
+            <img src="assets/images/icons/locator.svg" width="25" alt="locator icon" />
+          </div>
+          <div class="col-9 col-md-10">
+            <div class="row h-100" style="gap: 10px;">
+              <div>
+                <small class="text-muted">Pickup Location</small>
+                <p class="m-0 text-truncate">{{ pickupAddress }}</p>
+              </div>
+              <div>
+                <small class="text-muted">Delivery Location</small>
+                <p class="m-0 text-truncate">{{ deliveryAddress }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-2 col-md-1 d-flex justify-content-end align-items-start">
+            <img [src]="getDeliveryModeIcon(newOrderForm.get('details.package.modeOfDelivery')?.value?.toLowerCase())"
+              style="width: 100%;" alt="delivery mode icon" />
+          </div>
+        </div>
+
+        <div class="container-fluid">
+          <div class="row" style="row-gap: 10px;">
+            <div class="col-6">
+              <label class="form-label fs-6 m-0">Package details</label>
+              <p class="m-0 fw-medium">{{ newOrderForm.get('details.package.title')?.value }}</p>
+              <small class="text-muted text-capitalize"
+                [innerHTML]="newOrderForm.get('details.package.type')?.value"></small>
+            </div>
+            <div class="col-6">
+              <label class="form-label fs-6 m-0">Receipient</label>
+              <p class="m-0 fw-medium">{{ newOrderForm.get('details.recipient.firstName')?.value }} {{
+                newOrderForm.get('details.recipient.lastName')?.value }}</p>
+            </div>
+            <div class="col-12">
+              <label class="form-label fs-6 m-0">Receipient contact number</label>
+              <p class="m-0 fw-medium">{{ newOrderForm.get('details.recipient.phonw')?.value }}</p>
+            </div>
+            <div class="col-6">
+              <label class="form-label fs-6 m-0">Payment</label>
+              <p class="m-0 fw-medium">Card</p>
+            </div>
+            <div class="col-6">
+              <label class="form-label fs-6 m-0">Estimated Fee</label>
+              <p class="m-0 fw-bold text-green fs-5">{{ estimatedFee | currency: 'RUB' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div [class.disabled]="confirming" class="col-12 last text-center p-4 d-flex flex-row gap-5 justify-content-center align-items-center">
+          <a class="text-green" role="button" (click)="goToStage('details')">Edit Details</a>
+          <a class="text-danger" routerLink="/orders">Cancel</a>
+        </div>
+
+        <form [formGroup]="newOrderForm" (submit)="confirm()" class="col-12">
+          <footiedrop-web-loading-button [buttonText]="'Confirm order'" [disabled]="confirming"
+            [loading]="confirming"></footiedrop-web-loading-button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
