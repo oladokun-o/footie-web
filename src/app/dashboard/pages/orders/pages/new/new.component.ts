@@ -85,9 +85,10 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
   ngOnInit(): void { }
 
   ngOnDestroy(): void {
-    this.toastr.clear();
+    if (this.warningId) this.toastr.remove(this.warningId);
   }
 
+  warningId: number = 0;
   checkIfServiceAvailableForUserCurrentLocation(): void {
     const allowedRegions: Region[] = [
       {
@@ -104,6 +105,7 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
         disableTimeOut: true,
         tapToDismiss: false,
       });
+      this.warningId = this.toastr.currentlyActive;
     }
   }
 
