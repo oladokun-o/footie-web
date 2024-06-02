@@ -524,14 +524,16 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
 
       setTimeout(() => {
         this.toastr.info('Feature is ongoing development!');
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard/orders']);
       }, 2000);
     };
   }
 
   cancel(): void {
     const ref = this.dialog.open(CancelOrderComponent);
-    ref.componentInstance.why = 'Are you sure you want to cancel? <br> You\' lose your changes.';
+    ref.componentInstance.why = 'Are you sure you want to cancel? <br> You\'ll lose your changes.';
+    ref.componentInstance.options = [];
+    ref.componentInstance.selectedOption = { value: 'null', viewValue: 'null' }
     ref.afterClosed().subscribe((reason) => {
       if (reason) {
         this.router.navigate(['/dashboard']);

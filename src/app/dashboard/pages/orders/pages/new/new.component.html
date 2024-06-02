@@ -592,7 +592,7 @@
 
         <div [class.disabled]="confirming" class="col-12 last text-center p-4 d-flex flex-row gap-5 justify-content-center align-items-center">
           <a class="text-green" role="button" (click)="goToStage('details')">Edit Details</a>
-          <a class="text-danger" (click)="cancel()">Cancel</a>
+          <a class="text-danger" role="button" (click)="cancel()">Cancel</a>
         </div>
 
         <form [formGroup]="newOrderForm" (submit)="confirm()" class="col-12">
