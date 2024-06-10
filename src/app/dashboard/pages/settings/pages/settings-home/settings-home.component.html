@@ -1,0 +1,148 @@
+<div class="container-fluid mt-2">
+  <div class="row row-gap-3">
+    <div class="col-12">
+      <div class="d-flex justify-content-start align-items-center gap-3">
+        <!-- Profile picture -->
+        <img *ngIf="user && user.profilePicture" role="button" [src]="user.profilePicture" alt="Profile Icon"
+          class="profile-icon shadow-sm" />
+        <img *ngIf="user && !user.profilePicture" role="button" src="assets/images/icons/profile-icon.svg"
+          alt="Profile Icon" class="profile-icon" />
+
+        <!-- User's full name -->
+        <div class="col-auto">
+          <h4 class="fw-bold text-capitalize pt-3">{{ user.firstName + ' ' + user.lastName }}</h4>
+          <a title="Update email your address" [routerLink]="['./email']">{{ user.email }}</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <mat-divider></mat-divider>
+
+    <!-- Account Settings -->
+    <div class="col-12">
+      <ul class="p-0">
+        <li class="text-muted">Account</li>
+
+        <!-- Edit profile -->
+        <li matRipple [routerLink]="['./profile']">
+          <div>
+            <i class="bi bi-person-gear"></i>
+            Edit profile
+          </div>
+          <i class="bi bi-chevron-right"></i>
+        </li>
+
+        <!-- Change email address -->
+        <li matRipple [routerLink]="['./email']">
+          <div>
+            <i class="bi bi-envelope"></i>
+            Email address
+          </div>
+          <i class="bi bi-chevron-right"></i>
+        </li>
+
+        <!-- Change phone number -->
+        <li matRipple [routerLink]="['./phone']">
+          <div>
+            <i class="bi bi-phone"></i>
+            Phone number
+          </div>
+          <i class="bi bi-chevron-right"></i>
+        </li>
+
+        <!-- Change home address -->
+        <li matRipple [routerLink]="['./address']">
+          <div>
+            <i class="bi bi-house-gear"></i>
+            home address
+          </div>
+          <i class="bi bi-chevron-right"></i>
+        </li>
+
+        <li matRipple [routerLink]="['./preferences']">
+          <div>
+            <i class="bi bi-megaphone"></i>
+            Communication preferences
+          </div>
+          <i class="bi bi-chevron-right"></i>
+        </li>
+
+        <!-- <li matRipple (click)="toggleTheme()">
+          Dark mode
+
+          <div class="wrapper">
+            <div class="switch--box">
+              <label class="cswitch"><span class="cswitch--label"></span>
+                <input class="cswitch--input" [checked]="isDarkMode" (change)="toggleTheme()" type="checkbox" /><span
+                  class="cswitch--trigger wrapper bi"></span>
+              </label>
+            </div>
+          </div>
+        </li> -->
+      </ul>
+    </div>
+
+    <!-- Divider -->
+    <mat-divider></mat-divider>
+
+    <!-- Security Settings -->
+    <div class="col-12">
+      <ul class="p-0">
+        <li class="text-muted">Security</li>
+
+        <!-- Change password -->
+        <li matRipple [routerLink]="['./change-password']">
+          <div>
+            <i class="bi bi-lock"></i>
+            Change password
+          </div>
+          <i class="bi bi-chevron-right"></i>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Divider -->
+    <mat-divider></mat-divider>
+
+    <!-- More Settings (if any) -->
+    <div class="col-12">
+      <ul class="p-0">
+        <li class="text-muted">More</li>
+
+        <li matRipple [routerLink]="['./language']">
+          <div>
+            <i class="bi bi-globe"></i>
+            <span>
+              Language <br> <small class="text-muted">{{ getLanguage(user.settings.language) }}</small>
+            </span>
+          </div>
+          <i class="bi bi-chevron-right"></i>
+        </li>
+
+        <li matRipple>
+          <div>
+            <i class="bi bi-building"></i>
+            About us
+          </div>
+          <i class="bi bi-chevron-right"></i>
+        </li>
+
+        <li matRipple>
+          <div>
+            <i class="bi bi-journal-richtext"></i>
+            Privacy policy
+          </div>
+          <i class="bi bi-chevron-right"></i>
+        </li>
+
+        <li matRipple [routerLink]="['/logout']">
+          <div>
+            <i class="bi bi-box-arrow-right"></i>
+            Log out
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

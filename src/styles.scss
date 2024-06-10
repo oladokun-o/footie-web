@@ -363,3 +363,11 @@ div {
     font-size: inherit !important;
   }
 }
+
+.profile-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}

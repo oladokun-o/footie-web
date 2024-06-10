@@ -13,7 +13,7 @@
       [innerHTML]="sanitizePageName(innerPage === '' ? currentPage : innerPage)"></span>
   </div>
 
-  <div class="header-item" *ngIf="!hideProfileIcon">
+  <div class="header-item" *ngIf="!hideProfileIcon && !['settings'].includes(currentPage)">
     <img *ngIf="user && user.profilePicture" role="button" [mat-menu-trigger-for]="MatMenu" [src]="user.profilePicture"
       alt="Profile Icon" class="profile-icon" />
     <img *ngIf="user && !user.profilePicture" role="button" [mat-menu-trigger-for]="MatMenu" src="assets/images/icons/profile-icon.svg" alt="Profile Icon"

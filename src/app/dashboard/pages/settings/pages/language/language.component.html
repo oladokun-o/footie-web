@@ -1,0 +1,14 @@
+<form [formGroup]="form" class="container-fluid h-100 position-relative">
+  <div class="row h-100 justify-content-between">
+    <div class="form-group col-12">
+      <label for="language" class="form-label">Select language</label>
+      <ng-select id="language" [autofocus]="true" [items]="languages" bindLabel="label" bindValue="value"
+        formControlName="language" [clearable]="false" [searchable]="false"></ng-select>
+    </div>
+
+    <div class="col-12 position-absolute bottom-0 start-0">
+      <footiedrop-web-loading-button [buttonText]="'Save changes'" [disabled]="saving || form.invalid || !form.dirty"
+        [loading]="saving"></footiedrop-web-loading-button>
+    </div>
+  </div>
+</form>
