@@ -1,13 +1,20 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Address } from 'src/app/core/interfaces/order.interface';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Address, ItemType } from 'src/app/core/interfaces/order.interface';
 import { User } from 'src/app/core/interfaces/user.interface';
 import { mockData, mockLocation } from 'src/app/utils/orders/order.mock';
 import * as Chance from 'chance';
 import { OrdersService } from 'src/app/core/services/orders.service';
 import { OrdersHelpers } from 'src/app/utils/orders/helpers';
 import { LocationService } from 'src/app/core/services/location.service';
+import { ToastrService } from 'ngx-toastr';
+import { YaGeocoderService } from 'angular8-yandex-maps';
+import { Subscription, switchMap, tap } from 'rxjs';
+import { Region, UserLocation } from 'src/app/core/interfaces/location.interface';
+import { NgxFileDropEntry } from 'ngx-file-drop';
+import { MatDialog } from '@angular/material/dialog';
+import { CancelOrderComponent } from '../../modals/cancel-order/cancel-order.component';
 const chance = new Chance();
 
 interface Stage {
@@ -19,7 +26,7 @@ interface Stage {
   templateUrl: './new.component.html',
   styleUrls: ['./new.component.scss']
 })
-export class NewComponent extends OrdersHelpers {
+export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
   type: 'instant' | 'scheduled' = 'instant';
   user: User = mockData.user; // JSON.parse(localStorage.getItem('user') as string);
   recentDeliveriesLocation: Address[] = [];
@@ -30,18 +37,38 @@ export class NewComponent extends OrdersHelpers {
   ];
   newOrderStage = this.newOrderStages[0];
   newOrderForm!: FormGroup;
-  userCurrentLocation: Address = mockLocation;
+  get userCurrentLocation(): Address { return JSON.parse(localStorage.getItem('userCurrentLocation') as string) };
 
   @ViewChild('pickup') pickupAddressInput: ElementRef<HTMLInputElement> | undefined;
 
   @ViewChild('dropoff') deliveryAddressInput: ElementRef<HTMLInputElement> | undefined;
 
+  showMap: boolean = false;
+  hideMap: boolean = false;
+  mapFor: 'pickup' | 'dropoff' = 'pickup';
+
+  prohibitedItems: string[] = ['lorem', 'ipsum', 'carte'];
+  showProhibitedItems: boolean = false;
+
+  itemTypes: string[] = Object.values(ItemType).map(i => i.toUpperCase());
+  deliveryModes: string[] = ['Foot'];
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private orderService: OrdersService,
     private locationService: LocationService,
+    private toastr: ToastrService,
+    private yaGeocoderService: YaGeocoderService,
+    private router: Router,
+    public dialog: MatDialog
   ) {
     super();
+
+    // check if the service is available in the region
+    if (this.userCurrentLocation) {
+      this.checkIfServiceAvailableForUserCurrentLocation();
+    }
+
     this.activatedRoute.queryParams.subscribe(params => {
       if (params["type"]) {
         this.type = params["type"];
@@ -53,6 +80,33 @@ export class NewComponent extends OrdersHelpers {
     if (this.user) {
       this.initUserDetails();
     };
+  }
+
+  ngOnInit(): void { }
+
+  ngOnDestroy(): void {
+    if (this.warningId) this.toastr.remove(this.warningId);
+  }
+
+  warningId: number = 0;
+  checkIfServiceAvailableForUserCurrentLocation(): void {
+    const allowedRegions: Region[] = [
+      {
+        name: 'Russia',
+        code: 'rus',
+      }
+    ];
+
+    const location = this.userCurrentLocation;
+    const isAllowed = allowedRegions.some(region => location.country.toLowerCase().includes(region.code.toLowerCase()));
+
+    if (!isAllowed) {
+      this.toastr.warning('Service is not available in your current location.', '', {
+        disableTimeOut: true,
+        tapToDismiss: false,
+      });
+      this.warningId = this.toastr.currentlyActive;
+    }
   }
 
   handleStageChange(stage: Stage): void {
@@ -78,10 +132,13 @@ export class NewComponent extends OrdersHelpers {
     const stageIndex = this.newOrderStages.findIndex(stage => stage.value === value);
 
     if (value !== 'location' && this.newOrderForm.get('location')?.invalid) {
+      this.toastr.info('Please complete the delivery route information before proceeding.');
       return;
     }
 
-    if (value !== 'details' && this.newOrderForm.get('details')?.invalid) {
+    if (!['details', 'location'].includes(value) && this.newOrderForm.get('details')?.invalid) {
+      this.toastr.info('Please complete the order details before proceeding.');
+      this.newOrderForm.get('details')?.markAllAsTouched();
       return;
     }
 
@@ -92,11 +149,15 @@ export class NewComponent extends OrdersHelpers {
       }));
 
       this.newOrderStage = this.newOrderStages[stageIndex];
+      if (this.newOrderStage.value === 'details') {
+        this.calculateTrip();
+      }
     }
   }
 
   initUserDetails(): void {
     this.recentDeliveriesLocation = this.user.orders?.filter(order => order.status === 'Delivered').map(order => order.deliveryAddress) || [];
+    console.log(this.recentDeliveriesLocation);
   }
 
   initForm(): void {
@@ -104,28 +165,55 @@ export class NewComponent extends OrdersHelpers {
       location: new FormGroup({
         pickup: new FormGroup({
           address: new FormControl(null, [Validators.required]),
-          city: new FormControl(null, [Validators.required]),
-          state: new FormControl(null, [Validators.required]),
-          postalCode: new FormControl(null, [Validators.required]),
+          city: new FormControl(null),
+          state: new FormControl(null),
+          postalCode: new FormControl(null),
+          floorOrApartment: new FormControl(null),
           country: new FormControl('Russia', [Validators.required]),
           locationType: new FormControl(null, [Validators.required]),
+          coordinates: new FormControl(null, [Validators.required]),
         }),
         delivery: new FormGroup({
           address: new FormControl(null, [Validators.required]),
-          city: new FormControl(null, [Validators.required]),
-          state: new FormControl(null, [Validators.required]),
-          postalCode: new FormControl(null, [Validators.required]),
+          city: new FormControl(null),
+          state: new FormControl(null),
+          postalCode: new FormControl(null),
+          floorOrApartment: new FormControl(null),
           country: new FormControl('Russia', [Validators.required]),
           locationType: new FormControl(null, [Validators.required]),
+          coordinates: new FormControl(null, [Validators.required]),
         }),
       }),
       details: new FormGroup({
-        title: new FormControl(null, Validators.required)
+        sender: new FormGroup({
+          name: new FormControl(this.user.firstName + ' ' + this.user.lastName, [Validators.required]),
+          phone: new FormControl(this.user.phone, [Validators.required]),
+          email: new FormControl(this.user.email, [Validators.required]),
+          userId: new FormControl(this.user.id, [Validators.required]),
+        }),
+        recipient: new FormGroup({
+          firstName: new FormControl(null, [Validators.required]),
+          lastName: new FormControl(null, [Validators.required]),
+          phone: new FormControl(null, [Validators.required]),
+          email: new FormControl(null, [Validators.email]),
+        }),
+        package: new FormGroup({
+          title: new FormControl(null, [Validators.required]),
+          type: new FormControl('GADGET', [Validators.required]),
+          quantity: new FormControl(1, [Validators.required, Validators.min(1)]),
+          size: new FormControl('1KG', [Validators.required]),
+          image: new FormControl(null, [Validators.required]),
+          modeOfDelivery: new FormControl('foot', [Validators.required]),
+          message: new FormControl(null)
+        })
       }),
+      payment: new FormGroup({
+        price: new FormControl(0, [Validators.required]),
+      })
     });
 
     if (this.userCurrentLocation) {
-      this.newOrderForm.get('location.pickup.address')?.patchValue(this.userCurrentLocation.street);
+      this.newOrderForm.get('location.pickup.address')?.patchValue(this.userCurrentLocation.address);
       this.newOrderForm.get('location.pickup')?.patchValue(this.userCurrentLocation);
       setTimeout(() => {
         this.deliveryAddressInput?.nativeElement.focus();
@@ -160,6 +248,14 @@ export class NewComponent extends OrdersHelpers {
     }
   }
 
+  get estimatedFee(): number {
+    return this.newOrderForm.get('payment.price')?.value as number;
+  }
+
+  setPackageSize(value: string): void {
+    this.newOrderForm.get('details.package.size')?.setValue(value);
+  }
+
   get pickupAddress(): string {
     return this.newOrderForm.get('location.pickup.address')?.value || '';
   }
@@ -170,7 +266,6 @@ export class NewComponent extends OrdersHelpers {
 
   clearAddress(type: 'pickup' | 'delivery'): void {
     if (type === 'pickup') {
-      console.log('pickup')
       this.newOrderForm.get('location.pickup')?.reset();
     } else {
       this.newOrderForm.get('location.delivery')?.reset();
@@ -181,6 +276,7 @@ export class NewComponent extends OrdersHelpers {
   pickupOnFocus(): void {
     setTimeout(() => {
       this.pickupIsFocused = true;
+      this.mapFor = 'pickup'
     }, 1000);
   }
 
@@ -194,6 +290,7 @@ export class NewComponent extends OrdersHelpers {
   deliveryOnFocus(): void {
     setTimeout(() => {
       this.deliveryIsFocused = true;
+      this.mapFor = 'dropoff'
     }, 1000);
   }
 
@@ -222,7 +319,7 @@ export class NewComponent extends OrdersHelpers {
         this.searchingPickup = true;
         this.searchedForPickupAddress = true;
         this.searchedForDeliveryAddress = false;
-        this.locationService.searchLocations(searchvalue).then((locations) => {
+        this.locationService.searchLocations(searchvalue, 'pickup').subscribe((locations) => {
           this.searchingPickup = false;
           this.foundLocations = locations;
         });
@@ -237,7 +334,7 @@ export class NewComponent extends OrdersHelpers {
         this.searchingDelivery = true;
         this.searchedForDeliveryAddress = true;
         this.searchedForPickupAddress = false;
-        this.locationService.searchLocations(searchvalue).then((locations) => {
+        this.locationService.searchLocations(searchvalue, 'delivery').subscribe((locations) => {
           this.searchingDelivery = false;
           this.foundLocations = locations;
         });
@@ -248,35 +345,68 @@ export class NewComponent extends OrdersHelpers {
   selectAddress(address: Address): void {
     const { pickupAddress, deliveryAddress, searchedForPickupAddress, searchedForDeliveryAddress, newOrderForm } = this;
 
-    if (this.deliveryIsFocused) {
-      newOrderForm.get('location.delivery.address')?.patchValue(address.street);
+    const updatePickupAddressForm = () => {
+      newOrderForm.get('location.pickup.address')?.patchValue(address.address);
+      newOrderForm.get('location.pickup')?.patchValue(address);
+      this.foundLocations = [];
+    }
+
+    const updateDeliveryAddressForm = () => {
+      newOrderForm.get('location.delivery.address')?.patchValue(address.address);
       newOrderForm.get('location.delivery')?.patchValue(address);
+      this.foundLocations = [];
+      console.log(this.newOrderForm.value)
+    }
+
+    if (this.mapFor === 'pickup') {
+      updatePickupAddressForm();
+      return;
+    } else if (this.mapFor === 'dropoff') {
+      updateDeliveryAddressForm();
+      return;
+    }
+
+    if (this.deliveryIsFocused) {
+      updateDeliveryAddressForm();
       return;
     }
 
     if (this.pickupIsFocused) {
-      newOrderForm.get('location.pickup.address')?.patchValue(address.street);
-      newOrderForm.get('location.pickup')?.patchValue(address);
+      updatePickupAddressForm();
+      console.log(newOrderForm.value);
       return;
     }
 
-    if ((pickupAddress !== '' && searchedForPickupAddress) || pickupAddress === '') {
-      newOrderForm.get('location.pickup.address')?.patchValue(address.street);
-      newOrderForm.get('location.pickup')?.patchValue(address);
-    } else if ((deliveryAddress !== '' && searchedForDeliveryAddress) || deliveryAddress === '') {
-      newOrderForm.get('location.delivery.address')?.patchValue(address.street);
-      newOrderForm.get('location.delivery')?.patchValue(address);
-    } else {
-      // Default case: if neither specific condition is met, default to pickup
-      newOrderForm.get('location.pickup.address')?.patchValue(address.street);
-      newOrderForm.get('location.pickup')?.patchValue(address);
+    if (!this.pickupIsFocused && !this.deliveryIsFocused) {
+      if (address.type === 'pickup') {
+        updatePickupAddressForm();
+        return;
+      } else {
+        updateDeliveryAddressForm();
+        return;
+      }
     }
 
-    this.foundLocations = [];
+    if ((pickupAddress !== '' && searchedForPickupAddress) || pickupAddress === '') {
+      updatePickupAddressForm();
+    } else if ((deliveryAddress !== '' && searchedForDeliveryAddress) || deliveryAddress === '') {
+      updateDeliveryAddressForm();
+    } else {
+      // Default case: if neither specific condition is met, default to pickup
+      updatePickupAddressForm();
+    }
   }
 
   get selectedType(): 'pickup' | 'delivery' {
     return this.deliveryIsFocused ? 'delivery' : this.pickupIsFocused ? 'pickup' : 'pickup';
+  }
+
+  get selectedTypeAddress(): Address {
+    if (this.selectedType === 'pickup') {
+      return this.newOrderForm.get('location.pickup')?.value as Address;
+    } else {
+      return this.newOrderForm.get('location.delivery')?.value as Address;
+    }
   }
 
   getStageIcon(stage: Stage, index: number): string {
@@ -290,5 +420,126 @@ export class NewComponent extends OrdersHelpers {
         break;
     };
     return icon;
+  }
+
+  openMap(isFor: 'pickup' | 'dropoff'): void {
+    this.mapFor = isFor;
+
+    if (this.showMap) {
+      this.hideMap = true;
+      setTimeout(() => {
+        this.showMap = false;
+      }, 1000);
+    } else {
+      this.hideMap = false;
+      this.showMap = true;
+    }
+  }
+
+  calculateTrip() {
+    this.newOrderForm.get('payment.price')?.patchValue(2000, { emitEvent: false });
+  }
+
+  closeMap() {
+    this.hideMap = true;
+    this.showMap = false;
+  }
+
+  public file: File | null = null;
+  public fileUrl: string | null = null;
+  public fileDropErrorMessage: string = '';
+  private maxFileSize = 5242880; // 5MB
+
+  public dropped(files: NgxFileDropEntry[]) {
+    this.handleFileDrop(files);
+  }
+
+  public changeFile(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.handleFile(file);
+    }
+  }
+
+  private handleFileDrop(files: NgxFileDropEntry[]) {
+    this.fileDropErrorMessage = '';
+
+    if (files.length > 0) {
+      const droppedFile = files[0];
+
+      if (droppedFile.fileEntry.isFile) {
+        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+        fileEntry.file((file: File) => {
+          this.handleFile(file);
+        });
+      } else {
+        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
+        console.log(droppedFile.relativePath, fileEntry);
+      }
+    }
+  }
+
+  private handleFile(file: File) {
+    if (this.isFileTypeAccepted(file)) {
+      if (this.isFileSizeAccepted(file)) {
+        if (this.fileUrl) {
+          URL.revokeObjectURL(this.fileUrl);
+        }
+        this.file = file;
+        this.fileUrl = URL.createObjectURL(file);
+        this.newOrderForm.get('details.package.image')?.setValue(this.fileUrl);
+      } else {
+        this.fileDropErrorMessage = 'File size exceeds the 5MB limit.';
+      }
+    } else {
+      this.fileDropErrorMessage = 'Only image files (PNG, JPEG) are allowed.';
+    }
+  }
+
+  private isFileTypeAccepted(file: File): boolean {
+    const acceptedTypes = ['image/png', 'image/jpeg'];
+    return acceptedTypes.includes(file.type);
+  }
+
+  private isFileSizeAccepted(file: File): boolean {
+    return file.size <= this.maxFileSize;
+  }
+
+  public removeFile(): void {
+    if (this.fileUrl) {
+      URL.revokeObjectURL(this.fileUrl);
+    }
+    this.file = null;
+    this.fileUrl = null;
+    this.newOrderForm.get('details.package.image')?.setValue(null);
+  }
+
+  // Confirmation
+  confirming: boolean = false;
+
+  confirm(): void {
+    if (this.newOrderForm.valid) {
+      this.confirming = true;
+
+      console.log(this.newOrderForm.value)
+
+      setTimeout(() => {
+        this.toastr.info('Feature is ongoing development!');
+        this.router.navigate(['/dashboard/orders']);
+      }, 2000);
+    };
+  }
+
+  cancel(): void {
+    const ref = this.dialog.open(CancelOrderComponent);
+    ref.componentInstance.why = 'Are you sure you want to cancel? <br> You\'ll lose your changes.';
+    ref.componentInstance.options = [];
+    ref.componentInstance.selectedOption = { value: 'null', viewValue: 'null' }
+    ref.afterClosed().subscribe((reason) => {
+      if (reason) {
+        this.router.navigate(['/dashboard']);
+      }
+    });
   }
 }

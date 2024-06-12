@@ -1,0 +1,128 @@
+.map {
+  width: 100%;
+  height: 90vh;
+  position: relative;
+  top: -1px;
+  left: 0;
+  background-color: #015a456d;
+  z-index: 999;
+}
+
+.iframe {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.veil {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #0000002a;
+  z-index: 1000;
+}
+
+.btn-close-map {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background-color: #FFF;
+  z-index: 1000;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+
+  i {
+    font-size: 25px;
+  }
+}
+
+.btn-select-map {
+  position: absolute;
+  top: -60px;
+  right: 15px;
+  z-index: 999;
+  padding: 0px;
+  width: 50px;
+  height: 50px;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@media (min-width: 767px) {
+  .btn-close-map {
+    left: 40px !important;
+  }
+
+  .btn-select-map {
+    bottom: 40px;
+    right: 40px;
+  }
+}
+
+.button-pickup {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #FFF;
+  box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 15px 15px 0 0;
+  cursor: default;
+  z-index: 999;
+
+  .first {
+
+    a,
+    p {
+      font-size: 17px !important;
+    }
+  }
+
+  .last {
+
+    a {
+      font-size: 17px !important;
+    }
+  }
+
+  .form-label {
+    color: #777777;
+  }
+
+  img.profile {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .mat-badge-accent .mat-badge-content {
+    background: #FF0000 !important;
+    color: white;
+  }
+}
+
+::ng-deep {
+  .ymaps-2-1-79-float-button {
+    width: 50px !important;
+    height: 50px !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 10px !important;
+  }
+
+  .ymaps-2-1-79-float-button-icon {
+    width: 50px !important;
+    height: 50px !important;
+    border: none !important;
+    background-size: cover;
+  }
+}

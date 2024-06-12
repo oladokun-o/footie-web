@@ -1,0 +1,68 @@
+<div class="map col-12 p-0" [class.slide-in-right]="slideIn" [class.slide-out-right]="slideOut">
+  <button (click)="handleCloseMap()" type="button" class="btn btn-close-map shadow" title="Close map">
+    <i class="bi bi-x-lg"></i>
+  </button>
+
+
+  <!-- <iframe #map sandbox="allow-scripts allow-same-origin" class="iframe"
+    src="https://yandex.com/map-widget/v1/?um=constructor%3A6de7b1c9a53eb01b3167ebc9dd587958a7c9bd3ca0dae77c8cb5d8f250347727&amp;source=constructor"
+    width="500" height="400" frameborder="0"></iframe> -->
+
+  <ya-map *ngIf="address" [center]="address.coordinates || [0,0]" [state]="{ controls: [] }">
+    <ya-geoobject *ngIf="geoObject" [feature]="geoObject.feature" [options]="geoObject.options" (geometrychange)="handleGeometryChange($event)"></ya-geoobject>
+    <ya-control type="GeolocationControl" [parameters]="locatorButtonParameters"></ya-control>
+    <ya-control *ngIf="enableSearchControl" type="SearchControl" [parameters]="searchButtonParameters"></ya-control>
+  </ya-map>
+
+  <div class="veil" [class.fade-out]="!loadingMap" [ngStyle]="{ 'z-index': loadingMap ? 999 : -1 }">
+    <div class="d-flex justify-content-center align-items-center h-100">
+      <div class="spinner-border text-primary text-green" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showButtonPickup && address" class="button-pickup slide-in-bottom p-3 px-md-5 py-md-5" role="button">
+    <!-- <button *ngIf="!loadingMap" (click)="selectCurrentLocation()" type="button" class="btn btn-select-map shadow"
+      title="Select current location on map">
+      <img src="assets/images/icons/my-location.svg" alt="current location">
+    </button> -->
+    <div class="row">
+      <div class="col-12">
+        <div class="row gap-3">
+          <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center first">
+              <h4 class="m-0 fw-bold text-dark">{{ address.address }}</h4>
+              <button class="btn btn-light bg-white p-0" [disabled]="searchingLocation" style="width: 30px;height: 30px;" type="button" (click)="toggleSearch()">
+                <svg *ngIf="!enableSearchControl" width="21" height="22" viewBox="0 0 21 22" fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M19.5511 21.3403L12.1311 13.9203C11.5422 14.3914 10.865 14.7644 10.0994 15.0392C9.33389 15.314 8.51926 15.4514 7.65556 15.4514C5.51593 15.4514 3.70529 14.7102 2.22364 13.2278C0.742001 11.7454 0.000785808 9.93472 6.23163e-07 7.79588C-0.000784562 5.65703 0.74043 3.84639 2.22364 2.36396C3.70686 0.881535 5.5175 0.14032 7.65556 0.14032C9.79362 0.14032 11.6046 0.881535 13.0886 2.36396C14.5726 3.84639 15.3135 5.65703 15.3111 7.79588C15.3111 8.65958 15.1737 9.47421 14.8989 10.2398C14.6241 11.0053 14.2511 11.6825 13.78 12.2714L21.2 19.6914L19.5511 21.3403ZM7.65556 13.0959C9.12778 13.0959 10.3794 12.5808 11.4103 11.5506C12.4413 10.5205 12.9563 9.26888 12.9556 7.79588C12.9548 6.32287 12.4397 5.07168 11.4103 4.0423C10.3809 3.01292 9.12935 2.49745 7.65556 2.49588C6.18176 2.4943 4.93057 3.00978 3.90198 4.0423C2.87339 5.07482 2.35791 6.32601 2.35556 7.79588C2.3532 9.26574 2.86867 10.5173 3.90198 11.5506C4.93528 12.5839 6.18647 13.099 7.65556 13.0959Z"
+                    fill="black" />
+                </svg>
+
+                <svg *ngIf="enableSearchControl" width="25" height="25" viewBox="0 0 25 25" fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_545_843)">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M12.5001 14.2623L17.8031 19.5653C18.0845 19.8467 18.4661 20.0048 18.8641 20.0048C19.262 20.0048 19.6437 19.8467 19.9251 19.5653C20.2065 19.2839 20.3646 18.9023 20.3646 18.5043C20.3646 18.1064 20.2065 17.7247 19.9251 17.4433L14.6201 12.1403L19.9241 6.83732C20.0634 6.69799 20.1738 6.53259 20.2492 6.35057C20.3245 6.16855 20.3633 5.97347 20.3632 5.77647C20.3632 5.57947 20.3243 5.38441 20.2489 5.20242C20.1735 5.02044 20.0629 4.85509 19.9236 4.71582C19.7843 4.57656 19.6189 4.4661 19.4368 4.39075C19.2548 4.31541 19.0597 4.27665 18.8627 4.2767C18.6657 4.27674 18.4707 4.31559 18.2887 4.39102C18.1067 4.46645 17.9414 4.57699 17.8021 4.71632L12.5001 10.0193L7.19709 4.71632C7.05879 4.57299 6.89333 4.45864 6.71036 4.37995C6.52739 4.30125 6.33058 4.25978 6.13141 4.25795C5.93224 4.25613 5.73471 4.29399 5.55033 4.36932C5.36595 4.44466 5.19842 4.55596 5.05752 4.69673C4.91661 4.8375 4.80515 5.00493 4.72964 5.18923C4.65414 5.37354 4.61609 5.57104 4.61773 5.77021C4.61936 5.96938 4.66065 6.16623 4.73917 6.34927C4.8177 6.53231 4.93189 6.69789 5.07509 6.83632L10.3801 12.1403L5.07609 17.4443C4.93289 17.5828 4.8187 17.7483 4.74017 17.9314C4.66165 18.1144 4.62036 18.3113 4.61873 18.5104C4.61709 18.7096 4.65514 18.9071 4.73064 19.0914C4.80615 19.2757 4.91761 19.4431 5.05852 19.5839C5.19942 19.7247 5.36695 19.836 5.55133 19.9113C5.73571 19.9867 5.93324 20.0245 6.13241 20.0227C6.33158 20.0209 6.52839 19.9794 6.71136 19.9007C6.89433 19.822 7.05979 19.7077 7.19809 19.5643L12.5001 14.2623Z"
+                      fill="black" />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_545_843">
+                      <rect width="24" height="24" fill="white" transform="translate(0.5 0.14032)" />
+                    </clipPath>
+                  </defs>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <button type="button" [disabled]="searchingLocation" (click)="handleMapChange()" class="btn-primary">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 <div class="container cancel pb-3">
-  <h2 matDialogTitle class="fw-bold fs-5 text-dark">Why do you want to cancel?</h2>
+  <h2 matDialogTitle class="fw-bold fs-5 text-dark" [innerHTML]="why"></h2>
   <mat-dialog-content class="mat-typography mt-2">
     <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group d-flex flex-column"
       [(ngModel)]="selectedOption">

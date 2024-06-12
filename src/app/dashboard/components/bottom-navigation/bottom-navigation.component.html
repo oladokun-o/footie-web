@@ -21,8 +21,8 @@
     <li class="nav-item">
       <a class="nav-link" routerLink="./notifications" title="Notifications">
         <img [src]="
-            currentPage === 'notifications'
-              ? 'assets/images/icons/notifications-icon-warning-active.svg'
+            user && user.warnings && user.warnings.length > 0 && currentPage === 'notifications'
+                           ? 'assets/images/icons/notifications-icon-warning-active.svg'
                             : currentPage === 'notifications'
                             ? 'assets/images/icons/notifications-icon-active.svg'
                             : user && user.warnings && user.warnings.length > 0

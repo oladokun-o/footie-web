@@ -19,15 +19,11 @@ $footiedrop-web-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$footiedrop-web-theme: mat.define-light-theme(
-  (
-    color: (
-      primary: $footiedrop-web-primary,
-      accent: $footiedrop-web-accent,
-      warn: $footiedrop-web-warn,
-    ),
-  )
-);
+$footiedrop-web-theme: mat.define-light-theme((color: (primary: $footiedrop-web-primary,
+        accent: $footiedrop-web-accent,
+        warn: $footiedrop-web-warn,
+      ),
+    ));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -82,10 +78,11 @@ form {
   }
 
   small {
-    font-size: 12px !important;
+    font-size: 14px !important;
   }
 
   &.loading {
+
     input,
     button,
     textarea,
@@ -104,7 +101,8 @@ label {
   padding-bottom: 5px;
 }
 
-input {
+input,
+textarea {
   font-size: 14px !important;
   border: 1px solid #ededed !important;
   padding: 15px 10px !important;
@@ -141,7 +139,7 @@ input {
 .btn-primary {
   background-color: #e36f00 !important;
   color: #fff !important;
-  font-size: 14px !important;
+  font-size: 17px !important;
   border: none !important;
   width: 100% !important;
   font-weight: normal;
@@ -198,7 +196,8 @@ button:disabled {
       font-size: 16px;
     }
 
-    input {
+    input,
+    textarea {
       font-size: 14px !important;
       padding: 20px 15px !important;
     }
@@ -256,6 +255,10 @@ button:disabled {
   color: #01674f !important;
 }
 
+.text-danger {
+  transition: all 0.5s ease-in-out;
+}
+
 .red {
   background-color: #dc2836;
 }
@@ -293,10 +296,11 @@ div {
     border-bottom: 1px solid #c6c6c6;
   }
 
-  &:last-child > .card.order {
+  &:last-child>.card.order {
     border: none !important;
   }
 }
+
 .card.order {
   cursor: pointer;
 
@@ -358,4 +362,12 @@ div {
   a {
     font-size: inherit !important;
   }
+}
+
+.profile-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
 }

@@ -64,16 +64,16 @@
               <div class="row h-100" style="gap: 10px;">
                 <div>
                   <small class="text-muted">Pickup Location</small>
-                  <p class="m-0 text-truncate">{{ order.pickupAddress.street }}</p>
+                  <p class="m-0 text-truncate">{{ order.pickupAddress.address }}</p>
                 </div>
                 <div>
                   <small class="text-muted">Delivery Location</small>
-                  <p class="m-0 text-truncate">{{ order.deliveryAddress.street }}</p>
+                  <p class="m-0 text-truncate">{{ order.deliveryAddress.address }}</p>
                 </div>
               </div>
             </div>
             <div class="col-1 d-flex d-md-none justify-content-end align-items-start">
-              <img [src]="getDeliveryModeIcon(order)" style="width: 100%;" alt="delivery mode icon" />
+              <img [src]="getDeliveryModeIcon(order.deliveryMode || 'foot')" style="width: 100%;" alt="delivery mode icon" />
             </div>
           </div>
 

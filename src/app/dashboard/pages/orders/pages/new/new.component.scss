@@ -42,3 +42,247 @@
     transition: all .50s;
   }
 }
+
+.mat-expansion-panel {
+  box-shadow: 0px 2px 4px #00000040 !important;
+}
+
+textarea {
+  resize: none;
+}
+
+.form-group {
+  position: relative;
+
+  .textarea {
+    position: relative;
+
+    .chars {
+      position: absolute;
+      bottom: 1px;
+      right: 1px;
+      background-color: #f7f7f7;
+      padding: 0px 5px;
+      border-radius: 5px;
+    }
+  }
+}
+
+::ng-deep ng-select {
+  .ng-select-container {
+    height: 52px !important;
+    border: 1px solid #EDEDED !important;
+    background-color: #F7F7F7 !important;
+  }
+
+  .ng-value {
+    text-transform: capitalize;
+    font-size: 14px;
+  }
+
+  .ng-option {
+    text-transform: capitalize;
+    font-size: 14px;
+
+    &.ng-option-selected {
+      color: #E36F00 !important;
+      background-color: #e36e001d !important;
+    }
+  }
+
+  .ng-arrow {
+    border-color: #eb9a4c transparent transparent !important;
+    border-width: 7px 7px 2.5px !important;
+  }
+}
+
+// laptop & desktop screen sizes
+@media (min-width: 1024px) {
+  ::ng-deep ng-select {
+    .ng-select-container {
+      height: 62px !important;
+      border: 1px solid #EDEDED !important;
+      background-color: #F7F7F7 !important;
+    }
+  }
+
+  .image {
+    height: auto !important;
+  }
+
+  .button-pickup {
+    position: absolute !important;
+  }
+
+  .details > div.row {
+    padding-bottom: 191px !important;
+  }
+
+  .contn {
+    height: 85vh;
+    overflow-y: auto;
+  }
+}
+
+
+::ng-deep {
+
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected,
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected.ng-option-marked {
+    color: #333;
+    background-color: #eb994ca1 !important;
+  }
+
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+    background-color: #eb994c5a !important;
+    color: #333;
+  }
+
+  .ngx-file-drop__drop-zone {
+    margin: auto;
+    border: 2px dotted #619f91 !important;
+    border-radius: 5px !important;
+    background: #f0f5f5;
+    height: auto !important;
+  }
+
+  .ngx-file-drop__content {
+    height: auto !important;
+  }
+}
+
+.sizes {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 105px;
+    height: 105px;
+    background-color: #F0F5F5;
+    color: #707070;
+    border-radius: 5px;
+    border: none;
+
+    &.active {
+      box-shadow: 0 0 5px hsl(166, 98, 20, 25%);
+      color: #01674F;
+
+      svg path {
+        fill: #01674F;
+      }
+    }
+  }
+}
+
+.image {
+  color: #707070;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  row-gap: 8px;
+  flex-direction: column;
+  height: 135px;
+  width: 100%;
+}
+
+.mat-expansion-panel-header-title {
+  font-weight: 500;
+}
+
+.remove-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.dropped {
+  position: relative;
+  overflow: hidden;
+  max-height: 250px;
+  transition: height 1s ease-in;
+
+  img {
+    width: 100%;
+    transition: all 1s;
+  }
+}
+
+.dropped-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  gap: 15px;
+
+  button {
+    background-color: transparent;
+    border: none;
+  }
+}
+
+.button-pickup {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #FFF;
+  box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 15px 15px 0 0;
+  cursor: default;
+  z-index: 998;
+
+  .first {
+
+    a,
+    p {
+      font-size: 17px !important;
+    }
+  }
+
+  .last {
+
+    a {
+      font-size: 17px !important;
+    }
+  }
+
+  .form-label {
+    color: #777777;
+  }
+
+  img.profile {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .mat-badge-accent .mat-badge-content {
+    background: #FF0000 !important;
+    color: white;
+  }
+}
+
+.details {
+  padding-bottom: 170px !important;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}

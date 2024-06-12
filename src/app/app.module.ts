@@ -16,6 +16,13 @@ import { SharedComponentsModule } from 'src/shared/components/components.module'
 import { SharedDirectivesModule } from 'src/shared/directives/directives.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { AngularYandexMapsModule, YaConfig } from 'angular8-yandex-maps';
+import { ApiEndpoints } from 'src/app/core/configs/api.config';
+
+const mapConfig: YaConfig = {
+  apikey: ApiEndpoints.map.yandex_key,
+  lang: 'en_US',
+};
 
 @NgModule({
   declarations: [
@@ -40,7 +47,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
     AuthModule,
     DashboardModule,
     SharedComponentsModule,
-    SharedDirectivesModule
+    SharedDirectivesModule,
+    AngularYandexMapsModule.forRoot(mapConfig),
   ],
   providers: [
     {

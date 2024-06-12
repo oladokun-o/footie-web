@@ -15,7 +15,7 @@
               <div class="col-12 p-0 d-flex justify-content-between align-content-center flex-wrap gap-md-0 gap-2">
                 <div class="col-12 col-md-6 d-flex justify-content-between align-content-center gap-2">
                   <div class="col-3 col-md-4 d-none d-lg-flex justify-content-center align-items-center">
-                    <img [src]="getDeliveryModeIcon(order)" alt="delivery mode icon" />
+                    <img [src]="getDeliveryModeIcon(order.deliveryMode || 'foot')" alt="delivery mode icon" />
                   </div>
                   <div class="col-9 col-md-12 d-flex">
                     <div class="col-1 col-md-1 p-md-0">
@@ -25,11 +25,11 @@
                       <div class="row h-100" style="gap: 10px;">
                         <div>
                           <small class="text-muted">From</small>
-                          <p class="m-0 text-truncate">{{ order.pickupAddress.street }}</p>
+                          <p class="m-0 text-truncate">{{ order.pickupAddress.address }}</p>
                         </div>
                         <div>
                           <small class="text-muted">Delivered To</small>
-                          <p class="m-0 text-truncate">{{ order.deliveryAddress.street }}</p>
+                          <p class="m-0 text-truncate">{{ order.deliveryAddress.address }}</p>
                         </div>
                       </div>
                     </div>
@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="col-3 col-md-4 d-flex d-md-none justify-content-end align-items-end">
-                  <img [src]="getDeliveryModeIcon(order)" alt="delivery mode icon" />
+                  <img [src]="getDeliveryModeIcon(order.deliveryMode || 'foot')" alt="delivery mode icon" />
                 </div>
               </div>
             </div>

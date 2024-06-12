@@ -42,8 +42,8 @@ export class OrdersHelpers {
   }
 
   // Display the order delivery mode icon based on the delivery mode
-  getDeliveryModeIcon(order: Order): string {
-    switch (order.deliveryMode) {
+  getDeliveryModeIcon(deliveryMode: string): string {
+    switch (deliveryMode) {
       case "feet":
         return "assets/images/icons/feet-mode.svg";
       case "bike":

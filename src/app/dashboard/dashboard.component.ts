@@ -4,14 +4,22 @@ import { ToastrService } from 'ngx-toastr';
 import { User, UserRole } from 'src/app/core/interfaces/user.interface';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { Address } from '../core/interfaces/order.interface';
+import { YaGeocoderService } from 'angular8-yandex-maps';
+import { UserLocation } from '../core/interfaces/location.interface';
+import { ThemeService } from '../core/services/theme.service';
 
 @Component({
   selector: 'footiedrop-web-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnDestroy {
-  userSession: { email: string, role: UserRole } = localStorage.getItem('userSessionData') ? JSON.parse(localStorage.getItem('userSessionData') as string) : null;
+  userSession: { email: string; role: UserRole } = localStorage.getItem(
+    'userSessionData'
+  )
+    ? JSON.parse(localStorage.getItem('userSessionData') as string)
+    : null;
   currentPage: string = '';
   innerPage: string = '';
   loading: boolean;
@@ -25,8 +33,19 @@ export class DashboardComponent implements OnDestroy {
     private toastr: ToastrService,
     private authService: AuthService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private yaGeocoderService: YaGeocoderService,
+    private themeService: ThemeService,
   ) {
+    // Ensure initial theme matches saved preference
+    const isDarkMode = this.themeService.isDarkTheme();
+    const theme = isDarkMode ? 'dark-theme' : 'light-theme';
+    document.body.classList.add(theme);
+
+    if (!this.userCurrentLocation) {
+      this.getLocation();
+    }
+
     document.body.classList.add('dashboard-body');
     this.loading = true;
     this.fadeOut = false;
@@ -37,7 +56,9 @@ export class DashboardComponent implements OnDestroy {
           this.loading = false;
         }, 1000);
 
-        this.currentPage = this.router.url.endsWith('/dashboard') ? '' : this.router.url.split('/')[2];
+        this.currentPage = this.router.url.endsWith('/dashboard')
+          ? ''
+          : this.router.url.split('/')[2];
         if (this.currentPage === undefined) this.currentPage = '';
         this.innerPage = '';
         this.hideBottomNav = false;
@@ -45,7 +66,7 @@ export class DashboardComponent implements OnDestroy {
         // make sure to exclude params from the url
         if (this.currentPage && this.currentPage.includes('?')) {
           this.currentPage = this.currentPage.split('?')[0];
-        };
+        }
 
         // check if id, if it does, show currentPage as "View {{currentPage}}", set currentPage as a singular form
         if (event.url.split('/').length > 3) {
@@ -95,19 +116,91 @@ export class DashboardComponent implements OnDestroy {
           }
         }
       }
-    })
-
-    this.userService.getUserByEmail(this.userSession.email).subscribe((user) => {
-      if (user) {
-        localStorage.setItem('user', JSON.stringify(user));
-      } else {
-        toastr.error('User not found! <br> please login again.');
-        authService.logout();
-      }
     });
+
+    this.userService
+      .getUserByEmail(this.userSession.email)
+      .subscribe((user) => {
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
+        } else {
+          toastr.error('User not found! <br> please login again.');
+          authService.logout();
+        }
+      });
   }
 
   ngOnDestroy() {
     document.body.classList.remove('dashboard-body');
+    if (this.geoLocationSub) this.geoLocationSub.unsubscribe();
+  }
+
+  get userCurrentLocation(): Address {
+    return JSON.parse(
+      JSON.stringify(localStorage.getItem('userCurrentLocation'))
+    );
+  }
+  public lat: number = 0;
+  public lng: number = 0;
+
+  geoLocationSub: any;
+
+  getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position: any) => {
+          if (position) {
+            this.lat = position.coords.latitude;
+            this.lng = position.coords.longitude;
+            this.geoLocationSub = this.yaGeocoderService.geocode(
+              [this.lat, this.lng],
+              { results: 10 }
+            );
+            this.toastr.info('Fetching your current location...');
+            this.geoLocationSub.subscribe(
+              (result: any) => {
+                const geoObject = result.geoObjects.get(1);
+                const properties: UserLocation = geoObject.properties.getAll();
+                const metaData =
+                  properties.metaDataProperty.GeocoderMetaData.AddressDetails
+                    .Country;
+
+                let userLocation = {
+                  address: metaData.AddressLine,
+                  city:
+                    metaData.Locality?.DependentLocality
+                      ?.DependentLocalityName ||
+                    metaData.Locality?.LocalityName ||
+                    metaData?.AdministrativeArea?.AdministrativeAreaName ||
+                    '',
+                  state:
+                    metaData.Locality?.LocalityName ||
+                    metaData.Locality?.DependentLocality
+                      ?.DependentLocalityName ||
+                    metaData?.AdministrativeArea?.AdministrativeAreaName ||
+                    '',
+                  postalCode: '',
+                  country: metaData.CountryNameCode,
+                  locationType:
+                    properties.metaDataProperty.GeocoderMetaData.kind,
+                  coordinates: [this.lat, this.lng],
+                };
+
+                localStorage.setItem(
+                  'userCurrentLocation',
+                  JSON.stringify(userLocation)
+                );
+              },
+              (error: any) => {
+                this.toastr.error('An error occurred while updating location');
+              }
+            );
+          }
+        },
+        (error: any) => console.log(error)
+      );
+    } else {
+      alert('Geolocation is not supported by this browser.');
+    }
   }
 }

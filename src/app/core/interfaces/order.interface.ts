@@ -32,13 +32,14 @@ export enum ItemType {
 }
 
 export interface Address {
-  street: string;
+  address: string;
   city: string;
   state?: string;
-  postalCode: string;
+  postalCode?: string;
   country: string;
-  locationType?: LocationType;
+  locationType?: LocationType | string;
   type: 'pickup' | 'delivery';
+  coordinates?: number[];
 }
 
 export enum LocationType {
