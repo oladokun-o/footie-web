@@ -24,6 +24,9 @@ export const ApiEndpoints = {
     verifyResetPasswordToken: (token: string) => `${environment.apiUrl}/users/verifyPasswordResetToken/${token}`,
     updatePassword: () => `${environment.apiUrl}/users/updatePassword`,
     changeEmail: () => `${environment.apiUrl}/users/changeEmail`,
+    settings: {
+      ChangeLanguage: () => `${environment.apiUrl}/settings/changeLanguage`,
+    }
   },
   map: {
     yandex_key: '2215fdbd-83bb-4c46-9c52-faffd29f5d91',

@@ -1,13 +1,20 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute, ActivationEnd, NavigationEnd, NavigationStart, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivationEnd,
+  NavigationEnd,
+  NavigationStart,
+  Router,
+} from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { User, UserRole } from 'src/app/core/interfaces/user.interface';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { Address } from '../core/interfaces/order.interface';
-import { YaGeocoderService } from 'angular8-yandex-maps';
+import { YaGeocoderService, YaReadyEvent } from 'angular8-yandex-maps';
 import { UserLocation } from '../core/interfaces/location.interface';
 import { ThemeService } from '../core/services/theme.service';
+import { LocationService } from '../core/services/location.service';
 
 @Component({
   selector: 'footiedrop-web-dashboard',
@@ -36,6 +43,7 @@ export class DashboardComponent implements OnDestroy {
     private activatedRoute: ActivatedRoute,
     private yaGeocoderService: YaGeocoderService,
     private themeService: ThemeService,
+    private locationService: LocationService
   ) {
     // Ensure initial theme matches saved preference
     const isDarkMode = this.themeService.isDarkTheme();
@@ -152,55 +160,73 @@ export class DashboardComponent implements OnDestroy {
           if (position) {
             this.lat = position.coords.latitude;
             this.lng = position.coords.longitude;
-            this.geoLocationSub = this.yaGeocoderService.geocode(
-              [this.lat, this.lng],
-              { results: 10 }
-            );
-            this.toastr.info('Fetching your current location...');
-            this.geoLocationSub.subscribe(
-              (result: any) => {
-                const geoObject = result.geoObjects.get(1);
-                const properties: UserLocation = geoObject.properties.getAll();
-                const metaData =
-                  properties.metaDataProperty.GeocoderMetaData.AddressDetails
-                    .Country;
-
-                let userLocation = {
-                  address: metaData.AddressLine,
-                  city:
-                    metaData.Locality?.DependentLocality
-                      ?.DependentLocalityName ||
-                    metaData.Locality?.LocalityName ||
-                    metaData?.AdministrativeArea?.AdministrativeAreaName ||
-                    '',
-                  state:
-                    metaData.Locality?.LocalityName ||
-                    metaData.Locality?.DependentLocality
-                      ?.DependentLocalityName ||
-                    metaData?.AdministrativeArea?.AdministrativeAreaName ||
-                    '',
-                  postalCode: '',
-                  country: metaData.CountryNameCode,
-                  locationType:
-                    properties.metaDataProperty.GeocoderMetaData.kind,
-                  coordinates: [this.lat, this.lng],
-                };
-
-                localStorage.setItem(
-                  'userCurrentLocation',
-                  JSON.stringify(userLocation)
-                );
-              },
-              (error: any) => {
-                this.toastr.error('An error occurred while updating location');
-              }
-            );
+            this.setUserlocation();
           }
         },
-        (error: any) => console.log(error)
+        (error: any) => {
+          this.getAlternativeLocation();
+          console.error(error);
+        }
       );
     } else {
       alert('Geolocation is not supported by this browser.');
     }
+  }
+
+  getAlternativeLocation() {
+    this.locationService
+      .getAlternativeUserCoordinates(this.map)
+      .then((coordinates) => {
+        this.lat = coordinates[0];
+        this.lng = coordinates[1];
+        this.setUserlocation();
+      });
+  }
+
+  map: any;
+
+  onMapReady(event: YaReadyEvent<ymaps.Map>): void {
+    this.map = event.target;
+  }
+
+  setUserlocation() {
+    this.geoLocationSub = this.yaGeocoderService.geocode([this.lat, this.lng], {
+      results: 10,
+    });
+    this.toastr.info('Fetching your current location...');
+    this.geoLocationSub.subscribe(
+      (result: any) => {
+        const geoObject = result.geoObjects.get(1);
+        const properties: UserLocation = geoObject.properties.getAll();
+        const metaData =
+          properties.metaDataProperty.GeocoderMetaData.AddressDetails.Country;
+
+        let userLocation = {
+          address: metaData.AddressLine,
+          city:
+            metaData.Locality?.DependentLocality?.DependentLocalityName ||
+            metaData.Locality?.LocalityName ||
+            metaData?.AdministrativeArea?.AdministrativeAreaName ||
+            '',
+          state:
+            metaData.Locality?.LocalityName ||
+            metaData.Locality?.DependentLocality?.DependentLocalityName ||
+            metaData?.AdministrativeArea?.AdministrativeAreaName ||
+            '',
+          postalCode: '',
+          country: metaData.CountryNameCode,
+          locationType: properties.metaDataProperty.GeocoderMetaData.kind,
+          coordinates: [this.lat, this.lng],
+        };
+
+        localStorage.setItem(
+          'userCurrentLocation',
+          JSON.stringify(userLocation)
+        );
+      },
+      (error: any) => {
+        this.toastr.error('An error occurred while updating location');
+      }
+    );
   }
 }
