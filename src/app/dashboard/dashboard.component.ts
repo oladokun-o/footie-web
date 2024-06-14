@@ -22,7 +22,7 @@ import { LocationService } from '../core/services/location.service';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnDestroy {
-  userSession: { email: string; role: UserRole } = localStorage.getItem(
+  userSession: { email: string; role: UserRole, id: string } = localStorage.getItem(
     'userSessionData'
   )
     ? JSON.parse(localStorage.getItem('userSessionData') as string)
@@ -127,7 +127,7 @@ export class DashboardComponent implements OnDestroy {
     });
 
     this.userService
-      .getUserByEmail(this.userSession.email)
+      .getUserById(this.userSession.id)
       .subscribe((user) => {
         if (user) {
           localStorage.setItem('user', JSON.stringify(user));

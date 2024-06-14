@@ -1,1 +1,23 @@
-<p>change-phone works!</p>
+<form *ngIf="form" [formGroup]="form" [class.disabled]="saving" (ngSubmit)="save()"
+  class="container-fluid h-100 position-relative">
+  <div class="row justify-content-between">
+    <div class="form-group col-12">
+      <label for="phone" class="form-label">Current phone number</label>
+      <input footiedropWebInputMask="+0 000 000-00-00" type="tel" readonly [value]="user.phone" id="phone" class="form-control">
+    </div>
+
+    <div class="form-group col-12">
+      <label for="newPhoneNumber" class="form-label">New phone number</label>
+      <input footiedropWebInputMask="+0 000 000-00-00" type="tel" formControlName="newPhoneNumber" id="newPhoneNumber" class="form-control"
+        placeholder="Enter your new phone number">
+      <small class="text-danger">{{ form.get('newPhoneNumber')?.touched && form.get('newPhoneNumber')?.errors?.['required']
+      ? 'Please enter your new phone number' : '' }}</small>
+
+    </div>
+  </div>
+
+  <div class="col-12 position-absolute bottom-0 start-0">
+    <footiedrop-web-loading-button [buttonText]="'Save changes'" [disabled]="saving || form.invalid || !form.dirty"
+      [loading]="saving"></footiedrop-web-loading-button>
+  </div>
+</form>

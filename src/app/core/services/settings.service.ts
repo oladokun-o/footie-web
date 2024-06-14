@@ -22,7 +22,7 @@ export class SettingsService {
   }
 
   updateUser() {
-    this.userService.getUserByEmail(this.user.email).subscribe((user) => {
+    this.userService.getUserById(this.user.id).subscribe((user) => {
       if (user) {
         localStorage.setItem('user', JSON.stringify(user));
       }
@@ -31,15 +31,71 @@ export class SettingsService {
 
   ChangeLanguage(payload: any): Observable<RequestResponse> {
     return this.httpClient
-      .post<RequestResponse>(ApiEndpoints.users.settings.ChangeLanguage(), payload)
+      .post<RequestResponse>(
+        ApiEndpoints.users.settings.ChangeLanguage(),
+        payload
+      )
       .pipe(
-        tap(() => this.updateUser()),
+        tap((response) => {
+          if (response.result === 'success') this.updateUser();
+        }),
+        switchMap((response) =>
+          response.result === 'success'
+            ? of(response)
+            : throwError(response.message)
+        ),
+        catchError((error) => throwError(error.error))
+      );
+  }
+
+  ChangePassword(payload: any): Observable<RequestResponse> {
+    return this.httpClient
+      .post<RequestResponse>(
+        ApiEndpoints.users.settings.ChangePassword(),
+        payload
+      )
+      .pipe(
+        tap((response) => {
+          if (response.result === 'success') this.updateUser();
+        }),
         switchMap((response) =>
           response.result === 'success'
             ? of(response)
             : throwError(response.message)
         ),
         catchError((error) => throwError(error))
+      );
+  }
+
+  ChangeEmail(payload: any): Observable<RequestResponse> {
+    return this.httpClient
+      .post<RequestResponse>(ApiEndpoints.users.settings.ChangeEmail(), payload)
+      .pipe(
+        tap((response) => {
+          if (response.result === 'success') this.updateUser();
+        }),
+        switchMap((response) =>
+          response.result === 'success'
+            ? of(response)
+            : throwError(response.message)
+        ),
+        catchError((error) => throwError(error))
+      );
+  }
+
+  ChangePhoneNumber(payload: any): Observable<RequestResponse> {
+    return this.httpClient
+      .post<RequestResponse>(ApiEndpoints.users.settings.ChangePhoneNumber(), payload)
+      .pipe(
+        tap((response) => {
+          if (response.result === 'success') this.updateUser();
+        }),
+        switchMap((response) =>
+          response.result === 'success'
+            ? of(response)
+            : throwError(response.message)
+        ),
+        catchError((error) => throwError(error.error))
       );
   }
 }

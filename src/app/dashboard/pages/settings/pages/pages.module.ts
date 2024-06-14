@@ -14,6 +14,7 @@ import { LanguageComponent } from './language/language.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedComponentsModule } from 'src/shared/components/components.module';
+import { SharedDirectivesModule } from 'src/shared/directives/directives.module';
 
 
 
@@ -36,7 +37,8 @@ import { SharedComponentsModule } from 'src/shared/components/components.module'
     NgSelectModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedComponentsModule
+    SharedComponentsModule,
+    SharedDirectivesModule
   ]
 })
 export class SettingsPagesModule { }

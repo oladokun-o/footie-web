@@ -53,9 +53,19 @@ export class LanguageComponent implements OnInit {
           this.saving = false;
           this.toastr.success(res.message);
         },
-        (err) => {
+        (error) => {
           this.saving = false;
-          this.toastr.error(err.message);
+          if (error && error.message) {
+            if (Array.isArray(error.message)) {
+              error.message.forEach((err: string) => {
+                this.toastr.error(err);
+              });
+            } else {
+              this.toastr.error(error.message);
+            }
+          } else {
+            this.toastr.error(error);
+          }
         }
       );
     }

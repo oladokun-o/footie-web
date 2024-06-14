@@ -1,1 +1,28 @@
-<p>change-email works!</p>
+<form *ngIf="form" [formGroup]="form" [class.disabled]="saving" (ngSubmit)="save()"
+  class="container-fluid h-100 position-relative">
+  <div class="row justify-content-between">
+    <div class="form-group col-12">
+      <label for="email" class="form-label">Current email</label>
+      <input type="email" readonly formControlName="email" id="email" class="form-control"
+        placeholder="Enter your current email address">
+    </div>
+
+    <div class="form-group col-12">
+      <label for="newEmail" class="form-label">New email</label>
+      <input type="email" formControlName="newEmail" id="newEmail" class="form-control"
+        placeholder="Enter your new email address">
+      <small class="text-danger">{{ form.get('newEmail')?.touched && form.get('newEmail')?.errors?.['required'] ? 'Your new email address
+        is
+        required' : '' }}</small>
+      <small class="text-danger">{{ form.get('newEmail')?.touched && form.get('newEmail')?.errors?.['email'] ? 'Email address is
+        invalid' :
+        '' }}</small>
+
+    </div>
+  </div>
+
+  <div class="col-12 position-absolute bottom-0 start-0">
+    <footiedrop-web-loading-button [buttonText]="'Save changes'" [disabled]="saving || form.invalid || !form.dirty"
+      [loading]="saving"></footiedrop-web-loading-button>
+  </div>
+</form>

@@ -1,4 +1,4 @@
-<form *ngIf="form" [formGroup]="form" (ngSubmit)="save()" class="container-fluid h-100 position-relative">
+<form *ngIf="form" [formGroup]="form" [class.disabled]="saving" (ngSubmit)="save()" class="container-fluid h-100 position-relative">
   <div class="row h-100 justify-content-between">
     <div class="form-group col-12">
       <label for="language" class="form-label">Select language</label>
