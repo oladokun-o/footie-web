@@ -1,1 +1,25 @@
-<p>preferences works!</p>
+<form *ngIf="form" [formGroup]="form" [class.disabled]="saving" (ngSubmit)="save()"
+  class="container-fluid prefrences h-100 position-relative">
+  <div class="row justify-content-between">
+    <div class="form-group col-12">
+      <mat-slide-toggle formControlName="notificationsEmail" [labelPosition]="'before'" [color]="color"
+        id="notificationsEmail">Notifications Email</mat-slide-toggle>
+    </div>
+
+    <div class="form-group col-12 disabled">
+      <mat-slide-toggle formControlName="notificationsSms" [disabled]="true" [labelPosition]="'before'" [color]="color"
+        id="notificationsSms">Notifications SMS</mat-slide-toggle>
+    </div>
+
+    <div class="form-group col-12 disabled">
+      <mat-slide-toggle formControlName="securityTwoFactorAuth" [disabled]="true" [labelPosition]="'before'" [color]="color"
+        id="securityTwoFactorAuth">Two-Factor Authentication</mat-slide-toggle>
+    </div>
+  </div>
+
+  <div class="col-12 position-absolute bottom-0 start-0">
+    <footiedrop-web-loading-button [buttonText]="'Save changes'" [disabled]="saving || form.invalid || !form.dirty"
+      [loading]="saving">
+    </footiedrop-web-loading-button>
+  </div>
+</form>

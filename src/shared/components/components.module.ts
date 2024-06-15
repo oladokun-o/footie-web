@@ -13,7 +13,7 @@ import { StarRatingComponent } from './star-rating/star-rating.component';
     LoadingButtonComponent,
     SwitchControlComponent,
     LoadingScreenComponent,
-    StarRatingComponent
+    StarRatingComponent,
   ],
   imports: [
     CommonModule,

@@ -9,11 +9,14 @@ export interface User {
   password: string
   phone: string
   profilePicture: any
-  addressStreet: any
-  addressCity: any
-  addressState: any
-  addressPostalCode: any
-  addressCountry: any
+  addressStreet: string
+  addressCity: string
+  addressState: string
+  floor: string
+  apartment_number: string
+  zip_code: string
+  addressPostalCode: string
+  addressCountry: string
   role: string
   createdAt: string
   updatedAt: string

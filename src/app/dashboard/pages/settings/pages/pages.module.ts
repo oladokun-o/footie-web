@@ -15,7 +15,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedComponentsModule } from 'src/shared/components/components.module';
 import { SharedDirectivesModule } from 'src/shared/directives/directives.module';
-
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { NgxFileDropModule } from 'ngx-file-drop';
 
 
 @NgModule({
@@ -38,7 +39,9 @@ import { SharedDirectivesModule } from 'src/shared/directives/directives.module'
     FormsModule,
     ReactiveFormsModule,
     SharedComponentsModule,
-    SharedDirectivesModule
+    SharedDirectivesModule,
+    MatSlideToggleModule,
+    NgxFileDropModule
   ]
 })
 export class SettingsPagesModule { }

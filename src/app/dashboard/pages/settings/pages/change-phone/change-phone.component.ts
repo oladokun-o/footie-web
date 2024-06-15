@@ -42,7 +42,7 @@ export class ChangePhoneComponent implements OnInit {
       this.saving = true;
       this.settingsService.ChangePhoneNumber(this.form.value).subscribe(
         (res) => {
-          this.router.navigate(['/dashboard/settings']);
+          // this.router.navigate(['/dashboard/settings']);
           this.saving = false;
           this.toastr.success(res.message);
         },

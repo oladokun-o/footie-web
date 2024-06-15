@@ -138,7 +138,7 @@ class UserHelperService {
 
     // 3. Check if the user has disabled email notifications, if not, add a warning
     if (!user.settings.notificationsEmail) {
-      warnings.push("You have disabled email notifications. <br> Please enable email notifications to receive important updates.");
+      warnings.push("You have disabled email notifications. <br> Please <a href='/dashboard/settings/preferences'>enable</a> email notifications to receive important updates.");
     }
 
     // 4. Check if the user's current location is available for the service

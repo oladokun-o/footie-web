@@ -1,1 +1,76 @@
-<p>edit-profile works!</p>
+<form *ngIf="form" [formGroup]="form" [class.disabled]="saving" (ngSubmit)="save()"
+  class="container-fluid h-100 profile position-relative pb-5 pt-3">
+  <div class="row justify-content-between">
+    <div class="form-group col-12 d-flex justify-content-center align-items-center pb-4">
+      <ngx-file-drop *ngIf="!fileUrl" dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)"
+        accept=".png,.jpg,.jpeg" [directory]="false" [multiple]="false">
+        <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+          <div class="image text-center position-relative" role="button" (click)="openFileSelector()">
+            <img [routerLink]="['./profile']" role="button" src="assets/images/icons/profile-icon.svg"
+              alt="Profile Icon" class="profile-icon" />
+            <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M35 17.5C35 27.165 27.165 35 17.5 35C7.83502 35 0 27.165 0 17.5C0 7.83502 7.83502 0 17.5 0C27.165 0 35 7.83502 35 17.5Z"
+                fill="#01674F" />
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M20.9405 13.3333H23.1896C23.97 13.3333 24.6086 13.9333 24.6086 14.6667V22.6667C24.6086 23.4 23.97 24 23.1896 24H11.8379C11.0575 24 10.419 23.4 10.419 22.6667V14.6667C10.419 13.9333 11.0575 13.3333 11.8379 13.3333H14.087L15.3853 12H19.6422L20.9405 13.3333ZM11.8379 22.6667H23.1896V14.6667H20.3162L19.0179 13.3333H16.0097L14.7113 14.6667H11.8379V22.6667ZM17.5138 15.3333C15.5556 15.3333 13.9664 16.8267 13.9664 18.6667C13.9664 20.5067 15.5556 22 17.5138 22C19.4719 22 21.0612 20.5067 21.0612 18.6667C21.0612 16.8267 19.4719 15.3333 17.5138 15.3333ZM15.3853 18.6667C15.3853 19.7667 16.3431 20.6667 17.5138 20.6667C18.6844 20.6667 19.6422 19.7667 19.6422 18.6667C19.6422 17.5667 18.6844 16.6667 17.5138 16.6667C16.3431 16.6667 15.3853 17.5667 15.3853 18.6667Z"
+                fill="#F4F4F4" />
+            </svg>
+          </div>
+        </ng-template>
+      </ngx-file-drop>
+
+      <small *ngIf="fileDropErrorMessage" class="text-danger">
+        {{ fileDropErrorMessage }}
+      </small>
+
+      <ng-container *ngIf="fileUrl">
+        <div class="ngx-file-drop__drop-zone dropped image">
+          <img [src]="fileUrl" #profileImage (error)="profileImage.src = 'assets/images/icons/profile-icon.svg'" (click)="imageInput.click()" alt="{{ file?.name }}" class="profile-icon">
+          <svg role="button" (click)="imageInput.click()" width="35" height="35" viewBox="0 0 35 35" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M35 17.5C35 27.165 27.165 35 17.5 35C7.83502 35 0 27.165 0 17.5C0 7.83502 7.83502 0 17.5 0C27.165 0 35 7.83502 35 17.5Z"
+              fill="#01674F" />
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M20.9405 13.3333H23.1896C23.97 13.3333 24.6086 13.9333 24.6086 14.6667V22.6667C24.6086 23.4 23.97 24 23.1896 24H11.8379C11.0575 24 10.419 23.4 10.419 22.6667V14.6667C10.419 13.9333 11.0575 13.3333 11.8379 13.3333H14.087L15.3853 12H19.6422L20.9405 13.3333ZM11.8379 22.6667H23.1896V14.6667H20.3162L19.0179 13.3333H16.0097L14.7113 14.6667H11.8379V22.6667ZM17.5138 15.3333C15.5556 15.3333 13.9664 16.8267 13.9664 18.6667C13.9664 20.5067 15.5556 22 17.5138 22C19.4719 22 21.0612 20.5067 21.0612 18.6667C21.0612 16.8267 19.4719 15.3333 17.5138 15.3333ZM15.3853 18.6667C15.3853 19.7667 16.3431 20.6667 17.5138 20.6667C18.6844 20.6667 19.6422 19.7667 19.6422 18.6667C19.6422 17.5667 18.6844 16.6667 17.5138 16.6667C16.3431 16.6667 15.3853 17.5667 15.3853 18.6667Z"
+              fill="#F4F4F4" />
+          </svg>
+          <input type="file" #imageInput (change)="changeFile($event)" class="position-fixed invisible"
+            style="z-index: 0;right: 10000px;" accept="image/png, image/jpeg">
+        </div>
+      </ng-container>
+    </div>
+    <div class="form-group col-12">
+      <label for="lastName">Surname</label>
+      <input type="text" class="form-control text-capitalize" id="lastName" formControlName="lastName"
+        placeholder="Enter your surname">
+      <small class="text-danger">{{ form.get('lastName')?.touched && form.get('lastName')?.errors?.['required'] ?
+        'Your surname is required' : '' }}</small>
+    </div>
+    <div class="form-group col-12">
+      <label for="middleName">Middle Name <small>(optional)</small></label>
+      <input type="text" class="form-control text-capitalize" id="middleName" formControlName="middleName"
+        placeholder="Enter your middle name">
+      <small class="text-danger">{{ form.get('middleName')?.touched && form.get('middleName')?.errors?.['required'] ?
+        'Your middle name is required' : '' }}</small>
+    </div>
+    <div class="form-group col-12">
+      <label for="firstName">First Name</label>
+      <input type="text" class="form-control text-capitalize" id="firstName" formControlName="firstName"
+        placeholder="Enter your first name">
+      <small class="text-danger">{{ form.get('firstName')?.touched && form.get('firstName')?.errors?.['required']
+        ? 'Your first name is required' : '' }}</small>
+    </div>
+    <div class="form-group col-12">
+      <label for="role">Account Type</label>
+      <input readonly id="role" formControlName="role" class="form-control text-capitalize" />
+    </div>
+  </div>
+
+  <div class="col-12 pb-5 pt-3">
+    <footiedrop-web-loading-button [buttonText]="'Save changes'" [disabled]="saving || form.invalid || !form.dirty"
+      [loading]="saving">
+    </footiedrop-web-loading-button>
+  </div>
+</form>

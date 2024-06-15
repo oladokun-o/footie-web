@@ -3,9 +3,9 @@
     <div class="col-12">
       <div class="d-flex justify-content-start align-items-center gap-3">
         <!-- Profile picture -->
-        <img *ngIf="user && user.profilePicture" role="button" [src]="user.profilePicture" alt="Profile Icon"
+        <img *ngIf="user && user.profilePicture" [routerLink]="['./profile']" role="button" [src]="user.profilePicture"#profileImage (error)="profileImage.src = 'assets/images/icons/profile-icon.svg'" alt="Profile Icon"
           class="profile-icon shadow-sm" />
-        <img *ngIf="user && !user.profilePicture" role="button" src="assets/images/icons/profile-icon.svg"
+        <img *ngIf="user && !user.profilePicture" [routerLink]="['./profile']" role="button" src="assets/images/icons/profile-icon.svg"
           alt="Profile Icon" class="profile-icon" />
 
         <!-- User's full name -->

@@ -22,11 +22,10 @@ import { LocationService } from '../core/services/location.service';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnDestroy {
-  userSession: { email: string; role: UserRole, id: string } = localStorage.getItem(
-    'userSessionData'
-  )
-    ? JSON.parse(localStorage.getItem('userSessionData') as string)
-    : null;
+  userSession: { email: string; role: UserRole; id: string; userId: string } =
+    localStorage.getItem('userSessionData')
+      ? JSON.parse(localStorage.getItem('userSessionData') as string)
+      : null;
   currentPage: string = '';
   innerPage: string = '';
   loading: boolean;
@@ -126,16 +125,32 @@ export class DashboardComponent implements OnDestroy {
       }
     });
 
-    this.userService
-      .getUserById(this.userSession.id)
-      .subscribe((user) => {
-        if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
-        } else {
-          toastr.error('User not found! <br> please login again.');
-          authService.logout();
-        }
-      });
+    if (this.userSession) {
+      let id = this.userSession.id
+        ? this.userSession.id
+        : this.userSession.userId;
+      if (id) {
+        this.userService.getUserById(id).subscribe((user) => {
+          if (user) {
+            localStorage.setItem('user', JSON.stringify(user));
+          } else {
+            toastr.error('User not found! <br> please login again.');
+            authService.logout();
+          }
+        });
+      } else if (this.userSession.email) {
+        this.userService
+          .getUserByEmail(this.userSession.email)
+          .subscribe((user) => {
+            if (user) {
+              localStorage.setItem('user', JSON.stringify(user));
+            } else {
+              toastr.error('User not found! <br> please login again.');
+              authService.logout();
+            }
+          });
+      }
+    }
   }
 
   ngOnDestroy() {

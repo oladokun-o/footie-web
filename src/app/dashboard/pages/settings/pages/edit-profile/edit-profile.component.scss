@@ -1,0 +1,28 @@
+.profile-icon {
+  width: 100px;
+  height: 100px;
+}
+
+::ng-deep .profile {
+  .ngx-file-drop__drop-zone {
+    border: none !important;
+  }
+
+  .ngx-file-drop__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto !important;
+    border: none;
+  }
+
+  .image {
+    position: relative;
+
+    svg {
+      position: absolute;
+      bottom: 0;
+      right: -10px;
+    }
+  }
+}

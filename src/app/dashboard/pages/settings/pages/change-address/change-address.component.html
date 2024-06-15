@@ -1,1 +1,73 @@
-<p>change-address works!</p>
+<form *ngIf="form" [formGroup]="form" [class.disabled]="saving" (ngSubmit)="save()"
+  class="container-fluid h-100 position-relative pb-5">
+  <div class="row justify-content-between">
+    <div class="form-group col-12">
+      <label for="addressStreet" class="form-label">Street<span class="text-danger">*</span></label>
+      <input type="text" formControlName="addressStreet" id="addressStreet" class="form-control"
+        placeholder="Enter your street address">
+      <small class="text-danger">
+        {{ form.get('addressStreet')?.touched && form.get('addressStreet')?.errors?.['required']
+        ? 'Street address is required' : '' }}
+      </small>
+    </div>
+
+    <div class="form-group col-12">
+      <label for="addressCity" class="form-label">City<span class="text-danger">*</span></label>
+      <input type="text" formControlName="addressCity" id="addressCity" class="form-control"
+        placeholder="Enter your city">
+      <small class="text-danger">
+        {{ form.get('addressCity')?.touched && form.get('addressCity')?.errors?.['required']
+        ? 'City is required' : '' }}
+      </small>
+    </div>
+
+    <!-- <div class="form-group col-12">
+      <label for="addressState" class="form-label">State</label>
+      <input type="text" formControlName="addressState" id="addressState" class="form-control"
+        placeholder="Enter your state">
+    </div> -->
+
+    <div class="form-group col-12">
+      <label for="floor" class="form-label">Floor</label>
+      <input type="text" formControlName="floor" id="floor" class="form-control" placeholder="Enter your floor">
+    </div>
+
+    <div class="form-group col-12">
+      <label for="apartment_number" class="form-label">Apartment Number</label>
+      <input type="text" formControlName="apartment_number" id="apartment_number" class="form-control"
+        placeholder="Enter your apartment number">
+    </div>
+
+    <div class="form-group col-12">
+      <label for="zip_code" class="form-label">Zip Code/Index Number</label>
+      <input type="text" formControlName="zip_code" id="zip_code" class="form-control"
+        placeholder="Enter your zip code">
+    </div>
+
+    <!-- <div class="form-group col-12">
+      <label for="addressPostalCode" class="form-label">Postal Code</label>
+      <input type="text" formControlName="addressPostalCode" id="addressPostalCode" class="form-control"
+        placeholder="Enter your postal code">
+      <small class="text-danger">
+        {{ form.get('addressPostalCode')?.touched && form.get('addressPostalCode')?.errors?.['pattern']
+        ? 'Postal code is invalid' : '' }}
+      </small>
+    </div> -->
+
+    <div class="form-group col-12">
+      <label for="addressCountry" class="form-label">Country<span class="text-danger">*</span></label>
+      <input type="text" readonly formControlName="addressCountry" id="addressCountry" class="form-control"
+        placeholder="Enter your country">
+      <small class="text-danger">
+        {{ form.get('addressCountry')?.touched && form.get('addressCountry')?.errors?.['required']
+        ? 'Country is required' : '' }}
+      </small>
+    </div>
+  </div>
+
+  <div class="col-12 pb-5 pt-3">
+    <footiedrop-web-loading-button [buttonText]="'Save changes'" [disabled]="saving || form.invalid || !form.dirty"
+      [loading]="saving">
+    </footiedrop-web-loading-button>
+  </div>
+</form>

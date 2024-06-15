@@ -31,6 +31,9 @@ export const ApiEndpoints = {
       ChangePassword: () => `${environment.apiUrl}/settings/changePassword`,
       ChangeEmail: () => `${environment.apiUrl}/settings/updateEmail`,
       ChangePhoneNumber: () => `${environment.apiUrl}/settings/updatePhoneNumber`,
+      UpdateAddress: () => `${environment.apiUrl}/settings/updateAddress`,
+      UpdateCommunicationPreference: () => `${environment.apiUrl}/settings/updateCommunicationPreferences`,
+      UpdateProfile: (userId: string) => `${environment.apiUrl}/settings/updateProfile/${userId}`,
     },
   },
   map: {

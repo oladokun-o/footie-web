@@ -85,7 +85,10 @@ export class SettingsService {
 
   ChangePhoneNumber(payload: any): Observable<RequestResponse> {
     return this.httpClient
-      .post<RequestResponse>(ApiEndpoints.users.settings.ChangePhoneNumber(), payload)
+      .post<RequestResponse>(
+        ApiEndpoints.users.settings.ChangePhoneNumber(),
+        payload
+      )
       .pipe(
         tap((response) => {
           if (response.result === 'success') this.updateUser();
@@ -97,5 +100,74 @@ export class SettingsService {
         ),
         catchError((error) => throwError(error.error))
       );
+  }
+
+  UpdateAddress(payload: any): Observable<RequestResponse> {
+    return this.httpClient
+      .post<RequestResponse>(
+        ApiEndpoints.users.settings.UpdateAddress(),
+        payload
+      )
+      .pipe(
+        tap((response) => {
+          if (response.result === 'success') this.updateUser();
+        }),
+        switchMap((response) =>
+          response.result === 'success'
+            ? of(response)
+            : throwError(response.message)
+        ),
+        catchError((error) => throwError(error.error))
+      );
+  }
+
+  UpdateCommunicationPreferences(payload: any): Observable<RequestResponse> {
+    return this.httpClient
+      .post<RequestResponse>(
+        ApiEndpoints.users.settings.UpdateCommunicationPreference(),
+        payload
+      )
+      .pipe(
+        tap((response) => {
+          if (response.result === 'success') this.updateUser();
+        }),
+        switchMap((response) =>
+          response.result === 'success'
+            ? of(response)
+            : throwError(response.message)
+        ),
+        catchError((error) => throwError(error.error))
+      );
+  }
+
+  UpdateProfile(payload: any): Observable<RequestResponse> {
+    const formData = this.toFormData(payload);
+
+    return this.httpClient
+      .post<RequestResponse>(
+        ApiEndpoints.users.settings.UpdateProfile(this.user.id),
+        formData
+      )
+      .pipe(
+        tap((response) => {
+          if (response.result === 'success') this.updateUser();
+        }),
+        switchMap((response) =>
+          response.result === 'success'
+            ? of(response)
+            : throwError(response.message)
+        ),
+        catchError((error) => throwError(error.error))
+      );
+  }
+
+  private toFormData(obj: any): FormData {
+    const formData = new FormData();
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        formData.append(key, obj[key]);
+      }
+    }
+    return formData;
   }
 }

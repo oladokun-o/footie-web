@@ -1,3 +1,67 @@
+$primary-palette: (
+  50: #ffe9d6,
+  100: #ffcba8,
+  200: #ffab76,
+  300: #ff8b44,
+  400: #ff7521,
+  500: #e36f00,
+  600: #cc6400,
+  700: #b55700,
+  800: #9e4a00,
+  900: #803600,
+  A100: #ffd5c2,
+  A200: #ffa699,
+  A400: #ff776f,
+  A700: #ff5c56,
+  contrast: (50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: rgba(0, 0, 0, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(0, 0, 0, 0.87),
+    A200: rgba(0, 0, 0, 0.87),
+    A400: rgba(0, 0, 0, 0.87),
+    A700: rgba(0, 0, 0, 0.87),
+  )
+);
+
+$accent-palette: (
+  50: #e0f2ef,
+  100: #b3e0d7,
+  200: #80ccb9,
+  300: #4db89a,
+  400: #26a982,
+  500: #01674f,
+  600: #015f48,
+  700: #01543e,
+  800: #014a34,
+  900: #013721,
+  A100: #a3ffe7,
+  A200: #70ffd6,
+  A400: #3dffc6,
+  A700: #23ffbc,
+  contrast: (50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(0, 0, 0, 0.87),
+    A200: rgba(0, 0, 0, 0.87),
+    A400: rgba(0, 0, 0, 0.87),
+    A700: rgba(0, 0, 0, 0.87),
+  )
+);
+
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use "@angular/material" as mat;
@@ -11,8 +75,8 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$footiedrop-web-primary: mat.define-palette(mat.$indigo-palette);
-$footiedrop-web-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$footiedrop-web-primary: mat.define-palette($primary-palette);
+$footiedrop-web-accent: mat.define-palette($accent-palette);
 
 // The warn palette is optional (defaults to red).
 $footiedrop-web-warn: mat.define-palette(mat.$red-palette);

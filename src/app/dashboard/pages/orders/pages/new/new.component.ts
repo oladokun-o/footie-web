@@ -94,6 +94,10 @@ export class NewComponent extends OrdersHelpers implements OnInit, OnDestroy {
       {
         name: 'Russia',
         code: 'rus',
+      },
+      {
+        name: 'Russia',
+        code: 'ru'
       }
     ];
 

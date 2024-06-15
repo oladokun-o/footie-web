@@ -85,7 +85,6 @@ export class VerifyCodeComponent {
       this.userService.verifyOTP(payload).subscribe(
         (response) => {
           this.loading = false;
-          this.form.get('otp')?.reset();
           this.toastr.success('OTP verified successfully');
           if (!this.shouldResendOTP) {
             if (this.isLoggedIn) {
