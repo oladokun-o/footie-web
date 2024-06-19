@@ -18,6 +18,7 @@ export class ResetPasswordComponent {
     private router: Router,
     private toastr: ToastrService
   ) {
+    toastr.toastrConfig.preventDuplicates = true;
     this.activatedRoute.params.subscribe(params => {
       this.resetToken = params['token'];
       this.verifyToken();

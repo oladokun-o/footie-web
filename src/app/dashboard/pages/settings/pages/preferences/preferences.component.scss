@@ -19,4 +19,8 @@
       display: none;
     }
   }
+
+    .disabled .mdc-switch .mdc-switch__handle {
+      pointer-events: none !important;
+    }
 }

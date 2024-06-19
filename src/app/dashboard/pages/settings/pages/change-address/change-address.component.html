@@ -56,7 +56,7 @@
 
     <div class="form-group col-12">
       <label for="addressCountry" class="form-label">Country<span class="text-danger">*</span></label>
-      <input type="text" readonly formControlName="addressCountry" id="addressCountry" class="form-control"
+      <input type="text" [readonly]="form.get('addressCountry')?.value !== null" formControlName="addressCountry" id="addressCountry" class="form-control"
         placeholder="Enter your country">
       <small class="text-danger">
         {{ form.get('addressCountry')?.touched && form.get('addressCountry')?.errors?.['required']

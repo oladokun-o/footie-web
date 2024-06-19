@@ -47,21 +47,27 @@ export class ChangePasswordComponent implements OnInit {
           this.toastr.success(res.message);
         },
         (error) => {
-          console.log(error);
           this.saving = false;
-          if (error && error.message) {
-            if (Array.isArray(error.message)) {
-              error.message.forEach((err: string) => {
-                this.toastr.error(err);
-              });
-            } else {
-              this.toastr.error(error.message);
-            }
-          } else {
-            this.toastr.error(error);
-          }
+          this.handleError(error);
         }
       );
+    }
+  }
+
+  handleError(error: any): void {
+    if (error && error.error) {
+      const errorMessages =
+        error.error.message || error.message || error.error || error;
+
+      if (Array.isArray(errorMessages)) {
+        errorMessages.forEach((err: string) => {
+          this.toastr.error(err);
+        });
+      } else {
+        this.toastr.error(errorMessages);
+      }
+    } else {
+      this.toastr.error('An unknown error occurred');
     }
   }
 }

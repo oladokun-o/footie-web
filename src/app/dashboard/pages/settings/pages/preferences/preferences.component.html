@@ -7,13 +7,16 @@
     </div>
 
     <div class="form-group col-12 disabled">
-      <mat-slide-toggle formControlName="notificationsSms" [disabled]="true" [labelPosition]="'before'" [color]="color"
-        id="notificationsSms">Notifications SMS</mat-slide-toggle>
+      <mat-slide-toggle formControlName="notificationsSms" [disableRipple]="true" [disabled]="true"
+        [labelPosition]="'before'" [color]="color" id="notificationsSms">Notifications SMS</mat-slide-toggle>
+      <div class="veil"></div>
     </div>
 
     <div class="form-group col-12 disabled">
-      <mat-slide-toggle formControlName="securityTwoFactorAuth" [disabled]="true" [labelPosition]="'before'" [color]="color"
-        id="securityTwoFactorAuth">Two-Factor Authentication</mat-slide-toggle>
+      <mat-slide-toggle formControlName="securityTwoFactorAuth" [disableRipple]="true" [disabled]="true"
+        [labelPosition]="'before'" [color]="color" id="securityTwoFactorAuth">Two-Factor
+        Authentication</mat-slide-toggle>
+      <div class="veil"></div>
     </div>
   </div>
 
