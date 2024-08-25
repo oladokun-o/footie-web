@@ -1,0 +1,4 @@
+<button [type]="type" [class]="'btn-' + class + ' loading-button'" [disabled]="disabled">
+  <ng-container *ngIf="!loading">{{ buttonText }}</ng-container>
+  <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+</button>
