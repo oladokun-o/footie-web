@@ -18,6 +18,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { DashboardModule } from './dashboard/dashboard.module';
 import { AngularYandexMapsModule, YaConfig } from 'angular8-yandex-maps';
 import { ApiEndpoints } from 'src/app/core/configs/api.config';
+import { KycModule } from './kyc/kyc.module';
 
 const mapConfig: YaConfig = {
   apikey: ApiEndpoints.map.yandex_key,
@@ -46,6 +47,7 @@ const mapConfig: YaConfig = {
     OnlineStatusModule,
     AuthModule,
     DashboardModule,
+    KycModule,
     SharedComponentsModule,
     SharedDirectivesModule,
     AngularYandexMapsModule.forRoot(mapConfig),

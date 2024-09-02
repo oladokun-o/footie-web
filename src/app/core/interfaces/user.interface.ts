@@ -17,7 +17,7 @@ export interface User {
   zip_code: string
   addressPostalCode: string
   addressCountry: string
-  role: string
+  role: UserRole
   createdAt: string
   updatedAt: string
   lastLogin: string
@@ -25,6 +25,7 @@ export interface User {
   settings: Settings
   orders?: Orders
   warnings?: string[];
+  kyc?: UserKYC;
 }
 
 export interface Order {
@@ -49,6 +50,30 @@ export interface Settings {
   notificationsSms: boolean
   securityTwoFactorAuth: boolean
   verified: boolean
+}
+
+export interface UserKYC {
+  id: string;
+  userId: string;
+  internationalPassport: any;  // Image file
+  russianPassport?: any;        // Image file
+  schoolID: any;               // Image file
+  selfie: any;                 // Image file
+  createdAt: string;
+  updatedAt: string;
+  status: 'pending' | 'approved' | 'rejected';
+  rejectionReason?: string;    // Optional, needed only if rejected
+  user: User;
+  step: KYCStep;
+}
+
+export enum KYCStep {
+  START = 'start',
+  SUBMIT_SELFIE = 'submit_selfie',
+  SUBMIT_INTERNATIONAL_PASSPORT = 'submit_international_passport',
+  SUBMIT_RUSSIAN_PASSPORT = 'submit_russian_passport',
+  REVIEW = 'review',
+  COMPLETE = 'complete',
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

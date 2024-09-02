@@ -1,6 +1,6 @@
 import * as Chance from 'chance';
 import { Order, OrderStatus, Address, ItemType, Orders, Chat, LocationType } from '../../core/interfaces/order.interface';
-import { Courier, User } from '../../core/interfaces/user.interface';
+import { Courier, User, UserRole } from '../../core/interfaces/user.interface';
 const chance = new Chance();
 
 const generateMockUser = (): User => ({
@@ -24,7 +24,7 @@ const generateMockUser = (): User => ({
   zip_code: chance.zip(),
   addressPostalCode: chance.zip(),
   addressCountry: 'Russia',
-  role: chance.pickone(['customer', 'courier']),
+  role: chance.pickone([UserRole.CUSTOMER, UserRole.COURIER]),
   createdAt: chance.date({ month: 3, year: 2024 }).toString(),
   updatedAt: chance.date({ month: 3, year: 2024 }).toString(),
   lastLogin: chance.date({ month: 3, year: 2024 }).toString(),

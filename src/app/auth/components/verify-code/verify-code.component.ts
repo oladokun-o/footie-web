@@ -16,6 +16,7 @@ export class VerifyCodeComponent {
   get userData(): { email: string, userId: string } { return JSON.parse(localStorage.getItem('userSessionData') as string); }
   shouldResendOTP: boolean = false;
   isSettings: boolean = false;
+  user!: User;
 
   constructor(
     private userService: UserService,
@@ -61,17 +62,26 @@ export class VerifyCodeComponent {
     this.userService.getUserByEmailForVerification(this.userData.email).subscribe(
       (response) => {
         const user: User = response;
+        this.user = user;
+
+        // Check if the user's email is verified
         if (user.settings.verified) {
-          this.toastr.success('Account is already verified');
-          if (this.isLoggedIn) {
+          this.toastr.success('Email address is already verified');
+
+          // Navigate based on KYC status
+          if (user.kyc && user.kyc.status === 'approved') {
             this.router.navigate(['/dashboard']);
           } else {
-            this.router.navigate(['/login']);
+            this.router.navigate(['/kyc']);
           }
+        } else {
+          // Handle case where email is not verified (if needed)
+          this.toastr.info('Please verify your email address');
+          // Optionally navigate to a verification page or show a verification prompt
         }
       },
       (error) => {
-        this.toastr.error(error);
+        this.toastr.error('An error occurred while verifying the email address');
       }
     );
   }
@@ -87,10 +97,10 @@ export class VerifyCodeComponent {
           this.loading = false;
           this.toastr.success('OTP verified successfully');
           if (!this.shouldResendOTP) {
-            if (this.isLoggedIn) {
+            if (this.user.kyc && this.user.kyc.status === 'approved') {
               this.router.navigate(['/dashboard']);
             } else {
-              this.router.navigate(['/login']);
+              this.router.navigate(['/kyc']);
             }
           }
         },

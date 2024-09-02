@@ -41,10 +41,11 @@ export class UserService {
           if (response.result === 'success') {
             return of(response.data); // Return the data if successful
           } else {
-            return throwError(response.message); // Throw an error if not successful
+            return throwError(response); // Throw an error if not successful
           }
         }),
         catchError((error) => {
+          console.log(error);
           return throwError(error.error);
         }) // Handle any HTTP error
       );

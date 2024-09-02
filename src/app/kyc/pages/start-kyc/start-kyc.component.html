@@ -1,0 +1,248 @@
+<div class="container-fluid">
+  <div class="row d-flex justify-content-center align-items-center">
+    <div class="col-12 col-md-6">
+      <div class="row">
+        <div class="col-12 pt-4 d-flex">
+          <!-- Log out button using bootstrap log out icon -->
+          <div role="button" [routerLink]="['/logout']" class="d-flex gap-2 justify-content-center align-items-center">
+            <i class="bi bi-box-arrow-left fs-3 text-primary text-dark"></i>
+            <p class="m-0">Go back</p>
+          </div>
+        </div>
+
+        <div class="col-12 d-flex justify-content-center align-items-center">
+          <div *ngIf="isMobile || isTablet" class="col-12 img-bg px-0">
+            <img src="assets/images/backgrounds/kyc-start.svg" alt="KYC" />
+          </div>
+
+          <qrcode
+            *ngIf="!isMobile && !isTablet"
+            [qrdata]="qrCodeData"
+            [colorDark]="'#000000'"
+            [colorLight]="'#ffffff'"
+            [width]="300"
+          ></qrcode>
+        </div>
+
+        <div *ngIf="isMobile || isTablet" class="col-12 text-center">
+          <h1 class="heading fw-bold fs-1">Let’s Verify KYC</h1>
+          <p class="sub-heading px-3">
+            Please submit the following documents to verify your profile
+          </p>
+        </div>
+
+        <div class="col-12">
+          <!-- Form for Mobile and Tablet Devices -->
+          <form
+            *ngIf="isMobile || isTablet"
+            [formGroup]="KYCForm"
+            class="container-fluid kyc-form"
+          >
+            <div class="col-12 mb-4">
+              <div class="row">
+                <div role="button" matRipple class="col-12 py-3">
+                  <div class="row">
+                    <div class="col-auto">
+                      <svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 30 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M11.9531 8.97188H6.09375C5.22351 8.97188 4.38891 9.31758 3.77356 9.93293C3.1582 10.5483 2.8125 11.3829 2.8125 12.2531V23.3484C2.8125 24.2187 3.1582 25.0533 3.77356 25.6686C4.38891 26.284 5.22351 26.6297 6.09375 26.6297H23.9062C24.7765 26.6297 25.6111 26.284 26.2264 25.6686C26.8418 25.0533 27.1875 24.2187 27.1875 23.3484V12.2531C27.1875 11.3829 26.8418 10.5483 26.2264 9.93293C25.6111 9.31758 24.7765 8.97188 23.9062 8.97188H18.0469"
+                          stroke="#7B7B7B"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M18.0469 6.41719V9.81094C18.0469 10.1839 17.8987 10.5416 17.635 10.8053C17.3713 11.069 17.0136 11.2172 16.6406 11.2172H13.3594C12.9864 11.2172 12.6287 11.069 12.365 10.8053C12.1013 10.5416 11.9531 10.1839 11.9531 9.81094V6.41719C11.9531 5.60911 12.2741 4.83412 12.8455 4.26272C13.4169 3.69133 14.1919 3.37032 15 3.37032C15.8081 3.37032 16.5831 3.69133 17.1545 4.26272C17.7259 4.83412 18.0469 5.60911 18.0469 6.41719Z"
+                          stroke="#7B7B7B"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M15.0283 7.64062C15.5979 7.64062 16.0596 7.17892 16.0596 6.60938C16.0596 6.03983 15.5979 5.57812 15.0283 5.57812C14.4588 5.57812 13.9971 6.03983 13.9971 6.60938C13.9971 7.17892 14.4588 7.64062 15.0283 7.64062Z"
+                          fill="#7B7B7B"
+                        />
+                        <path
+                          d="M19.6123 19.9031H15.8623"
+                          stroke="#7B7B7B"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M23.3623 16.2891H15.8623"
+                          stroke="#7B7B7B"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M12.108 14.3438H7.10645C6.84756 14.3438 6.6377 14.5536 6.6377 14.8125V21.375C6.6377 21.6339 6.84756 21.8437 7.10645 21.8437H12.108C12.3669 21.8437 12.5768 21.6339 12.5768 21.375V14.8125C12.5768 14.5536 12.3669 14.3438 12.108 14.3438Z"
+                          stroke="#7B7B7B"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <div class="col">
+                      <p>Upload your International Passport</p>
+                      <small
+                        >To verify your identity with an official
+                        document</small
+                      >
+                    </div>
+                    <div class="col-auto">
+                      <i class="bi bi-chevron-right fs-3"></i>
+                    </div>
+                  </div>
+                </div>
+                <div role="button" matRipple class="col-12 py-3">
+                  <div class="row">
+                    <div class="col-auto">
+                      <svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 30 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M11.9531 8.97188H6.09375C5.22351 8.97188 4.38891 9.31758 3.77356 9.93293C3.1582 10.5483 2.8125 11.3829 2.8125 12.2531V23.3484C2.8125 24.2187 3.1582 25.0533 3.77356 25.6686C4.38891 26.284 5.22351 26.6297 6.09375 26.6297H23.9062C24.7765 26.6297 25.6111 26.284 26.2264 25.6686C26.8418 25.0533 27.1875 24.2187 27.1875 23.3484V12.2531C27.1875 11.3829 26.8418 10.5483 26.2264 9.93293C25.6111 9.31758 24.7765 8.97188 23.9062 8.97188H18.0469"
+                          stroke="#7B7B7B"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M18.0469 6.41719V9.81094C18.0469 10.1839 17.8987 10.5416 17.635 10.8053C17.3713 11.069 17.0136 11.2172 16.6406 11.2172H13.3594C12.9864 11.2172 12.6287 11.069 12.365 10.8053C12.1013 10.5416 11.9531 10.1839 11.9531 9.81094V6.41719C11.9531 5.60911 12.2741 4.83412 12.8455 4.26272C13.4169 3.69133 14.1919 3.37032 15 3.37032C15.8081 3.37032 16.5831 3.69133 17.1545 4.26272C17.7259 4.83412 18.0469 5.60911 18.0469 6.41719Z"
+                          stroke="#7B7B7B"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M15.0283 7.64062C15.5979 7.64062 16.0596 7.17892 16.0596 6.60938C16.0596 6.03983 15.5979 5.57812 15.0283 5.57812C14.4588 5.57812 13.9971 6.03983 13.9971 6.60938C13.9971 7.17892 14.4588 7.64062 15.0283 7.64062Z"
+                          fill="#7B7B7B"
+                        />
+                        <path
+                          d="M19.6123 19.9031H15.8623"
+                          stroke="#7B7B7B"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M23.3623 16.2891H15.8623"
+                          stroke="#7B7B7B"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M12.108 14.3438H7.10645C6.84756 14.3438 6.6377 14.5536 6.6377 14.8125V21.375C6.6377 21.6339 6.84756 21.8437 7.10645 21.8437H12.108C12.3669 21.8437 12.5768 21.6339 12.5768 21.375V14.8125C12.5768 14.5536 12.3669 14.3438 12.108 14.3438Z"
+                          stroke="#7B7B7B"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <div class="col">
+                      <p>Upload your School ID Card</p>
+                      <small
+                        >To verify your affiliation with an educational
+                        institution</small
+                      >
+                    </div>
+                    <div class="col-auto">
+                      <i class="bi bi-chevron-right fs-3"></i>
+                    </div>
+                  </div>
+                </div>
+                <div role="button" matRipple class="col-12 py-3">
+                  <div class="row">
+                    <div class="col-auto">
+                      <svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 30 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M20 2.5H10C9.00544 2.5 8.05161 2.89509 7.34835 3.59835C6.64509 4.30161 6.25 5.25544 6.25 6.25V23.75C6.25 24.7446 6.64509 25.6984 7.34835 26.4017C8.05161 27.1049 9.00544 27.5 10 27.5H20C20.9946 27.5 21.9484 27.1049 22.6517 26.4017C23.3549 25.6984 23.75 24.7446 23.75 23.75V6.25C23.75 5.25544 23.3549 4.30161 22.6517 3.59835C21.9484 2.89509 20.9946 2.5 20 2.5ZM21.25 23.75C21.25 24.0815 21.1183 24.3995 20.8839 24.6339C20.6495 24.8683 20.3315 25 20 25H10C9.66848 25 9.35054 24.8683 9.11612 24.6339C8.8817 24.3995 8.75 24.0815 8.75 23.75V22.5H21.25V23.75ZM15 17.5C15.7737 17.5022 16.5278 17.7436 17.1588 18.1912C17.7899 18.6387 18.2671 19.2706 18.525 20H11.475C11.7329 19.2706 12.2101 18.6387 12.8412 18.1912C13.4722 17.7436 14.2263 17.5022 15 17.5ZM13.75 13.75C13.75 13.5028 13.8233 13.2611 13.9607 13.0555C14.098 12.85 14.2932 12.6898 14.5216 12.5952C14.7501 12.5005 15.0014 12.4758 15.2439 12.524C15.4863 12.5722 15.7091 12.6913 15.8839 12.8661C16.0587 13.0409 16.1778 13.2637 16.226 13.5061C16.2742 13.7486 16.2495 13.9999 16.1548 14.2284C16.0602 14.4568 15.9 14.652 15.6945 14.7893C15.4889 14.9267 15.2472 15 15 15C14.6685 15 14.3505 14.8683 14.1161 14.6339C13.8817 14.3995 13.75 14.0815 13.75 13.75ZM21.25 20H21.125C20.9435 19.1335 20.5799 18.3154 20.0584 17.6C19.5369 16.8845 18.8694 16.288 18.1 15.85C18.5216 15.2306 18.748 14.4992 18.75 13.75C18.75 12.7554 18.3549 11.8016 17.6517 11.0983C16.9484 10.3951 15.9946 10 15 10C14.0054 10 13.0516 10.3951 12.3483 11.0983C11.6451 11.8016 11.25 12.7554 11.25 13.75C11.252 14.4992 11.4784 15.2306 11.9 15.85C11.1306 16.288 10.4631 16.8845 9.94157 17.6C9.42007 18.3154 9.05652 19.1335 8.875 20H8.75V6.25C8.75 5.91848 8.8817 5.60054 9.11612 5.36612C9.35054 5.1317 9.66848 5 10 5H20C20.3315 5 20.6495 5.1317 20.8839 5.36612C21.1183 5.60054 21.25 5.91848 21.25 6.25V20ZM15 6.25C14.7528 6.25 14.5111 6.32331 14.3055 6.46066C14.1 6.59801 13.9398 6.79324 13.8452 7.02165C13.7505 7.25005 13.7258 7.50139 13.774 7.74386C13.8223 7.98634 13.9413 8.20907 14.1161 8.38388C14.2909 8.5587 14.5137 8.67775 14.7561 8.72598C14.9986 8.77421 15.2499 8.74946 15.4784 8.65485C15.7068 8.56024 15.902 8.40002 16.0393 8.19446C16.1767 7.9889 16.25 7.74723 16.25 7.5C16.25 7.16848 16.1183 6.85054 15.8839 6.61612C15.6495 6.3817 15.3315 6.25 15 6.25Z"
+                          fill="#848484"
+                        />
+                      </svg>
+                    </div>
+                    <div class="col">
+                      <p>Upload a Selfie</p>
+                      <small
+                        >To confirm your identity by matching your photo with
+                        your documents</small
+                      >
+                    </div>
+                    <div class="col-auto">
+                      <i class="bi bi-chevron-right fs-3"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <footiedrop-web-loading-button
+                  buttonText="Submit"
+                  [disabled]="KYCForm.invalid"
+                  [loading]="loading"
+                  class="primary"
+                ></footiedrop-web-loading-button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Alternative Content for Non-Mobile Devices -->
+          <div
+            *ngIf="!isMobile && !isTablet"
+            class="container-fluid alternative-content"
+          >
+            <div class="row">
+              <div class="col-12 text-center">
+                <h2 class="heading fw-bold fs-1">
+                  For KYC Verification, Please Use a Mobile or Tablet Device
+                </h2>
+                <p class="sub-heading">
+                  For the best experience and to upload your documents
+                  accurately, please scan the QR code above with your mobile or
+                  tablet device to continue the process on your phone.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 text-center pt-3 pb-5" *ngIf="isMobile || isTablet">
+          <small class="mt-4 text-dark">
+            <a [class.disabled]="loading" [routerLink]="['/privacy']"
+              >Why is this needed?</a
+            >
+          </small>
+        </div>
+
+        <div class="col-12 text-center py-3" *ngIf="!isMobile && !isTablet">
+          <small class="mt-4 text-muted">
+            <span>&copy;</span> 2024 Footiedrop. All rights reserved.
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

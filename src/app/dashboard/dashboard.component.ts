@@ -63,7 +63,7 @@ export class DashboardComponent implements OnDestroy {
           this.loading = false;
         }, 1000);
 
-        this.currentPage = this.router.url.endsWith('/dashboard')
+        this.currentPage = this.router.url.endsWith('/dashboard/home')
           ? ''
           : this.router.url.split('/')[2];
         if (this.currentPage === undefined) this.currentPage = '';

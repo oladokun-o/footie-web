@@ -35,6 +35,11 @@ export const ApiEndpoints = {
       UpdateCommunicationPreference: () => `${environment.apiUrl}/settings/updateCommunicationPreferences`,
       UpdateProfile: (userId: string) => `${environment.apiUrl}/settings/updateProfile/${userId}`,
     },
+    kyc: {
+      initiateKYC: (userId: string) => `${environment.apiUrl}/kyc/initiate/${userId}`,
+      getUserByEmailForKYC: (email: string) => `${environment.apiUrl}/users/kyc/user/${email}`,
+      getUserByIDForKYC: (id: string) => `${environment.apiUrl}/users/kyc/user/id/${id}`,
+    }
   },
   map: {
     yandex_key: '2215fdbd-83bb-4c46-9c52-faffd29f5d91',

@@ -1,0 +1,40 @@
+.img-bg {
+  position: relative;
+  height: 300px;
+
+  img {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.heading {
+  font-family: 'Poppins' !important;
+}
+
+.sub-heading {
+  font-family: 'Poppins' !important;
+  font-size: 16px;
+  color: #6c757d;
+  text-transform: unset;
+}
+
+form {
+  p {
+    font-family: 'Poppins' !important;
+    font-size: 16px;
+    color: #000;
+    text-transform: unset;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  small {
+    font-size: 14px !important;
+    font-family: 'Poppins' !important;
+    color: #848484;
+  }
+}
