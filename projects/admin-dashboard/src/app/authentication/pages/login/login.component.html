@@ -1,0 +1,101 @@
+<div class="col-12 d-flex justify-content-center align-items-center h-100">
+  <div class="col-lg-10 col-12 px-1 px-lg-4">
+    <form
+      [formGroup]="form"
+      (ngSubmit)="login()"
+      class="mt-3"
+      [class.loading]="loggingIn"
+    >
+      <div class="container-fluid text-center ps-0 my-3 pt-5 mb-4 pb-3">
+        <div class="col-12 pb-4 d-flex justify-content-center align-items-center">
+          <div class="col-6">
+            <img
+              src="/assets/images/logos/logo-light.svg"
+              style="width: 100%"
+              alt="Footiedrop Logo"
+            />
+          </div>
+        </div>
+        <h3 class="heading">Footiedrop Admin Dashboard</h3>
+        <p class="sub-heading">Sign in with your email</p>
+      </div>
+      <div *ngIf="loginmode === 'email'" class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          autofocus
+          class="form-control"
+          id="email"
+          formControlName="email"
+          placeholder="Enter your email address"
+        />
+        <small
+          class="text-danger"
+          >{{ form.get('email')?.touched && form.get('email')?.errors?.['required'] ? 'Email is required' : '' }}</small
+        >
+        <small
+          class="text-danger"
+          >{{ form.get('email')?.touched && form.get('email')?.errors?.['email'] ? 'Email is invalid' : '' }}</small
+        >
+      </div>
+      <div *ngIf="loginmode === 'phone'" class="form-group">
+        <label for="phone">Phone</label>
+        <input
+          footiedropWebNumbersOnly
+          footiedropWebInputMask="+0 000 000-00-00"
+          autofocus
+          type="tel"
+          class="form-control"
+          id="phone"
+          formControlName="phone"
+          placeholder="Enter your phone number"
+        />
+        <small
+          class="text-danger"
+          >{{ form.get('phone')?.touched && form.get('phone')?.errors?.['required'] ? 'Phone is required' : '' }}</small
+        >
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="pwd-group">
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            formControlName="password"
+            placeholder="Enter your password"
+            #pwdInput
+          />
+          <button
+            type="button"
+            class="btn-transparent"
+            (click)="
+              pwdInput.type = pwdInput.type === 'text' ? 'password' : 'text'
+            "
+          >
+            <img
+              src="assets/images/icons/{{
+                pwdInput.type === 'password' ? 'eye-off' : 'eye'
+              }}.svg"
+              alt="eye"
+              class="icon"
+            />
+          </button>
+        </div>
+        <small
+          class="text-danger"
+          >{{ form.get('password')?.touched && form.get('password')?.errors?.['required'] ? 'Password is required' : '' }}</small
+        >
+      </div>
+      <div class="form-group text-end">
+        <a routerLink="/forgot-password">Forgot Password?</a>
+      </div>
+      <footiedrop-web-loading-button
+        buttonText="Sign In"
+        [disabled]="form.invalid"
+        [loading]="loggingIn"
+        class="primary"
+      ></footiedrop-web-loading-button>
+    </form>
+  </div>
+</div>

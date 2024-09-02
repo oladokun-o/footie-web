@@ -1,0 +1,60 @@
+.line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1px;
+  width: 20%;
+  background-color: #ededed;
+}
+
+.sign-in-text {
+  font-size: 14px;
+  color: #b6b6b6;
+}
+
+.pwd-group {
+  position: relative;
+  width: 100%;
+  height: auto;
+
+  button {
+    position: absolute;
+    right: 10px;
+    top: 0;
+
+    .icon {
+      cursor: pointer;
+      width: 17px;
+    }
+  }
+}
+
+.switch-acct {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding-top: 10px;
+  padding-right: 15px;
+
+  p {
+    margin: 0;
+    opacity: 32%;
+    position: relative;
+    top: -3px;
+    cursor: pointer;
+
+    &.active {
+      opacity: 100%;
+    }
+  }
+
+  ::ng-deep  {
+    .cswitch {
+      right: -5px !important;
+    }
+  }
+}

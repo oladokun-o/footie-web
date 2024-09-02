@@ -1,0 +1,27 @@
+header {
+  background-image: url('/assets/images/backgrounds/auth-header-bg.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  position: relative;
+  min-height: 169px;
+  transition: all 0.3s ease;
+
+  .logo {
+    position: absolute;
+    left: 15px;
+    bottom: -32px;
+  }
+}
+
+// laptop & desktop screen sizes
+@media (min-width: 992px) {
+  header {
+    .logo {
+
+      img {
+        width: 150%;
+      }
+    }
+  }
+}
