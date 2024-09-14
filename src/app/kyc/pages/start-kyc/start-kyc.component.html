@@ -4,7 +4,12 @@
       <div class="row">
         <div class="col-12 pt-4 d-flex">
           <!-- Log out button using bootstrap log out icon -->
-          <div role="button" [routerLink]="['/logout']" class="d-flex gap-2 justify-content-center align-items-center">
+          <div
+            role="button"
+            [routerLink]="['/logout']"
+            class="d-flex gap-2 justify-content-center align-items-center"
+            [class.disabled]="loading"
+          >
             <i class="bi bi-box-arrow-left fs-3 text-primary text-dark"></i>
             <p class="m-0">Go back</p>
           </div>
@@ -26,8 +31,12 @@
 
         <div *ngIf="isMobile || isTablet" class="col-12 text-center">
           <h1 class="heading fw-bold fs-1">Let’s Verify KYC</h1>
-          <p class="sub-heading px-3">
+          <p *ngIf="!kycHasAllDocuments" class="sub-heading px-3">
             Please submit the following documents to verify your profile
+          </p>
+          <p *ngIf="kycHasAllDocuments" class="sub-heading px-3">
+            <!-- KYC under review -->
+            Your KYC is under review. You will be notified once it is approved.
           </p>
         </div>
 
@@ -37,10 +46,17 @@
             *ngIf="isMobile || isTablet"
             [formGroup]="KYCForm"
             class="container-fluid kyc-form"
+            (ngSubmit)="submitKYC()"
+            [class.disabled]="loading"
           >
             <div class="col-12 mb-4">
               <div class="row">
-                <div role="button" matRipple class="col-12 py-3">
+                <div
+                  role="button"
+                  matRipple
+                  class="col-12 py-3"
+                  (click)="proceed('internationalPassport')"
+                >
                   <div class="row">
                     <div class="col-auto">
                       <svg
@@ -99,11 +115,17 @@
                       >
                     </div>
                     <div class="col-auto">
-                      <i class="bi bi-chevron-right fs-3"></i>
+                      <i *ngIf="!KYCForm.get('internationalPassport')?.value" class="bi bi-chevron-right fs-3"></i>
+                      <i *ngIf="KYCForm.get('internationalPassport')?.value" class="bi bi-check-circle-fill fs-3 text-success"></i>
                     </div>
                   </div>
                 </div>
-                <div role="button" matRipple class="col-12 py-3">
+                <div
+                  role="button"
+                  matRipple
+                  class="col-12 py-3"
+                  (click)="proceed('schoolID')"
+                >
                   <div class="row">
                     <div class="col-auto">
                       <svg
@@ -162,11 +184,17 @@
                       >
                     </div>
                     <div class="col-auto">
-                      <i class="bi bi-chevron-right fs-3"></i>
+                      <i *ngIf="!KYCForm.get('schoolID')?.value" class="bi bi-chevron-right fs-3"></i>
+                      <i *ngIf="KYCForm.get('schoolID')?.value" class="bi bi-check-circle-fill fs-3 text-success"></i>
                     </div>
                   </div>
                 </div>
-                <div role="button" matRipple class="col-12 py-3">
+                <div
+                  role="button"
+                  matRipple
+                  class="col-12 py-3"
+                  (click)="proceed('selfie')"
+                >
                   <div class="row">
                     <div class="col-auto">
                       <svg
@@ -190,18 +218,31 @@
                       >
                     </div>
                     <div class="col-auto">
-                      <i class="bi bi-chevron-right fs-3"></i>
+                      <i *ngIf="!KYCForm.get('selfie')?.value" class="bi bi-chevron-right fs-3"></i>
+                      <i *ngIf="KYCForm.get('selfie')?.value" class="bi bi-check-circle-fill fs-3 text-success"></i>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
+            <div *ngIf="!kycHasAllDocuments" class="col-12 d-flex mb-3 align-items-center">
+              <i class="bi bi-info-circle me-3"></i>
+              <!-- info about file types and sizes -->
+              <div class="col">
+                <small class="text-muted"
+                  >Accepted file types: PDF, PNG, JPEG, JPG</small
+                >
+                <br />
+                <small class="text-muted">Maximum file size: 5MB</small>
+              </div>
+            </div>
+
             <div class="row">
               <div class="col-12">
                 <footiedrop-web-loading-button
-                  buttonText="Submit"
-                  [disabled]="KYCForm.invalid"
+                  [buttonText]="submitButtonLabel"
+                  [disabled]="KYCForm.invalid || disableForm"
                   [loading]="loading"
                   class="primary"
                 ></footiedrop-web-loading-button>
@@ -231,7 +272,11 @@
 
         <div class="col-12 text-center pt-3 pb-5" *ngIf="isMobile || isTablet">
           <small class="mt-4 text-dark">
-            <a [class.disabled]="loading" [routerLink]="['/privacy']"
+            <a
+              [class.disabled]="loading"
+              aria-hidden="false"
+              href="javascript:void(0)"
+              (click)="showWhyKYCisNeededModal()"
               >Why is this needed?</a
             >
           </small>
@@ -246,3 +291,55 @@
     </div>
   </div>
 </div>
+
+<!-- International passport upload input:hidden, accept: pdf,png,jpeg,jpg -->
+<input
+  type="file"
+  accept="application/pdf,image/png,image/jpeg,image/jpg"
+  multiple="false"
+  (change)="onFileChange($event, 'internationalPassport')"
+  #internationalPassportElement
+  hidden
+  [disabled]="loading"
+/>
+
+<!-- School ID Card upload input:hidden, accept: pdf,png,jpeg,jpg -->
+<input
+  type="file"
+  accept="application/pdf,image/png,image/jpeg,image/jpg"
+  multiple="false"
+  (change)="onFileChange($event, 'schoolID')"
+  #schoolIDElement
+  hidden
+  [disabled]="loading"
+/>
+
+<!-- Selfie upload with camera input:hidden, accept: png,jpeg,jpg -->
+<input
+  type="file"
+  accept="image/png,image/jpeg,image/jpg"
+  capture="camera"
+  (change)="onFileChange($event, 'selfie')"
+  #selfieElement
+  hidden
+  [disabled]="loading"
+/>
+
+<!-- Confirm Uploading Documents Modal -->
+<ng-template #confirmKYCSubmissionModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Confirm Documents Upload</h4>
+    <!-- <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button> -->
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to upload the selected documents?</p>
+  </div>
+  <div class="modal-footer">
+    <div class="col-5">
+      <button type="button" class="btn btn-danger" (click)="modal.dismiss('Cancel click')">Cancel</button>
+    </div>
+    <div class="col">
+      <button type="button" class="btn btn-primary" (click)="proceedToSubmitKYC()">Confirm Upload</button>
+    </div>
+  </div>
+</ng-template>

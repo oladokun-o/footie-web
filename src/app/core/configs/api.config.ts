@@ -39,6 +39,8 @@ export const ApiEndpoints = {
       initiateKYC: (userId: string) => `${environment.apiUrl}/kyc/initiate/${userId}`,
       getUserByEmailForKYC: (email: string) => `${environment.apiUrl}/users/kyc/user/${email}`,
       getUserByIDForKYC: (id: string) => `${environment.apiUrl}/users/kyc/user/id/${id}`,
+      uploadDocument: (userId: string, file: 'internationalPassport' | 'schoolID' | 'selfie') => `${environment.apiUrl}/kyc/uploadDocument/${userId}/${file}`,
+      verifyKYCDocuments: (userId: string) => `${environment.apiUrl}/kyc/verifyDocuments/${userId}`,
     }
   },
   map: {
