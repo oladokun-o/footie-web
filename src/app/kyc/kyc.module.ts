@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { KycComponent } from './kyc.component';
 import { KYCPagesModule } from './pages/pages.module';
 import { KYCRoutingModule } from './kyc-routing.module';
+import { KYCModalsModule } from './modals/modals.module';
 
 
 
@@ -13,7 +14,8 @@ import { KYCRoutingModule } from './kyc-routing.module';
   imports: [
     CommonModule,
     KYCPagesModule,
-    KYCRoutingModule
+    KYCRoutingModule,
+    KYCModalsModule
   ]
 })
 export class KycModule { }
