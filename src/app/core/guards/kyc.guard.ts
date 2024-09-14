@@ -116,16 +116,16 @@ export class KycGuard implements CanActivate {
     if (user.kyc && user.kyc.step) {
       switch (user.kyc.step) {
         case KYCStep.SUBMIT_SELFIE:
-          this.router.navigate(['/kyc/selfie']);
+          this.router.navigate(['/kyc']);
           break;
         case KYCStep.SUBMIT_INTERNATIONAL_PASSPORT:
-          this.router.navigate(['/kyc/international-passport']);
+          this.router.navigate(['/kyc']);
           break;
         case KYCStep.SUBMIT_RUSSIAN_PASSPORT:
-          this.router.navigate(['/kyc/russian-passport']);
+          this.router.navigate(['/kyc']);
           break;
         case KYCStep.REVIEW:
-          this.router.navigate(['/kyc/review']);
+          this.router.navigate(['/kyc']);
           break;
         default:
           this.initiateKyc(); // If the step is not recognized, re-initiate KYC
