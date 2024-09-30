@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthenticationComponent } from './authentication.component';
-import { LoginComponent } from './pages/login/login.component';
-import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
-import { LogoutComponent } from './pages/logout/logout.component';
+import { AuthenticationComponent } from 'projects/admin-dashboard/src/app/authentication/authentication.component';
+import { AdminLoginComponent } from 'projects/admin-dashboard/src/app/authentication/pages/login/login.component';
+import { AdminForgotPasswordComponent } from 'projects/admin-dashboard/src/app/authentication/pages/forgot-password/forgot-password.component';
+import { AdminResetPasswordComponent } from 'projects/admin-dashboard/src/app/authentication/pages/reset-password/reset-password.component';
+import { AdminLogoutComponent } from 'projects/admin-dashboard/src/app/authentication/pages/logout/logout.component';
 
 const routes: Routes = [
   {
@@ -13,7 +13,7 @@ const routes: Routes = [
     children: [
       {
         path: 'login',
-        component: LoginComponent
+        component: AdminLoginComponent
       },
       {
         path: '',
@@ -22,15 +22,15 @@ const routes: Routes = [
       },
       {
         path: 'logout',
-        component: LogoutComponent
+        component: AdminLogoutComponent
       },
       {
         path: 'forgot-password',
-        component: ForgotPasswordComponent
+        component: AdminForgotPasswordComponent
       },
       {
         path: 'reset-password/:token',
-        component: ResetPasswordComponent
+        component: AdminResetPasswordComponent
       },
     ]
   }

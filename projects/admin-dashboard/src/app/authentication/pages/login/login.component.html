@@ -1,5 +1,5 @@
 <div class="col-12 d-flex justify-content-center align-items-center h-100">
-  <div class="col-lg-10 col-12 px-1 px-lg-4">
+  <div class="col-md-4 col-lg-5 col-12 px-1 px-lg-4">
     <form
       [formGroup]="form"
       (ngSubmit)="login()"
@@ -19,7 +19,7 @@
         <h3 class="heading">Footiedrop Admin Dashboard</h3>
         <p class="sub-heading">Sign in with your email</p>
       </div>
-      <div *ngIf="loginmode === 'email'" class="form-group">
+      <div class="form-group">
         <label for="email">Email</label>
         <input
           type="email"
@@ -38,23 +38,7 @@
           >{{ form.get('email')?.touched && form.get('email')?.errors?.['email'] ? 'Email is invalid' : '' }}</small
         >
       </div>
-      <div *ngIf="loginmode === 'phone'" class="form-group">
-        <label for="phone">Phone</label>
-        <input
-          footiedropWebNumbersOnly
-          footiedropWebInputMask="+0 000 000-00-00"
-          autofocus
-          type="tel"
-          class="form-control"
-          id="phone"
-          formControlName="phone"
-          placeholder="Enter your phone number"
-        />
-        <small
-          class="text-danger"
-          >{{ form.get('phone')?.touched && form.get('phone')?.errors?.['required'] ? 'Phone is required' : '' }}</small
-        >
-      </div>
+
       <div class="form-group">
         <label for="password">Password</label>
         <div class="pwd-group">

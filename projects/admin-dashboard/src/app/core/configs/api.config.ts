@@ -1,13 +1,12 @@
 // API endpoints configuration
-import { environment } from 'src/environments/environment';
+import { environment } from 'projects/admin-dashboard/src/environments/environment';
 /**
  * @description API endpoints
  */
 export const ApiEndpoints = {
   auth: {
     login: {
-      viaEmail: () => `${environment.apiUrl}/auth/loginWithEmail`,
-      viaPhone: () => `${environment.apiUrl}/auth/loginWithPhone`,
+      viaEmail: () => `${environment.apiUrl}/auth/admin/loginWithEmail`,
       isAuthenticated: () => `${environment.apiUrl}/auth/validateToken`,
       logout: () => `${environment.apiUrl}/auth/logout`,
     },
@@ -35,6 +34,14 @@ export const ApiEndpoints = {
       UpdateCommunicationPreference: () => `${environment.apiUrl}/settings/updateCommunicationPreferences`,
       UpdateProfile: (userId: string) => `${environment.apiUrl}/settings/updateProfile/${userId}`,
     },
+    kyc: {
+      initiateKYC: (userId: string) => `${environment.apiUrl}/kyc/initiate/${userId}`,
+      getUserByEmailForKYC: (email: string) => `${environment.apiUrl}/users/kyc/user/${email}`,
+      getUserByIDForKYC: (id: string) => `${environment.apiUrl}/users/kyc/user/id/${id}`,
+      uploadDocument: (userId: string, file: 'internationalPassport' | 'schoolID' | 'selfie') => `${environment.apiUrl}/kyc/uploadDocument/${userId}/${file}`,
+      verifyKYCDocuments: (userId: string) => `${environment.apiUrl}/kyc/verifyDocuments/${userId}`,
+      list: () => `${environment.apiUrl}/kyc/list`,
+    }
   },
   map: {
     yandex_key: '2215fdbd-83bb-4c46-9c52-faffd29f5d91',

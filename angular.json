@@ -134,7 +134,7 @@
       },
       "root": "projects/admin-dashboard",
       "sourceRoot": "projects/admin-dashboard/src",
-      "prefix": "app",
+      "prefix": "admin-app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -152,9 +152,13 @@
               "projects/admin-dashboard/src/assets"
             ],
             "styles": [
-              "projects/admin-dashboard/src/styles.scss"
+              "projects/admin-dashboard/src/styles.scss",
+              "projects/admin-dashboard/src/assets/css/material.css",
+              "projects/admin-dashboard/src/assets/plugins/morris/morris.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {

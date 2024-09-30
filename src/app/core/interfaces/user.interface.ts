@@ -65,6 +65,9 @@ export interface UserKYC {
   rejectionReason?: string;    // Optional, needed only if rejected
   user: User;
   step: KYCStep;
+  documentsInReviewEmailSent: boolean;
+  documentsVerifiedEmailSent: boolean;
+  documentsRejectedEmailSent: boolean;
 }
 
 export enum KYCStep {

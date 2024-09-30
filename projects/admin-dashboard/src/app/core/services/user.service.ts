@@ -1,12 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RequestResponse } from '../interfaces/index.interface';
-import { CreateUserDto } from '../dto/user.dto';
+import { RequestResponse } from 'projects/admin-dashboard/src/app/core/interfaces/index.interface';
+import { CreateUserDto } from 'projects/admin-dashboard/src/app/core/dto/user.dto';
 import { Observable, tap, switchMap, of, throwError, catchError } from 'rxjs';
-import { ApiEndpoints } from '../configs/api.config';
-import { User } from '../interfaces/user.interface';
-import { Address } from '../interfaces/order.interface';
-import { Region } from '../interfaces/location.interface';
+import { ApiEndpoints } from 'projects/admin-dashboard/src/app/core/configs/api.config';
+import { User } from 'projects/admin-dashboard/src/app/core/interfaces/user.interface';
+import { Address } from 'projects/admin-dashboard/src/app/core/interfaces/order.interface';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
@@ -212,21 +211,7 @@ class UserHelperService {
       );
     }
 
-    // 4. Check if the user's current location is available for the service
-    if (this.userCurrentLocation) {
-      const allowedRegions: Region[] = [{ name: 'Russia', code: 'rus' }];
-
-      const location = this.userCurrentLocation;
-      const isAllowed = allowedRegions.some((region) =>
-        location.country.toLowerCase().includes(region.code.toLowerCase())
-      );
-
-      if (!isAllowed) {
-        warnings.push('Service is not available in your current location.');
-      }
-    }
-
-    // 5. Check if the user has filled in their home address
+    // 4. Check if the user has filled in their home address
     if (!user.addressCountry || !user.addressStreet || !user.addressCity) {
       warnings.push("Please complete your <a href='/dashboard/settings/address'>home address information</a>.");
     }

@@ -23,4 +23,4 @@ import { AuthenticationLayoutModule } from './layout/layout.module';
     AuthenticationLayoutModule
   ]
 })
-export class AuthenticationModule { }
+export class AdminAuthenticationModule { }
