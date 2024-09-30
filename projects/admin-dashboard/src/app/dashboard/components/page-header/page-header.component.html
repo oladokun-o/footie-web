@@ -1,0 +1,12 @@
+<div class="page-header" [class.m-0]="pageTitle === ''">
+  <div class="row">
+    <div class="col-sm-12">
+      <h3 class="page-title" [innerHTML]="pageTitle"></h3>
+      <ul *ngFor="let breadcrumb of breadcrumbs" class="breadcrumb">
+        <li *ngIf="breadcrumb.title" [class.active]="breadcrumb.active" class="breadcrumb-item">
+          <a [routerLink]="breadcrumb.link">{{ breadcrumb.title }}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -96,3 +96,31 @@ export interface Courier {
 export interface Delivery {
   orderId: string;
 }
+
+export interface UserKYC {
+  id: string;
+  userId: string;
+  internationalPassport: any;  // Image file
+  russianPassport?: any;        // Image file
+  schoolID: any;               // Image file
+  selfie: any;                 // Image file
+  createdAt: string;
+  updatedAt: string;
+  status: 'pending' | 'approved' | 'rejected';
+  rejectionReason?: string;    // Optional, needed only if rejected
+  user: User;
+  step: KYCStep;
+  documentsInReviewEmailSent: boolean;
+  documentsVerifiedEmailSent: boolean;
+  documentsRejectedEmailSent: boolean;
+}
+
+export enum KYCStep {
+  START = 'start',
+  SUBMIT_SELFIE = 'submit_selfie',
+  SUBMIT_INTERNATIONAL_PASSPORT = 'submit_international_passport',
+  SUBMIT_RUSSIAN_PASSPORT = 'submit_russian_passport',
+  SUBMIT_SCHOOL_ID = 'submit_school_id',
+  REVIEW = 'review',
+  COMPLETE = 'complete',
+}

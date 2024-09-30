@@ -4,26 +4,26 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
-  selector: 'footiedrop-web-logout',
+  selector: 'admin-app-logout',
   templateUrl: './logout.component.html',
   styleUrls: ['./logout.component.scss']
 })
-export class LogoutComponent {
+export class AdminLogoutComponent {
   constructor(
-    // private authService: AuthService,
+    private authService: AuthService,
     private toastr: ToastrService,
     private router: Router
   ) {
-    // authService.logout().subscribe(
-    //   response => {
-    //     this.toastr.success('Logged out successfully.', '', {
-    //       timeOut: 1000
-    //     });
-    //     this.router.navigate(['/login']);
-    //   },
-    //   error => {
-    //     this.toastr.error('An error occurred while logging out. Please try again later.');
-    //   }
-    // );
+    authService.logout().subscribe(
+      response => {
+        this.toastr.success('Logged out successfully.', '', {
+          timeOut: 1000
+        });
+        this.router.navigate(['/login']);
+      },
+      error => {
+        this.toastr.error('An error occurred while logging out. Please try again later.');
+      }
+    );
   }
 }

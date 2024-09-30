@@ -1,0 +1,129 @@
+<div class="header">
+  <div class="header-left">
+    <a href="admin-dashboard.html" class="logo">
+      <img src="assets/images/logos/logo-transparent-light.svg" alt="Logo" />
+    </a>
+    <a href="admin-dashboard.html" class="logo collapse-logo">
+      <img src="assets/img/collapse-logo.svg" alt="Logo" />
+    </a>
+    <a href="admin-dashboard.html" class="logo2">
+      <img src="assets/img/logo2.png" width="40" height="40" alt="Logo" />
+    </a>
+  </div>
+
+  <!-- <a id="toggle_btn" href="javascript:void(0);">
+    <span class="bar-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+  </a> -->
+
+  <div class="page-title-box">
+    <h3>Admin Control Panel</h3>
+  </div>
+
+  <!-- <a id="mobile_btn" class="mobile_btn" href="#sidebar"
+    ><i class="fa-solid fa-bars"></i
+  ></a> -->
+
+  <ul class="nav user-menu">
+    <!-- <li class="nav-item">
+      <div class="top-nav-search">
+        <a href="javascript:void(0);" class="responsive-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </a>
+        <form action="search.html">
+          <input class="form-control" type="text" placeholder="Search here" />
+          <button class="btn" type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </form>
+      </div>
+    </li> -->
+
+    <li class="nav-item dropdown has-arrow flag-nav">
+      <ng-select
+        [items]="languageOptions"
+        bindLabel="name"
+        bindValue="code"
+        [multiple]="false"
+        [closeOnSelect]="true"
+        [searchable]="false"
+        [clearable]="false"
+        [dropdownPosition]="'bottom'"
+        [(ngModel)]="selectedLanguage"
+        placeholder="Select Language"
+      ></ng-select>
+    </li>
+
+    <li class="nav-item mx-3" ngbDropdown>
+      <a class="dropdown-toggle nav-link" ngbDropdownToggle>
+        <i class="fa-regular fa-bell text-white"></i>
+        <span class="badge rounded-pill">{{ notificationsCount }}</span>
+      </a>
+
+      <div ngbDropdownMenu class="dropdown-menu notifications">
+        <div class="topnav-dropdown-header">
+          <span class="notification-title">Notifications</span>
+          <a href="javascript:void(0)" class="clear-noti">Clear All</a>
+        </div>
+
+        <div class="noti-content">
+          <ul class="notification-list">
+            <li
+              class="notification-message"
+              *ngFor="let notification of notifications"
+            >
+              <a [routerLink]="['/notifications', notification.id]">
+                <div class="chat-block d-flex">
+                  <div class="media-body flex-grow-1">
+                    <p class="noti-details">
+                      <span class="noti-title">{{ notification.title }}</span>
+                      {{ notification.message }}
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="topnav-dropdown-footer">
+          <a routerLink="/notifications">View all Notifications</a>
+        </div>
+      </div>
+    </li>
+
+    <li class="nav-item me-4" ngbDropdown>
+      <a class="dropdown-toggle nav-link" ngbDropdownToggle>
+        <span *ngIf="user?.profilePicture" class="user-img">
+          <img [src]="user?.profilePicture" alt="User Image" />
+          <span class="status online"></span>
+        </span>
+        <span>{{ user?.firstName }}</span>
+      </a>
+
+      <div ngbDropdownMenu class="dropdown-menu">
+        <a class="dropdown-item" routerLink="/profile">My Profile</a>
+        <a class="dropdown-item" routerLink="/settings">Settings</a>
+        <a class="dropdown-item" routerLink="/logout">Logout</a>
+      </div>
+    </li>
+  </ul>
+
+  <div class="dropdown mobile-user-menu">
+    <a
+      href="#"
+      class="nav-link dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+      ><i class="fa-solid fa-ellipsis-vertical"></i
+    ></a>
+    <div class="dropdown-menu dropdown-menu-right">
+      <a class="dropdown-item" href="profile.html">My Profile</a>
+      <a class="dropdown-item" href="settings.html">Settings</a>
+      <a class="dropdown-item" href="index.html">Logout</a>
+    </div>
+  </div>
+</div>
