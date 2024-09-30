@@ -2,16 +2,17 @@ import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { UserService } from 'projects/admin-dashboard/src/app/core/services/user.service';
 
 @Component({
-  selector: 'footiedrop-web-forgot-password',
+  selector: 'admin-app-forgot-password',
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.scss']
 })
-export class ForgotPasswordComponent {
+export class AdminForgotPasswordComponent {
 
   constructor(
-    // private userService: UserService,
+    private userService: UserService,
     private toastr: ToastrService,
     private router: Router,
   ) { }
@@ -29,17 +30,17 @@ export class ForgotPasswordComponent {
     } else {
       const payload = this.form.value;
       this.loading = true;
-      // this.userService.resetPassword(payload).subscribe(
-      //   (response) => {
-      //     this.toastr.success(response.message);
-      //     this.canResend = true;
-      //     this.loading = false;
-      //   },
-      //   (error) => {
-      //     this.toastr.error(error);
-      //     this.loading = false;
-      //   }
-      // );
+      this.userService.resetPassword(payload).subscribe(
+        (response) => {
+          this.toastr.success(response.message);
+          this.canResend = true;
+          this.loading = false;
+        },
+        (error) => {
+          this.toastr.error(error);
+          this.loading = false;
+        }
+      );
     }
   }
 

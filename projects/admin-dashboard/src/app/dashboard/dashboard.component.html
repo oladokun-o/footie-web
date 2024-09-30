@@ -1,0 +1,34 @@
+<div class="main-wrapper h-100">
+  <admin-app-header></admin-app-header>
+
+  <admin-app-side-nav></admin-app-side-nav>
+
+  <div class="page-wrapper h-100">
+    <div class="content container-fluid pb-0 h-100">
+      <ng-container *ngIf="!loading; else loadingScreen">
+        <router-outlet></router-outlet>
+      </ng-container>
+
+      <ng-template #loadingScreen>
+        <!-- bootstrap spinner -->
+        <div class="d-flex justify-content-center align-items-center h-100">
+          <div class="spinner-border text-primary text-green" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+
+<script src="assets/js/jquery.slimscroll.min.js"></script>
+
+<script src="assets/plugins/morris/morris.min.js"></script>
+<script src="assets/plugins/raphael/raphael.min.js"></script>
+<script src="assets/js/chart.js"></script>
+<script src="assets/js/greedynav.js"></script>
+
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/theme-settings.js"></script>

@@ -49,7 +49,7 @@ export class AuthInterceptor implements HttpInterceptor {
         tap((event: HttpEvent<any>) => {
           if (event instanceof HttpResponse) {
             const response = event.body; // Assuming the response body contains the error message and result
-            
+
             if (
               response &&
               response.result === 'error'
