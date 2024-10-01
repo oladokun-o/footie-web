@@ -10,7 +10,6 @@ import { KycService } from '../../../core/services/kyc.service';
 export class HomeComponent implements OnInit {
   user: User | null = JSON.parse(localStorage.getItem('user') as string);
   pageTitle: string = this.user ? `Welcome, ${this.user.firstName}` : 'Welcome';
-  breadcrumbs: { title: string, link: string, active: boolean }[] = [];
 
   kycRecords: UserKYC[] = [];
   loadingRecords: boolean = false;

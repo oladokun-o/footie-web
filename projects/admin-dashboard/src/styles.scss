@@ -440,3 +440,12 @@ div {
   object-fit: cover;
   object-position: center;
 }
+
+
+.static-column {
+  position: sticky;
+  right: 0;
+  background-color: white;
+  z-index: 2;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}

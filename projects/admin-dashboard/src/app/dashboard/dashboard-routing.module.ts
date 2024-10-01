@@ -11,15 +11,20 @@ const routes: Routes = [
     path: '',
     component: AdminDashboardComponent,
     resolve: [UserResolver],
-
     children: [
       {
         path: '',
-        component: HomeComponent
+        component: HomeComponent,
+        data: {
+          breadcrumb: ''
+        }
       },
       {
         path: 'kyc-records',
         loadChildren: () => import('projects/admin-dashboard/src/app/dashboard/pages/kyc-records/kyc-records.module').then(m => m.KycRecordsModule),
+        data: {
+          breadcrumb: 'KYC Records'
+        }
       }
     ]
   }

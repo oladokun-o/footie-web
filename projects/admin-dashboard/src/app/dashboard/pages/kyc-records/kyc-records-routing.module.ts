@@ -9,10 +9,16 @@ const routes: Routes = [
   {
     path: '',
     component: ListComponent,
+    data: {
+      breadcrumb: 'List'
+    }
   },
   {
     path: ':id',
-    component: RecordComponent
+    component: RecordComponent,
+    data: {
+      breadcrumb: 'Record'
+    }
   }
 ];
 

@@ -1,6 +1,5 @@
 <admin-app-page-header
   [pageTitle]="pageTitle"
-  [breadcrumbs]="breadcrumbs"
 ></admin-app-page-header>
 
 <div class="row">
@@ -33,7 +32,7 @@
                 <th>Email</th>
                 <th>Status</th>
                 <th>Step</th>
-                <th class="text-end">Action</th>
+                <th class="text-end static-columun">Action</th>
               </tr>
             </thead>
             <tbody *ngIf="kycRecords.length > 0 && !loadingRecords; else loadingSkeleton">
@@ -55,7 +54,7 @@
                   <span class="badge text-uppercase bg-inverse-{{ getKYCStatusBootsrapClass(record.status) }}">{{ record.status }}</span>
                 </td>
                 <td>{{ showKYCStep(record.step) }}</td>
-                <td class="text-end">
+                <td class="text-end static-columun">
                   <div class="btn-group">
                     <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
                       <button [routerLink]="['/kyc-records', record.id]" type="button" class="btn bg-orange manage">Manage</button>
@@ -103,7 +102,7 @@
         </div>
       </div>
       <div class="card-footer">
-        <a routerLink="/kyc-records">View all KYC Records</a>
+        <a routerLink="/dashboard/kyc-records">View all KYC Records</a>
       </div>
     </div>
   </div>

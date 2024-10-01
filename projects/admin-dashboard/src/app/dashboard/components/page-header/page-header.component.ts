@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { AfterViewChecked, Component, Input, OnInit } from '@angular/core';
+import { BreadcrumbService } from '../../../core/services/breadcrumb.service';
 
 @Component({
   selector: 'admin-app-page-header',
@@ -8,5 +9,10 @@ import { Component, Input } from '@angular/core';
 export class PageHeaderComponent {
   @Input() pageTitle: string = '';
 
-  @Input() breadcrumbs: { title: string, link: string, active: boolean }[] = [];
+  get breadcrumbs(): { title: string, link: string, active: boolean }[] {
+    return this.breadcrumbService.breadcrumbs;
+  }
+
+  constructor(private breadcrumbService: BreadcrumbService) {}
+
 }

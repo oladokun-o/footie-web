@@ -2673,7 +2673,7 @@ button.bg-danger:hover {
 }
 .dropdown-item.active,
 .dropdown-item:active {
-  background-color: #ff902f;
+  background-color: #ff902f !important;
 }
 .navbar-nav__.open--.dropdown-menu {
   border: 0;
@@ -8111,7 +8111,7 @@ input[type="file"].form-control {
 @media (max-width: 991px) {
   .header .header-left {
     position: absolute;
-    width: 100%;
+    left: 50px;
   }
 }
 @media (min-width: 992px) {
@@ -8489,7 +8489,7 @@ input[type="file"].form-control {
   border-right: 1px solid transparent;
   margin-top: 0;
   position: fixed;
-  top: 60px;
+  top: 67px;
   bottom: 0;
   left: 0;
   -webkit-transition: all 0.2s ease;
@@ -8814,7 +8814,7 @@ input[type="file"].form-control {
   width: 100%;
   z-index: 1040;
   position: fixed;
-  top: 60px;
+  top: 67px;
   left: 0;
   background-color: rgba(0, 0, 0, 0.6);
 }

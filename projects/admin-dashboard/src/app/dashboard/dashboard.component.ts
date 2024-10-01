@@ -21,7 +21,6 @@ export class AdminDashboardComponent implements OnInit {
 
   loading: boolean;
   pageTitle: string = this.user ? `Welcome, ${this.user.firstName}` : 'Welcome';
-  breadcrumbs: { title: string, link: string, active: boolean }[] = [];
 
   constructor(
     private router: Router,
