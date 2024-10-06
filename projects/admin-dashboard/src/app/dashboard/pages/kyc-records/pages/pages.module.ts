@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminDashboardComponentsModule } from '../../../components/dashboard-components.module';
+import { SharedComponentsModule } from 'projects/admin-dashboard/src/shared/components/components.module';
 
 
 
@@ -19,7 +20,8 @@ import { AdminDashboardComponentsModule } from '../../../components/dashboard-co
     RouterModule,
     NgxSkeletonLoaderModule,
     NgbDropdownModule,
-    AdminDashboardComponentsModule
+    AdminDashboardComponentsModule,
+    SharedComponentsModule
   ]
 })
 export class KYCRecordsPagesModule { }

@@ -122,9 +122,36 @@ export class KycService {
     );
   }
 
-  listKYCRecords(): Observable<RequestResponse> {
+  /**
+   * List KYC records
+   * @returns Observable<RequestResponse>
+   * @memberof KycService
+   * @description List KYC records
+   */
+  listKYCRecords(): Observable<any> {
     return this.httpClient
       .get<RequestResponse>(ApiEndpoints.users.kyc.list())
+      .pipe(
+        switchMap((response) =>
+          response.result === 'success'
+            ? of(response.data)
+            : throwError(response)
+        ),
+        catchError((error) => throwError(error))
+      );
+  }
+
+  /**
+   * Update KYC record
+   * @param {string} userId
+   * @param {string} status
+   * @returns Observable<RequestResponse>
+   * @memberof KycService
+   * @description Update KYC record
+   */
+  updateKYCRecord(userId: string, status: string): Observable<RequestResponse> {
+    return this.httpClient
+      .patch<RequestResponse>(ApiEndpoints.users.kyc.update(userId), { status })
       .pipe(
         switchMap((response) =>
           response.result === 'success'
@@ -133,5 +160,5 @@ export class KycService {
         ),
         catchError((error) => throwError(error))
       );
-  }
+    }
 }

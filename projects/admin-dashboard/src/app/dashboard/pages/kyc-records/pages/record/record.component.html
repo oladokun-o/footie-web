@@ -1,143 +1,310 @@
-<admin-app-page-header
-  [pageTitle]="'KYC Record'"
-></admin-app-page-header>
+<ng-container *ngIf="(loading$ | async) == false; else loadingTemplate">
+  <ng-container *ngIf="kycRecord$ | async as record">
+    <!-- Your content here -->
+    <div class="card mb-0">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="profile-view">
+              <div class="profile-img-wrap">
+                <div class="profile-img">
+                  <img
+                    #avatar
+                    loading="lazy"
+                    [src]="record.user.profilePicture"
+                    (error)="handleImgError(avatar)"
+                    alt="User Image"
+                  />
+                </div>
+              </div>
+              <div class="profile-basic">
+                <div class="row">
+                  <div class="col-md-5">
+                    <div class="profile-info-left">
+                      <h3 class="user-name m-t-0 mb-0 text-capitalize">
+                        {{ record.user.firstName }} {{ record.user.lastName }}
+                      </h3>
+                      <small class="text-muted">
+                        <strong>Middle Name:</strong>
+                        {{
+                          record.user.middleName
+                            ? record.user.middleName
+                            : "N/A"
+                        }}
+                      </small>
 
-<div class="card mb-0">
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="profile-view">
-          <div class="profile-img-wrap">
-            <div class="profile-img">
-              <a href="#"
-                ><img src="assets/img/profiles/avatar-02.jpg" alt="User Image"
-              /></a>
-            </div>
-          </div>
-          <div class="profile-basic">
-            <div class="row">
-              <div class="col-md-5">
-                <div class="profile-info-left">
-                  <h3 class="user-name m-t-0 mb-0">John Doe</h3>
-                  <h6 class="text-muted">UI/UX Design Team</h6>
-                  <small class="text-muted">Web Designer</small>
-                  <div class="staff-id">Employee ID : FT-0001</div>
-                  <div class="small doj text-muted">
-                    Date of Join : 1st Jan 2013
+                      <br />
+
+                      <small class="text-muted">
+                        <strong>Role:</strong> {{ record.user.role }}
+                      </small>
+                      <div class="small doj">
+                        <strong>User ID:</strong> {{ record.user.id }}
+                      </div>
+                      <div class="small doj text-muted">
+                        <strong>User since:</strong>
+                        {{ record.user.createdAt | date : "medium" }}
+                      </div>
+
+                      <div class="d-flex gap-2 staff-msg">
+                        <!-- Action buttons for KYC -->
+                        <button class="btn btn-success btn-sm">Approve</button>
+                        <button class="btn btn-danger btn-sm">Reject</button>
+                      </div>
+                    </div>
                   </div>
-                  <div class="staff-msg">
-                    <a class="btn btn-custom" href="chat.html">Send Message</a>
+                  <div class="col-md-7">
+                    <ul class="personal-info">
+                      <li>
+                        <div class="title">Phone:</div>
+                        <div class="text">
+                          <a href="tel:{{ record.user.phone }}">{{
+                            record.user.phone
+                          }}</a>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="title">Email:</div>
+                        <div class="text">
+                          <a href="mailto:{{ record.user.email }}">{{
+                            record.user.email
+                          }}</a>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="title">Birthday:</div>
+                        <div class="text">
+                          {{
+                            record.user.dob
+                              ? (record.user.dob | date : "medium")
+                              : "N/A"
+                          }}
+                        </div>
+                      </li>
+                      <li>
+                        <div class="title">Address:</div>
+                        <div
+                          class="text"
+                          [innerHTML]="getUserAddress(record.user)"
+                        ></div>
+                      </li>
+                      <li>
+                        <div class="title">Gender:</div>
+                        <div class="text">
+                          {{ record.user.gender ? record.user.gender : "N/A" }}
+                        </div>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
-              <div class="col-md-7">
-                <ul class="personal-info">
-                  <li>
-                    <div class="title">Phone:</div>
-                    <div class="text"><a href="#">9876543210</a></div>
-                  </li>
-                  <li>
-                    <div class="title">Email:</div>
-                    <div class="text">
-                      <a href="#">johndoe&#64;example.com</a>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="title">Birthday:</div>
-                    <div class="text">24th July</div>
-                  </li>
-                  <li>
-                    <div class="title">Address:</div>
-                    <div class="text">
-                      1861 Bayonne Ave, Manchester Township, NJ, 08759
-                    </div>
-                  </li>
-                  <li>
-                    <div class="title">Gender:</div>
-                    <div class="text">Male</div>
-                  </li>
-                  <li>
-                    <div class="title">Reports to:</div>
-                    <div class="text">
-                      <div class="avatar-box">
-                        <div class="avatar avatar-xs">
-                          <img
-                            src="assets/img/profiles/avatar-16.jpg"
-                            alt="User Image"
-                          />
-                        </div>
-                      </div>
-                      <a href="profile.html"> Jeffery Lalor </a>
-                    </div>
-                  </li>
-                </ul>
+              <div class="pro-edit">
+                <a
+                  data-bs-target="#profile_info"
+                  data-bs-toggle="modal"
+                  class="edit-icon"
+                  href="#"
+                  ><i class="fa-solid fa-pencil"></i
+                ></a>
               </div>
             </div>
           </div>
-          <div class="pro-edit">
-            <a
-              data-bs-target="#profile_info"
-              data-bs-toggle="modal"
-              class="edit-icon"
-              href="#"
-              ><i class="fa-solid fa-pencil"></i
-            ></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="card tab-box">
+      <div class="row user-tabs">
+        <div class="col-lg-12 col-md-12 col-sm-12 line-tabs">
+          <ul class="nav nav-tabs nav-tabs-bottom" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a
+                href="#emp_profile"
+                data-bs-toggle="tab"
+                class="nav-link active"
+                aria-selected="true"
+                role="tab"
+                >Profile</a
+              >
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                href="#emp_projects"
+                data-bs-toggle="tab"
+                class="nav-link"
+                aria-selected="false"
+                role="tab"
+                tabindex="-1"
+                >Projects</a
+              >
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                href="#bank_statutory"
+                data-bs-toggle="tab"
+                class="nav-link"
+                aria-selected="false"
+                role="tab"
+                tabindex="-1"
+                >Bank &amp; Statutory
+                <small class="text-danger">(Admin Only)</small></a
+              >
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                href="#emp_assets"
+                data-bs-toggle="tab"
+                class="nav-link"
+                aria-selected="false"
+                role="tab"
+                tabindex="-1"
+                >Assets</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div> -->
+  </ng-container>
+</ng-container>
+
+<ng-template #loadingTemplate>
+  <!-- Loading template here -->
+  <div class="card mb-0 record-skeleton">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="profile-view">
+            <div class="profile-img-wrap">
+              <div class="profile-img">
+                <ngx-skeleton-loader
+                  [count]="1"
+                  [theme]="{
+                    width: '120px',
+                    height: '120px',
+                    'border-radius': '50%'
+                  }"
+                ></ngx-skeleton-loader>
+              </div>
+            </div>
+            <div class="profile-basic">
+              <div class="row">
+                <div class="col-md-5">
+                  <div class="profile-info-left">
+                    <h3 class="user-name m-t-0 mb-0 text-capitalize">
+                      <ngx-skeleton-loader
+                        [count]="1"
+                        [theme]="{ width: '200px', height: '20px' }"
+                      ></ngx-skeleton-loader>
+                    </h3>
+                    <h6 class="text-muted">
+                      <ngx-skeleton-loader
+                        [count]="1"
+                        [theme]="{ width: '150px', height: '20px' }"
+                      ></ngx-skeleton-loader>
+                    </h6>
+                    <small class="text-muted">
+                      <ngx-skeleton-loader
+                        [count]="1"
+                        [theme]="{ width: '100px', height: '20px' }"
+                      ></ngx-skeleton-loader>
+                    </small>
+                    <div class="staff-id d-flex">
+                      User ID :
+                      <ngx-skeleton-loader
+                        [count]="1"
+                        [theme]="{
+                          width: '50px',
+                          height: '20px',
+                          margin: '0 5px'
+                        }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                    <div class="small doj text-muted d-flex">
+                      User since :
+                      <ngx-skeleton-loader
+                        [count]="1"
+                        [theme]="{
+                          width: '100px',
+                          height: '20px',
+                          margin: '0 5px'
+                        }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                    <div class="staff-msg">
+                      <ngx-skeleton-loader
+                        [count]="1"
+                        [theme]="{ width: '100px', height: '20px' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-7">
+                  <ul class="personal-info">
+                    <li>
+                      <div class="title">Phone:</div>
+                      <div class="text">
+                        <ngx-skeleton-loader
+                          [count]="1"
+                          [theme]="{
+                            width: '100px',
+                            height: '20px',
+                          }"
+                        ></ngx-skeleton-loader>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="title">Email:</div>
+                      <div class="text">
+                        <ngx-skeleton-loader
+                          [count]="1"
+                          [theme]="{ width: '200px', height: '20px' }"
+                        ></ngx-skeleton-loader>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="title">Birthday:</div>
+                      <div class="text">
+                        <ngx-skeleton-loader
+                          [count]="1"
+                          [theme]="{ width: '100px', height: '20px' }"
+                        ></ngx-skeleton-loader>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="title">Address:</div>
+                      <div class="text">
+                        <ngx-skeleton-loader
+                          [count]="1"
+                          [theme]="{ width: '250px', height: '20px' }"
+                        ></ngx-skeleton-loader>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="title">Gender:</div>
+                      <div class="text">
+                        <ngx-skeleton-loader
+                          [count]="1"
+                          [theme]="{ width: '50px', height: '20px' }"
+                        ></ngx-skeleton-loader>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="pro-edit">
+              <a
+                data-bs-target="#profile_info"
+                data-bs-toggle="modal"
+                class="edit-icon"
+                href="#"
+                ><i class="fa-solid fa-pencil"></i
+              ></a>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<div class="card tab-box">
-  <div class="row user-tabs">
-    <div class="col-lg-12 col-md-12 col-sm-12 line-tabs">
-      <ul class="nav nav-tabs nav-tabs-bottom" role="tablist">
-        <li class="nav-item" role="presentation">
-          <a
-            href="#emp_profile"
-            data-bs-toggle="tab"
-            class="nav-link active"
-            aria-selected="true"
-            role="tab"
-            >Profile</a
-          >
-        </li>
-        <li class="nav-item" role="presentation">
-          <a
-            href="#emp_projects"
-            data-bs-toggle="tab"
-            class="nav-link"
-            aria-selected="false"
-            role="tab"
-            tabindex="-1"
-            >Projects</a
-          >
-        </li>
-        <li class="nav-item" role="presentation">
-          <a
-            href="#bank_statutory"
-            data-bs-toggle="tab"
-            class="nav-link"
-            aria-selected="false"
-            role="tab"
-            tabindex="-1"
-            >Bank &amp; Statutory
-            <small class="text-danger">(Admin Only)</small></a
-          >
-        </li>
-        <li class="nav-item" role="presentation">
-          <a
-            href="#emp_assets"
-            data-bs-toggle="tab"
-            class="nav-link"
-            aria-selected="false"
-            role="tab"
-            tabindex="-1"
-            >Assets</a
-          >
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
+</ng-template>

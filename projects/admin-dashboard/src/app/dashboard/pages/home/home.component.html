@@ -1,6 +1,4 @@
-<admin-app-page-header
-  [pageTitle]="pageTitle"
-></admin-app-page-header>
+<admin-app-page-header [pageTitle]="pageTitle"></admin-app-page-header>
 
 <div class="row">
   <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
@@ -8,7 +6,12 @@
       <div class="card-body">
         <span class="dash-widget-icon"><i class="fa-solid fa-user"></i></span>
         <div class="dash-widget-info">
-          <h3>{{ kycRecordsCount }}</h3>
+          <h3 *ngIf="!(kycLoading$ | async)">{{ (kycRecordsCount$ | async) | number }}</h3>
+          <ngx-skeleton-loader
+            *ngIf="kycLoading$ | async"
+            [count]="1"
+            [theme]="{ width: '40px', height: '30px' }"
+          ></ngx-skeleton-loader>
           <span>KYC Records</span>
         </div>
       </div>
@@ -16,94 +19,10 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-12 d-flex">
-    <div class="card card-table flex-fill">
-      <div class="card-header">
-        <h3 class="card-title mb-0">Recent KYC Records</h3>
-      </div>
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table custom-table mb-0">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Status</th>
-                <th>Step</th>
-                <th class="text-end static-columun">Action</th>
-              </tr>
-            </thead>
-            <tbody *ngIf="kycRecords.length > 0 && !loadingRecords; else loadingSkeleton">
-              <tr *ngFor="let record of getRecentRecords()">
-                <td>
-                  <a class="avatar">
-                    <img
-                      #avatar
-                      loading="lazy"
-                      [src]="record.user.profilePicture"
-                      (error)="handleImgError(avatar)"
-                      alt="User Image"
-                    />
-                  </a>
-                </td>
-                <td>{{ record.user.firstName }} {{ record.user.lastName }}</td>
-                <td>{{ record.user.email }}</td>
-                <td>
-                  <span class="badge text-uppercase bg-inverse-{{ getKYCStatusBootsrapClass(record.status) }}">{{ record.status }}</span>
-                </td>
-                <td>{{ showKYCStep(record.step) }}</td>
-                <td class="text-end static-columun">
-                  <div class="btn-group">
-                    <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
-                      <button [routerLink]="['/kyc-records', record.id]" type="button" class="btn bg-orange manage">Manage</button>
-                      <button type="button" class="btn bg-orange dropdown-toggle-split" ngbDropdownToggle></button>
-                      <div class="dropdown-menu" ngbDropdownMenu>
-                        <button ngbDropdownItem>View</button>
-                        <button ngbDropdownItem>Approve</button>
-                        <button ngbDropdownItem>Reject</button>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-
-
-             <!-- Skeleton loader for when records are loading -->
-            <ng-template #loadingSkeleton>
-              <tr *ngFor="let i of [1, 2, 3, 4]">
-                <td>
-                  <ngx-skeleton-loader [count]="1" [theme]="{ width: '40px', height: '40px', 'border-radius': '50%' }"></ngx-skeleton-loader>
-                </td>
-                <td>
-                  <ngx-skeleton-loader [count]="1" [theme]="{ width: '100px', height: '20px' }"></ngx-skeleton-loader>
-                </td>
-                <td>
-                  <ngx-skeleton-loader [count]="1" [theme]="{ width: '250px', height: '20px' }"></ngx-skeleton-loader>
-                </td>
-                <td>
-                  <ngx-skeleton-loader [count]="1" [theme]="{ width: '50px', height: '20px' }"></ngx-skeleton-loader>
-                </td>
-                <td>
-                  <ngx-skeleton-loader [count]="1" [theme]="{ width: '50px', height: '20px' }"></ngx-skeleton-loader>
-                </td>
-                <td class="text-end">
-                  <ngx-skeleton-loader [count]="1" [theme]="{ width: '50px', height: '20px' }"></ngx-skeleton-loader>
-                </td>
-              </tr>
-            </ng-template>
-          </table>
-        </div>
-
-        <div *ngIf="kycRecords.length === 0 && !loadingRecords" class="col-12 text-center">
-          <h4 class="p-4">No records found</h4>
-        </div>
-      </div>
-      <div class="card-footer">
-        <a routerLink="/dashboard/kyc-records">View all KYC Records</a>
-      </div>
-    </div>
-  </div>
-</div>
+<admin-app-kyc-list
+  [tableTitle]="'Recent KYC Records'"
+  [tableFooter]="{
+  text: 'View all KYC Records',
+  link: '/dashboard/kyc-records',
+}"
+></admin-app-kyc-list>

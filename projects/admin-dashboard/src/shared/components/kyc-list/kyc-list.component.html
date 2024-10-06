@@ -1,0 +1,169 @@
+<div class="row">
+  <div class="col-12 d-flex">
+    <div class="card card-table flex-fill overflow-hidden">
+      <div class="card-header">
+        <h3
+          *ngIf="tableTitle !== ''"
+          class="card-title mb-0"
+          [innerHTML]="tableTitle"
+        ></h3>
+
+        <div class="card-options">
+          <!-- Action buttons -->
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-light"
+              (click)="refreshKYCRecords()"
+              [disabled]="loading$ | async"
+            >
+              Refresh
+              <i
+                class="bi bi-arrow-clockwise fs-6 ms-1"
+                [class.spin]="loading$ | async"
+              ></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table custom-table mb-0">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Step</th>
+                <th class="text-end static-column">Action</th>
+              </tr>
+            </thead>
+            <ng-container *ngIf="!(loading$ | async)">
+              <ng-container *ngIf="kycRecords$ | async as kycRecords">
+                <tbody *ngIf="kycRecords.length > 0">
+                  <tr *ngFor="let record of kycRecords">
+                    <td>
+                      <a class="avatar">
+                        <img
+                          #avatar
+                          loading="lazy"
+                          [src]="record.user.profilePicture"
+                          (error)="handleImgError(avatar)"
+                          alt="User Image"
+                        />
+                      </a>
+                    </td>
+                    <td>
+                      {{ record.user.firstName }} {{ record.user.lastName }}
+                    </td>
+                    <td>{{ record.user.email }}</td>
+                    <td>
+                      <span
+                        class="badge text-uppercase bg-inverse-{{
+                          getKYCStatusBootsrapClass(record.status)
+                        }}"
+                        >{{ record.status }}</span
+                      >
+                    </td>
+                    <td>{{ showKYCStep(record.step) }}</td>
+                    <td class="text-end static-column">
+                      <div class="btn-group">
+                        <div
+                          class="btn-group"
+                          ngbDropdown
+                          container="body"
+                          role="group"
+                          aria-label="Button group with nested dropdown"
+                        >
+                          <button
+                            [routerLink]="['/dashboard/kyc-records', record.id]"
+                            type="button"
+                            class="btn bg-orange manage"
+                          >
+                            Manage
+                          </button>
+                          <button
+                            type="button"
+                            class="btn bg-orange dropdown-toggle-split"
+                            ngbDropdownToggle
+                          ></button>
+                          <div class="dropdown-menu" ngbDropdownMenu>
+                            <button ngbDropdownItem>View</button>
+                            <button ngbDropdownItem>Approve</button>
+                            <button ngbDropdownItem>Reject</button>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </ng-container>
+            </ng-container>
+
+            <!-- Skeleton loader for when records are loading -->
+            <ng-container *ngIf="loading$ | async" #loadingSkeleton>
+              <tr *ngFor="let i of [1, 2, 3, 4]">
+                <td>
+                  <ngx-skeleton-loader
+                    [count]="1"
+                    [theme]="{
+                      width: '40px',
+                      height: '40px',
+                      'border-radius': '50%'
+                    }"
+                  ></ngx-skeleton-loader>
+                </td>
+                <td>
+                  <ngx-skeleton-loader
+                    [count]="1"
+                    [theme]="{ width: '100px', height: '20px' }"
+                  ></ngx-skeleton-loader>
+                </td>
+                <td>
+                  <ngx-skeleton-loader
+                    [count]="1"
+                    [theme]="{ width: '250px', height: '20px' }"
+                  ></ngx-skeleton-loader>
+                </td>
+                <td>
+                  <ngx-skeleton-loader
+                    [count]="1"
+                    [theme]="{ width: '50px', height: '20px' }"
+                  ></ngx-skeleton-loader>
+                </td>
+                <td>
+                  <ngx-skeleton-loader
+                    [count]="1"
+                    [theme]="{ width: '50px', height: '20px' }"
+                  ></ngx-skeleton-loader>
+                </td>
+                <td class="text-end">
+                  <ngx-skeleton-loader
+                    [count]="1"
+                    [theme]="{ width: '50px', height: '20px' }"
+                  ></ngx-skeleton-loader>
+                </td>
+              </tr>
+            </ng-container>
+          </table>
+        </div>
+
+        <div
+          *ngIf="
+            (kycRecordsCount$ | async) === 0 && (loading$ | async) === false
+          "
+          class="col-12 text-center"
+        >
+          <h4 class="p-4">No records found</h4>
+        </div>
+      </div>
+      <div
+        class="card-footer"
+        *ngIf="tableFooter.link !== '' && tableFooter.text !== ''"
+      >
+        <a [routerLink]="tableFooter.link" [innerHTML]="tableFooter.text"></a>
+      </div>
+    </div>
+  </div>
+</div>

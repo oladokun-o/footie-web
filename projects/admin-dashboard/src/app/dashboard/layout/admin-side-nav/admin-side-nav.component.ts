@@ -3,6 +3,7 @@ import { BreadcrumbService } from '../../../core/services/breadcrumb.service';
 import { Observable } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { NavbarService } from '../../../core/services/navbar.service';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   selector: 'admin-app-side-nav',
@@ -19,7 +20,8 @@ export class AdminSideNavComponent implements OnInit {
   constructor(
     private breadCrumbService: BreadcrumbService,
     private router: Router,
-    private navbarService: NavbarService
+    private navbarService: NavbarService,
+    private deviceService: DeviceDetectorService,
   ) {
     // Listen for route changes
     this.router.events
@@ -30,7 +32,9 @@ export class AdminSideNavComponent implements OnInit {
       });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.checkDevice();
+  }
 
   get activeBreadcrumb() {
     return this.breadCrumbService.getActiveBreadcrumb();
@@ -63,5 +67,22 @@ export class AdminSideNavComponent implements OnInit {
 
   handleMouseLeaveSidebar() {
     document.body.classList.remove('expand-menu');
+  }
+
+  handleNavItemClicked() {
+    if (this.isMobile || this.isTablet) {
+      this.navbarService.hideNavbar();
+    }
+  }
+
+  isMobile: boolean = false;
+  isTablet: boolean = false;
+
+  checkDevice(): void {
+    this.isMobile = this.deviceService.isMobile();
+    this.isTablet = this.deviceService.isTablet();
+
+    console.log('isMobile', this.isMobile);
+    console.log('isTablet', this.isTablet);
   }
 }

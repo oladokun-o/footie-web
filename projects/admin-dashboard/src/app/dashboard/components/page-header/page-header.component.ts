@@ -6,13 +6,15 @@ import { BreadcrumbService } from '../../../core/services/breadcrumb.service';
   templateUrl: './page-header.component.html',
   styleUrls: ['./page-header.component.scss']
 })
-export class PageHeaderComponent {
+export class PageHeaderComponent{
   @Input() pageTitle: string = '';
 
-  get breadcrumbs(): { title: string, link: string, active: boolean }[] {
-    return this.breadcrumbService.breadcrumbs;
-  }
+  breadcrumbs: { title: string, link: string, active: boolean }[] = [];
 
-  constructor(private breadcrumbService: BreadcrumbService) {}
+  constructor(private breadcrumbService: BreadcrumbService) {
+    this.breadcrumbService.breadcrumbs$.subscribe(breadcrumbs => {
+      this.breadcrumbs = breadcrumbs;
+    });
+  }
 
 }

@@ -5,28 +5,28 @@ import { tap } from "rxjs/operators";
 import { LoadingService } from "./loading.service";
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class HttpLoadingInterceptor implements HttpInterceptor {
-    urlsToIntercept = [];
+  urlsToIntercept = [];
 
-    urlToIngnore = [];
+  urlToIngnore = [];
 
-    constructor(private loading: LoadingService) { }
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const toIngnore = this.urlToIngnore.find(url => req.url.includes(url));
-        if (!toIngnore) {
-            this.loading.loading$.next(true);
-        }
-        return next.handle(req).pipe(
-            tap(() => {
-                const found = this.urlsToIntercept.find(url => req.url.includes(url))
-                if (found) {
-                    this.loading.loading$.next(false);
-                }
-            })
-        )
+  constructor(private loading: LoadingService) { }
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const toIngnore = this.urlToIngnore.find(url => req.url.includes(url));
+    if (!toIngnore) {
+      this.loading.loading$.next(true);
     }
+    return next.handle(req).pipe(
+      tap(() => {
+        const found = this.urlsToIntercept.find(url => req.url.includes(url))
+        if (found) {
+          this.loading.loading$.next(false);
+        }
+      })
+    )
+  }
 
 
 }

@@ -41,6 +41,7 @@ export const ApiEndpoints = {
       uploadDocument: (userId: string, file: 'internationalPassport' | 'schoolID' | 'selfie') => `${environment.apiUrl}/kyc/uploadDocument/${userId}/${file}`,
       verifyKYCDocuments: (userId: string) => `${environment.apiUrl}/kyc/verifyDocuments/${userId}`,
       list: () => `${environment.apiUrl}/kyc/list`,
+      update: (userId: string) => `${environment.apiUrl}/kyc/update/${userId}`,
     }
   },
   map: {

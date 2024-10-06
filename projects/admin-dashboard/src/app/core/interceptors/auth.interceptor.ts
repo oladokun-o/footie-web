@@ -4,15 +4,20 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpResponse
+  HttpResponse,
+  HttpErrorResponse
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from "rxjs/operators";
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from "rxjs/operators";
 import { Router } from '@angular/router'; // Import Router
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private router: Router) { } // Inject Router
+  constructor(
+    private router: Router,
+    private toastr: ToastrService
+  ) { } // Inject Router
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Define the list of domains that require authorization headers
@@ -25,7 +30,6 @@ export class AuthInterceptor implements HttpInterceptor {
     const AuthPages = [
       '/login',
       '/register',
-      '/validateToken',
       '/verifyOTP',
       '/changeEmail',
       '/resetPassword',
@@ -33,6 +37,7 @@ export class AuthInterceptor implements HttpInterceptor {
       '/updatePassword',
       '/users',
       '/users/verify',
+      '/validateToken'
     ];
 
     const isAuthPage = AuthPages.some(page => req.url.endsWith(page));
@@ -58,6 +63,17 @@ export class AuthInterceptor implements HttpInterceptor {
               this.router.navigate(['/login']); // Use Router for redirection
             }
           }
+        }),
+        catchError((error: HttpErrorResponse) => {
+          if (
+            error &&
+            error.error.result === 'error' &&
+            error.error.message === 'Invalid token'
+          ) {
+            this.toastr.error('Session expired, please log in again.', 'Unauthorized!');
+          }
+
+          return throwError(error);
         })
       );
     }

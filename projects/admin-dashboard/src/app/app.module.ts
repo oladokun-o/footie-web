@@ -16,6 +16,11 @@ import { AdminDashboardModule } from './dashboard/dashboard.module';
 import { HttpLoadingInterceptor } from './core/interceptors/http-loading.interceptor';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { appReducers } from './core/store/reducers';
+import { appEffects } from './core/store/effects';
 
 @NgModule({
   declarations: [
@@ -42,9 +47,13 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     NgSelectModule,
     OnlineStatusModule,
     AdminAuthenticationModule,
-    AdminDashboardModule,
+    // AdminDashboardModule,
     SharedComponentsModule,
     SharedDirectivesModule,
+    // Store
+    StoreModule.forRoot(appReducers),
+    EffectsModule.forRoot(appEffects), // Use centralized effects array
+    StoreDevtoolsModule.instrument({ maxAge: 25 }),
   ],
   providers: [
     {
@@ -56,7 +65,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
-    },
+    }
   ],
   bootstrap: [AppComponent]
 })

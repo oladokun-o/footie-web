@@ -5,6 +5,9 @@ import { User, UserRole } from 'projects/admin-dashboard/src/app/core/interfaces
 import { AuthService } from 'projects/admin-dashboard/src/app/core/services/auth.service';
 import { UserService } from 'projects/admin-dashboard/src/app/core/services/user.service';
 import { Observable, of } from 'rxjs';
+import { KycState } from '../core/store/reducers/kyc.reducer';
+import { Store } from '@ngrx/store';
+import { kycActions } from '../core/store/actions/kyc.action';
 
 @Component({
   selector: 'admin-app-dashboard',
@@ -26,7 +29,8 @@ export class AdminDashboardComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private userService: UserService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private kycStore: Store<{ kyc: KycState }>
   ) {
     this.loading = true;
     router.events.subscribe((event) => {
@@ -39,6 +43,23 @@ export class AdminDashboardComponent implements OnInit {
       }
     });
 
+    this.loadUser();
+
+    if (this.userSession) {
+      this.loadStores();
+    };
+  }
+
+  ngOnInit(): void {
+
+  }
+
+  loadStores(): void {
+    // Dispatch action to load KYC records
+    this.kycStore.dispatch(kycActions.loadKycRecords());
+  }
+
+  loadUser(): void {
     if (this.userSession && !this.user) {
       this.loading = true;
 
@@ -55,8 +76,8 @@ export class AdminDashboardComponent implements OnInit {
             this.pageTitle = `Welcome, ${user.firstName}`;
             localStorage.setItem('user', JSON.stringify(user));
           } else {
-            toastr.error('User not found! <br> please login again.');
-            authService.logout();
+            this.toastr.error('User not found! <br> please login again.');
+            this.authService.logout();
           }
         });
       } else if (this.userSession.email) {
@@ -70,15 +91,11 @@ export class AdminDashboardComponent implements OnInit {
               this.pageTitle = `Welcome, ${user.firstName}`;
               localStorage.setItem('user', JSON.stringify(user));
             } else {
-              toastr.error('User not found! <br> please login again.');
-              authService.logout();
+              this.toastr.error('User not found! <br> please login again.');
+              this.authService.logout();
             }
           });
       }
     }
-  }
-
-  ngOnInit(): void {
-
   }
 }

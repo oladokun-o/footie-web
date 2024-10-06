@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AuthService } from 'projects/admin-dashboard/src/app/core/services/auth.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -8,14 +10,16 @@ import { AuthService } from 'projects/admin-dashboard/src/app/core/services/auth
 export class LoginRedirectGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) { }
 
-  canActivate(): boolean {
-    if (this.authService.isAuthenticated()) {
-      console.log('User is already authenticated, redirecting to dashboard');
-      this.router.navigate(['/dashboard']); // Change '/dashboard' to your actual dashboard route
-      return false; // Prevent access to the login page
-    } else {
-      console.log('User is not authenticated, can access login page');
-      return true; // Allow access to the login page
-    }
+  canActivate(): Observable<boolean> {
+    return this.authService.checkIfLoggedIn().pipe(
+      map(isAuthenticated => {
+        console.log(isAuthenticated)
+        if (isAuthenticated) {
+          this.router.navigate(['/dashboard']);
+          return false; // Prevent access to the login page
+        }
+        return true; // Allow access to the login page
+      })
+    );
   }
 }
