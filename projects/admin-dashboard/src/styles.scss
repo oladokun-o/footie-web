@@ -459,3 +459,42 @@ div {
   z-index: 2;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
 }
+
+// make the first column th and td, last column th and td padding start and end 15px
+.table {
+  th:first-child,
+  td:first-child {
+    padding-left: 15px;
+  }
+
+  th:last-child,
+  td:last-child {
+    padding-right: 15px;
+  }
+}
+
+.ngb-dp-day {
+  .btn-light {
+    color: #000 !important;
+  }
+
+  .bg-primary {
+    background-color: #e36f00 !important;
+    color: white !important;
+  }
+}
+
+.ngb-dp-weekday {
+  color: #e36f00 !important;
+}
+
+.ngb-dp-arrow-btn {
+  --bs-btn-color: #e36e008e !important;
+  &:hover {
+    --bs-btn-color: #e36f00 !important;
+  }
+}
+
+.btn-light {
+  background-color: #dfdfdf !important;
+}

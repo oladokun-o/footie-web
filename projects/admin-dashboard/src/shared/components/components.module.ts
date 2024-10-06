@@ -8,7 +8,7 @@ import { StarRatingComponent } from './star-rating/star-rating.component';
 import { KycListComponent } from './kyc-list/kyc-list.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { RouterModule } from '@angular/router';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule, NgbDropdownModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -26,7 +26,9 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
     RouterModule,
-    NgbDropdownModule
+    NgbDropdownModule,
+    NgbDatepickerModule,
+    NgbTooltipModule
   ],
   exports: [
     LoadingButtonComponent,
