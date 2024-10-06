@@ -39,7 +39,7 @@
                         <strong>Role:</strong> {{ record.user.role }}
                       </div>
 
-                      <div class="small doj d-flex align-items-center justify-content-center">
+                      <div class="small doj d-flex align-items-center justify-content-md-start justify-content-center">
                         <strong>User ID:</strong>
                         <span
                           class="ms-2 d-none d-md-block"
@@ -67,7 +67,7 @@
                         </button>
                       </div>
 
-                      <div class="small doj d-flex align-items-center justify-content-center mt-2">
+                      <div class="small doj d-flex align-items-center justify-content-md-start justify-content-center mt-2">
                         <strong>KYC ID:</strong>
                         <span
                           class="ms-2 d-none d-md-block"
@@ -263,6 +263,17 @@
                     </small>
                     <div class="staff-id d-flex">
                       User ID :
+                      <ngx-skeleton-loader
+                        [count]="1"
+                        [theme]="{
+                          width: '50px',
+                          height: '20px',
+                          margin: '0 5px'
+                        }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                    <div class="staff-id d-flex">
+                      KYC ID :
                       <ngx-skeleton-loader
                         [count]="1"
                         [theme]="{
