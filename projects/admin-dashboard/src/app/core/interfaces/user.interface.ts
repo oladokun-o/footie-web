@@ -25,6 +25,8 @@ export interface User {
   settings: Settings
   orders?: Orders
   warnings?: string[];
+  dob?: string;
+  gender?: string;
 }
 
 export interface Order {

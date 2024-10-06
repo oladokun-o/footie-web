@@ -25,17 +25,33 @@ export class AuthService {
     );
   }
 
-  isAuthenticated() {
-    return !!localStorage.getItem("token");
+  isAuthenticated(): Observable<boolean> {
+    return of(!!localStorage.getItem("token"));
   }
 
   checkIfLoggedIn(): Observable<boolean> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem("token")}`);
     return this.httpClient.get<RequestResponse>(ApiEndpoints.auth.login.isAuthenticated(), { headers }).pipe(
-      tap(response => { if (response.result === "success") localStorage.setItem("userSessionData", JSON.stringify(response.data)) }),
+      tap(response => {
+        this.handleIsAuthenticatedResponse(response);
+        if (response.result === "success") localStorage.setItem("userSessionData", JSON.stringify(response.data));
+        }),
       switchMap(response => response.result === "success" ? of(true) : of(false)),
-      catchError(error => of(false)),
+      catchError(error => {
+        this.handleIsAuthenticatedResponse(error.error);
+        return of(false);
+      }),
     );
+  }
+
+  private handleIsAuthenticatedResponse(response: RequestResponse) {
+    if (response.result === "error") {
+      if (response.message === 'Invalid token') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userSessionData');
+        localStorage.removeItem('user');
+      }
+    }
   }
 
   logout() {

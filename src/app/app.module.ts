@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -19,6 +19,9 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { AngularYandexMapsModule, YaConfig } from 'angular8-yandex-maps';
 import { ApiEndpoints } from 'src/app/core/configs/api.config';
 import { KycModule } from './kyc/kyc.module';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 const mapConfig: YaConfig = {
   apikey: ApiEndpoints.map.yandex_key,
@@ -51,6 +54,9 @@ const mapConfig: YaConfig = {
     SharedComponentsModule,
     SharedDirectivesModule,
     AngularYandexMapsModule.forRoot(mapConfig),
+    EffectsModule.forRoot([]),
+    StoreModule.forRoot({}, {}),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
   providers: [
     {

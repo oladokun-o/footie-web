@@ -1,31 +1,35 @@
 <div class="header">
   <div class="header-left">
-    <a href="admin-dashboard.html" class="logo">
+    <a routerLink="/dashboard" class="logo">
       <img src="assets/images/logos/logo-transparent-light.svg" alt="Logo" />
     </a>
-    <a href="admin-dashboard.html" class="logo collapse-logo">
-      <img src="assets/img/collapse-logo.svg" alt="Logo" />
+    <a routerLink="/dashboard" class="logo collapse-logo">
+      <img
+        src="assets/images/logos/logo.svg"
+        alt="Logo"
+        [style]="{ width: isMobile || isTablet ? '40px' : '100%' }"
+      />
     </a>
-    <a href="admin-dashboard.html" class="logo2">
-      <img src="assets/img/logo2.png" width="40" height="40" alt="Logo" />
+    <a routerLink="/dashboard" class="logo2">
+      <img src="assets/images/logos/logo-transparent-light.svg" alt="Logo" />
     </a>
   </div>
 
-  <!-- <a id="toggle_btn" href="javascript:void(0);">
+  <a id="toggle_btn" (click)="toggleNavbar()">
     <span class="bar-icon">
       <span></span>
       <span></span>
       <span></span>
     </span>
-  </a> -->
+  </a>
 
   <div class="page-title-box">
-    <h3>Admin Control Panel</h3>
+    <h3>Control Panel</h3>
   </div>
 
-  <!-- <a id="mobile_btn" class="mobile_btn" href="#sidebar"
-    ><i class="fa-solid fa-bars"></i
-  ></a> -->
+  <a id="mobile_btn" class="mobile_btn" (click)="toggleNavbar()">
+    <i class="fa-solid fa-bars"></i>
+  </a>
 
   <ul class="nav user-menu">
     <!-- <li class="nav-item">
@@ -96,7 +100,11 @@
     </li>
 
     <li class="nav-item me-4" ngbDropdown>
-      <a class="dropdown-toggle nav-link" ngbDropdownToggle>
+      <a
+        class="dropdown-toggle nav-link"
+        style="width: auto !important"
+        ngbDropdownToggle
+      >
         <span *ngIf="user?.profilePicture" class="user-img">
           <img [src]="user?.profilePicture" alt="User Image" />
           <span class="status online"></span>

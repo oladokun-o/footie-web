@@ -1,0 +1,11 @@
+.submenu {
+  a {
+    &.active {
+      background-color: #ff902f52;
+    }
+
+    &:hover {
+      background-color: #ff902fc4;
+    }
+  }
+}

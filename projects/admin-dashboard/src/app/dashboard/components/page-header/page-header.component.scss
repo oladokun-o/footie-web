@@ -1,0 +1,15 @@
+a:not(.active) {
+  color: #6d6d6d;
+}
+
+a {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+span.active {
+  color: #01674f !important;
+}

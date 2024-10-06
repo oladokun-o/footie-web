@@ -5,8 +5,8 @@ import { AdminDashboardComponentsModule } from '../components/dashboard-componen
 import { AdminDashboardLayoutModule } from '../layout/layout.module';
 import { RouterModule } from '@angular/router';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { KycRecordsModule } from './kyc-records/kyc-records.module';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedComponentsModule } from 'projects/admin-dashboard/src/shared/components/components.module';
 
 
 @NgModule({
@@ -19,7 +19,8 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
     AdminDashboardLayoutModule,
     RouterModule,
     NgxSkeletonLoaderModule,
-    NgbDropdownModule
+    NgbDropdownModule,
+    SharedComponentsModule
   ]
 })
-export class AdminPagesModule { }
+export class AdminDashboardPagesModule { }
