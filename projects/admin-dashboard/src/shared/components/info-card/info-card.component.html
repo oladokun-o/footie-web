@@ -1,0 +1,57 @@
+<div class="row info-cards">
+  <ng-container *ngIf="!loading; else skeleton">
+    <div
+      *ngFor="let info of infoCards"
+      class="col-md-{{ info.size ? info.size : 4 }} col-sm-{{ info.size ? info.size : 4 }} col-lg-{{
+        info.size ? info.size : 4
+      }} col-xl-{{ info.size ? info.size : 4 }}"
+    >
+      <div class="card dash-widget">
+        <div class="card-body">
+          <h5 [innerHTML]="info.title"></h5>
+
+          <div class="dash-widget-info">
+            <div class="number-circle {{ info.type }}">
+              <h3>
+                {{ info.value | number }}
+              </h3>
+              <ngx-skeleton-loader
+                *ngIf="loading"
+                [count]="1"
+                [appearance]="'circle'"
+                [theme]="{ width: '50px', height: '50px' }"
+              ></ngx-skeleton-loader>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #skeleton>
+    <!-- Simulating 3 skeleton loaders -->
+    <div *ngFor="let item of [1, 2, 3]" class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+      <div class="card dash-widget">
+        <div class="card-body">
+          <h5>
+            <ngx-skeleton-loader
+              [count]="1"
+              [appearance]="'line'"
+              [theme]="{ width: '150px', height: '25px' }"
+            ></ngx-skeleton-loader>
+          </h5>
+
+          <div class="dash-widget-info">
+            <div class="number-circle">
+              <ngx-skeleton-loader
+                [count]="1"
+                [appearance]="'circle'"
+                [theme]="{ width: '50px', height: '50px' }"
+              ></ngx-skeleton-loader>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

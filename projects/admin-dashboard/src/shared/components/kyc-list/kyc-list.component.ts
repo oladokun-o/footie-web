@@ -115,7 +115,8 @@ export class KycListComponent {
       filters: {
         dateRange: {
           startDate: null, endDate: null
-        }
+        },
+        query: null
       }
     }));
   }

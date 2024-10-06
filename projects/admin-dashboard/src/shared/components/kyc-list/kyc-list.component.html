@@ -17,7 +17,7 @@
           <div class="col-xl-4 col-md-5 col-12">
             <div class="input-group">
               <input
-                type="search"
+                type="text"
                 class="form-control"
                 #searchInput
                 placeholder="Search by name, email..."
@@ -145,12 +145,12 @@
 
           <!-- Clear Filter Button -->
           <button
-            *ngIf="activeFilter !== 'none'"
+            *ngIf="activeFilter !== 'none' || searchInput.value !== ''"
             type="button"
             ngbTooltip="Clear filters"
             placement="top"
             container="body"
-            (click)="clearFilters()"
+            (click)="clearFilters();searchInput.value = ''"
             class="btn btn-light"
           >
             Clear
@@ -204,7 +204,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Status</th>
-                <th>Step</th>
+                <th>Time Submitted</th>
                 <th class="text-end static-column">Action</th>
               </tr>
             </thead>
@@ -235,11 +235,13 @@
                         >{{ record.status }}</span
                       >
                     </td>
-                    <td>{{ showKYCStep(record.step) }}</td>
+                    <td>
+                      {{ record.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}
+                    </td>
                     <td class="text-end static-column">
                       <div class="btn-group">
                         <div
-                          class="btn-group"
+                          class="btn-grou p"
                           ngbDropdown
                           container="body"
                           role="group"
@@ -250,13 +252,13 @@
                             type="button"
                             class="btn bg-orange manage"
                           >
-                            Manage
+                            View
                           </button>
-                          <button
+                          <!-- <button
                             type="button"
                             class="btn bg-orange dropdown-toggle-split"
                             ngbDropdownToggle
-                          ></button>
+                          ></button> -->
                           <div class="dropdown-menu" ngbDropdownMenu>
                             <button ngbDropdownItem>View</button>
                             <button ngbDropdownItem>Approve</button>

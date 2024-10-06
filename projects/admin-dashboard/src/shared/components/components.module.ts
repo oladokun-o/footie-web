@@ -9,6 +9,7 @@ import { KycListComponent } from './kyc-list/kyc-list.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { RouterModule } from '@angular/router';
 import { NgbDatepickerModule, NgbDropdownModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { InfoCardComponent } from './info-card/info-card.component';
 
 
 
@@ -19,6 +20,7 @@ import { NgbDatepickerModule, NgbDropdownModule, NgbTooltipModule } from '@ng-bo
     LoadingScreenComponent,
     StarRatingComponent,
     KycListComponent,
+    InfoCardComponent,
   ],
   imports: [
     CommonModule,
@@ -36,6 +38,7 @@ import { NgbDatepickerModule, NgbDropdownModule, NgbTooltipModule } from '@ng-bo
     LoadingScreenComponent,
     StarRatingComponent,
     KycListComponent,
+    InfoCardComponent,
   ]
 })
 export class SharedComponentsModule { }
