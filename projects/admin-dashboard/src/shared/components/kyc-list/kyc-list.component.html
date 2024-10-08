@@ -1,21 +1,190 @@
 <div class="row">
   <div class="col-12 d-flex">
     <div class="card card-table flex-fill overflow-hidden">
-      <div class="card-header">
+      <div class="card-header gap-2">
         <h3
           *ngIf="tableTitle !== ''"
           class="card-title mb-0"
           [innerHTML]="tableTitle"
         ></h3>
 
-        <div class="card-options">
+        <!-- Filter -->
+        <div
+          *ngIf="showTableFilter"
+          class="main-search d-flex gap-3 col align-items-center justify-content-start m-0"
+        >
+          <!-- Search -->
+          <div class="col-xl-4 col-md-5 col-12">
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                #searchInput
+                placeholder="Search by name, email..."
+                (input)="onSearchTermChange(searchInput.value)"
+              />
+            </div>
+          </div>
+
+          <!-- dropdown -->
+          <div class="dropdown-group">
+            <div
+              class="d-flex gap-2 align-items-center justify-content-between"
+            >
+              <i class="bi bi-filter"></i> Filter
+            </div>
+
+            <div class="dropdown" ngbDropdown container="body" role="group">
+              <button
+                type="text"
+                class="btn btn-light text-capitalize"
+                readonly
+                ngbDropdownToggle
+              >
+                {{ activeFilter }}
+              </button>
+              <div class="dropdown-menu" ngbDropdownMenu>
+                <button
+                  *ngFor="let filter of filters"
+                  class="dropdown-item text-capitalize"
+                  (click)="onFilterChange(filter)"
+                  [class.active]="filter === activeFilter"
+                >
+                  {{ filter }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Status dropwdown -->
+            <div
+              *ngIf="activeFilter === 'status'"
+              class="dropdown"
+              ngbDropdown
+              container="body"
+              role="group"
+            >
+              <button
+                type="text"
+                class="btn btn-light text-capitalize"
+                readonly
+                ngbDropdownToggle
+              >
+                {{ activeStatusFilter }}
+              </button>
+              <div class="dropdown-menu" ngbDropdownMenu>
+                <button
+                  *ngFor="let status of statusFilters"
+                  class="dropdown-item text-capitalize"
+                  (click)="onStatusChange(status.value)"
+                  [class.active]="status.value === activeStatusFilter"
+                >
+                  {{ status.label }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Date Range -->
+            <div *ngIf="activeFilter === 'date'" class="dropdown">
+              <div
+                class="form-group d-flex justify-content-between align-items-center gap-2"
+              >
+                <button
+                  type="button"
+                  class="btn btn-light text-capitalize text-nowrap"
+                  readonly
+                  (click)="d.open()"
+                  #button1
+                >
+                  <input
+                    class="form-control"
+                    placeholder="yyyy-mm-dd"
+                    name="dp"
+                    readonly
+                    type="hidden"
+                    ngbDatepicker
+                    container="body"
+                    #d="ngbDatepicker"
+                    [(ngModel)]="dateRangeModel.startDate"
+                    [positionTarget]="button1"
+                    [minDate]="minDateRange"
+                    [maxDate]="maxDateRange"
+                    (dateSelect)="onDateRangeChange($event, 'start')"
+                    [displayMonths]="2"
+                  />
+                  <small>{{ dateRange.startDate | date : "yyyy-MM-dd" }}</small>
+                </button>
+                -
+                <button
+                  type="button"
+                  class="btn btn-light text-capitalize text-nowrap"
+                  readonly
+                  (click)="d2.open()"
+                  #button2
+                >
+                  <input
+                    class="form-control"
+                    placeholder="yyyy-mm-dd"
+                    name="dp2"
+                    readonly
+                    ngbDatepicker
+                    container="body"
+                    type="hidden"
+                    #d2="ngbDatepicker"
+                    [(ngModel)]="dateRangeModel.endDate"
+                    [positionTarget]="button2"
+                    [minDate]="minDateRange"
+                    [maxDate]="maxDateRange"
+                    (dateSelect)="onDateRangeChange($event, 'end')"
+                    [displayMonths]="2"
+                  />
+                  <small>{{ dateRange.endDate | date : "yyyy-MM-dd" }}</small>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Clear Filter Button -->
+          <button
+            *ngIf="activeFilter !== 'none' || searchInput.value !== ''"
+            type="button"
+            ngbTooltip="Clear filters"
+            placement="top"
+            container="body"
+            (click)="clearFilters();searchInput.value = ''"
+            class="btn btn-light"
+          >
+            Clear
+            <i class="fa fa-solid fa-close ms-1"></i>
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-light d-flex d-md-none"
+            (click)="refreshKYCRecords()"
+            [disabled]="loading$ | async"
+            ngbTooltip="Refresh KYC Records"
+            placement="top"
+            container="body"
+          >
+            Refresh
+            <i
+              class="bi bi-arrow-clockwise fs-6 ms-1"
+              [class.spin]="loading$ | async"
+            ></i>
+          </button>
+        </div>
+
+        <div class="card-options d-none d-md-block">
           <!-- Action buttons -->
           <div class="btn-group">
             <button
               type="button"
-              class="btn btn-light"
+              class="btn btn-light d-flex"
               (click)="refreshKYCRecords()"
               [disabled]="loading$ | async"
+              ngbTooltip="Refresh KYC Records"
+              placement="top"
+              container="body"
             >
               Refresh
               <i
@@ -28,14 +197,15 @@
       </div>
       <div class="card-body">
         <div class="table-responsive">
-          <table class="table custom-table mb-0">
+          <table class="table custom-table table-hover mb-0">
             <thead>
               <tr>
                 <th></th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Status</th>
-                <th>Step</th>
+                <th>Progress</th>
+                <th>Time Updated</th>
                 <th class="text-end static-column">Action</th>
               </tr>
             </thead>
@@ -44,7 +214,7 @@
                 <tbody *ngIf="kycRecords.length > 0">
                   <tr *ngFor="let record of kycRecords">
                     <td>
-                      <a class="avatar">
+                      <div class="avatar">
                         <img
                           #avatar
                           loading="lazy"
@@ -52,25 +222,30 @@
                           (error)="handleImgError(avatar)"
                           alt="User Image"
                         />
-                      </a>
+                      </div>
                     </td>
-                    <td>
+                    <td class="text-capitalize">
                       {{ record.user.firstName }} {{ record.user.lastName }}
                     </td>
                     <td>{{ record.user.email }}</td>
                     <td>
                       <span
                         class="badge text-uppercase bg-inverse-{{
-                          getKYCStatusBootsrapClass(record.status)
+                          getKYCStatusBootstrapClass(record.status)
                         }}"
                         >{{ record.status }}</span
                       >
                     </td>
-                    <td>{{ showKYCStep(record.step) }}</td>
+                    <td>
+                      {{ showKYCStep(record.step) }}
+                    </td>
+                    <td>
+                      {{ record.updatedAt| date: 'medium' }}
+                    </td>
                     <td class="text-end static-column">
                       <div class="btn-group">
                         <div
-                          class="btn-group"
+                          class="btn-grou p"
                           ngbDropdown
                           container="body"
                           role="group"
@@ -81,17 +256,22 @@
                             type="button"
                             class="btn bg-orange manage"
                           >
-                            Manage
+                            View
                           </button>
-                          <button
+                          <!-- <button
                             type="button"
                             class="btn bg-orange dropdown-toggle-split"
                             ngbDropdownToggle
-                          ></button>
+                          ></button> -->
                           <div class="dropdown-menu" ngbDropdownMenu>
                             <button ngbDropdownItem>View</button>
                             <button ngbDropdownItem>Approve</button>
-                            <button ngbDropdownItem>Reject</button>
+                            <button
+                              ngbDropdownItem
+                              class="delete-dropdown-item"
+                            >
+                              Reject
+                            </button>
                           </div>
                         </div>
                       </div>

@@ -67,10 +67,13 @@ export class AuthInterceptor implements HttpInterceptor {
         catchError((error: HttpErrorResponse) => {
           if (
             error &&
-            error.error.result === 'error' &&
-            error.error.message === 'Invalid token'
+            error.error.result === 'error'
           ) {
-            this.toastr.error('Session expired, please log in again.', 'Unauthorized!');
+            if (error.error.message === 'Invalid token') this.toastr.error('Session expired, please log in again.', 'Unauthorized!');
+            if (error.error.message === 'Unauthorized') {
+              localStorage.removeItem('token');
+              this.toastr
+            }
           }
 
           return throwError(error);

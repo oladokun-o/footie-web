@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { UserKYC } from '../../interfaces/user.interface';
+import { KycState } from '../reducers/kyc.reducer';
 
 // Load KYC records
 const loadKycRecords = createAction('[KYC] Load KYC Records');
@@ -13,7 +14,7 @@ const selectKycRecordFailure = createAction('[KYC] Select KYC Record By ID Failu
 const updateKycRecord = createAction('[KYC] Update KYC Record', props<{ kycRecord: UserKYC }>());
 const updateUserKYCSuccess = createAction('[KYC] Update KYC Record Success', props<{ kycRecord: UserKYC }>());
 const updateKycRecordFailure = createAction('[KYC] Update KYC Record Failure', props<{ error: string }>());
-
+const updateFilter = createAction('[KYC] Update Filter', props<{ filters: Partial<KycState['filters']> }>());
 
 export const kycActions = {
   loadKycRecords,
@@ -24,5 +25,6 @@ export const kycActions = {
   updateKycRecordFailure,
   selectKycRecord,
   selectKycRecordSuccess,
-  selectKycRecordFailure
+  selectKycRecordFailure,
+  updateFilter,
 }

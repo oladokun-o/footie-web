@@ -7,13 +7,35 @@ export interface KycState {
   selectedRecord?: UserKYC;
   loading: boolean;
   error: any;
+  filters: {
+    query: string | null;
+    email: string | null;
+    status: 'pending' | 'approved' | 'rejected' | null;
+    id: string | null;
+    userId: string | null;
+    dateRange: {
+      startDate: Date | null;
+      endDate: Date | null;
+    }
+  }
 }
 
 const initialState: KycState = {
   kycRecords: [],
   selectedRecord: undefined,
   loading: false,
-  error: null
+  error: null,
+  filters: {
+    query: null,
+    email: null,
+    status: null,
+    id: null,
+    userId: null,
+    dateRange: {
+      startDate: null,
+      endDate: null
+    }
+  }
 };
 
 export const kycReducer = createReducer(
@@ -30,5 +52,11 @@ export const kycReducer = createReducer(
   on(kycActions.selectKycRecord, (state, { id }) => {
     const selectedRecord = state.kycRecords.find((record) => record.id === id);
     return { ...state, selectedRecord };
-  })
+  }),
+  on(kycActions.selectKycRecordSuccess, (state, { kycRecord }) => ({ ...state, selectedRecord: kycRecord })),
+  on(kycActions.selectKycRecordFailure, (state, { error }) => ({ ...state, error })),
+  on(kycActions.updateFilter, (state, { filters }) => ({
+    ...state,
+    filters: { ...state.filters, ...filters }
+  }))
 );

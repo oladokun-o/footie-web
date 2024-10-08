@@ -81,8 +81,5 @@ export class AdminSideNavComponent implements OnInit {
   checkDevice(): void {
     this.isMobile = this.deviceService.isMobile();
     this.isTablet = this.deviceService.isTablet();
-
-    console.log('isMobile', this.isMobile);
-    console.log('isTablet', this.isTablet);
   }
 }

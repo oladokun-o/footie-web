@@ -1,3 +1,32 @@
 .manage {
   background-color: #ff902f2b !important;
 }
+
+.delete-dropdown-item {
+  &:hover {
+    background-color: #d61b1bc7 !important;
+    color: #fff;
+  }
+}
+
+.dropdown-group {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.main-search {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.card-header {
+  align-items: baseline;
+}
+
+input.form-control {
+  height: 38px !important;
+}

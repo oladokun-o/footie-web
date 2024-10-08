@@ -8,7 +8,8 @@ import { StarRatingComponent } from './star-rating/star-rating.component';
 import { KycListComponent } from './kyc-list/kyc-list.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { RouterModule } from '@angular/router';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule, NgbDropdownModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { InfoCardComponent } from './info-card/info-card.component';
 
 
 
@@ -19,6 +20,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
     LoadingScreenComponent,
     StarRatingComponent,
     KycListComponent,
+    InfoCardComponent,
   ],
   imports: [
     CommonModule,
@@ -26,7 +28,9 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
     RouterModule,
-    NgbDropdownModule
+    NgbDropdownModule,
+    NgbDatepickerModule,
+    NgbTooltipModule
   ],
   exports: [
     LoadingButtonComponent,
@@ -34,6 +38,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
     LoadingScreenComponent,
     StarRatingComponent,
     KycListComponent,
+    InfoCardComponent,
   ]
 })
 export class SharedComponentsModule { }

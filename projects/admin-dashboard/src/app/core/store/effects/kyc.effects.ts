@@ -5,7 +5,7 @@ import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { KycService } from '../../services/kyc.service';
 import { select, Store } from '@ngrx/store';
-import { selectAllKycRecords } from '../selectors/kyc.selector';
+import { selectAllKycRecords, selectKycFilters } from '../selectors/kyc.selector';
 
 @Injectable()
 export class KycEffects {
@@ -57,7 +57,6 @@ export class KycEffects {
       )
     )
   );
-
 
   /**
    * Update KYC record effect

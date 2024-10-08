@@ -1,12 +1,12 @@
 <ng-container *ngIf="(loading$ | async) == false; else loadingTemplate">
   <ng-container *ngIf="kycRecord$ | async as record">
     <!-- Your content here -->
-    <div class="card mb-0">
-      <div class="card-body">
+    <div class="card main-card mb-0 overflow-hidden border-bottom-0">
+      <div class="card-body pb-0">
         <div class="row">
           <div class="col-md-12">
             <div class="profile-view">
-              <div class="profile-img-wrap">
+              <div class="profile-img-wrap h-100 d-flex flex-row flex-wrap justify-content-between gap-3 gap-md-0">
                 <div class="profile-img">
                   <img
                     #avatar
@@ -16,12 +16,25 @@
                     alt="User Image"
                   />
                 </div>
+
+                <div class="col-12 text-center">
+                  <!-- <h6>Status</h6> -->
+                  <span
+                    class="badge badge-pill text-uppercase shadow-sm p-2 fs-6"
+                    [ngClass]="{
+                      'bg-inverse-success': record.status === 'approved',
+                      'bg-inverse-danger': record.status === 'rejected',
+                      'bg-inverse-warning': record.status === 'pending'
+                    }"
+                    >{{ record.status }}</span
+                  >
+                </div>
               </div>
-              <div class="profile-basic">
+              <div class="profile-basic pe-0">
                 <div class="row">
-                  <div class="col-md-5">
+                  <div class="col-md-6">
                     <div class="profile-info-left">
-                      <h3 class="user-name m-t-0 mb-0 text-capitalize">
+                      <h3 class="user-name mt-3 mt-md-0 mb-0 text-capitalize">
                         {{ record.user.firstName }} {{ record.user.lastName }}
                       </h3>
                       <small class="text-muted">
@@ -35,63 +48,137 @@
 
                       <br />
 
-                      <small class="text-muted">
+                      <div class="small doj text-muted my-2">
                         <strong>Role:</strong> {{ record.user.role }}
-                      </small>
-                      <div class="small doj">
-                        <strong>User ID:</strong> {{ record.user.id }}
                       </div>
-                      <div class="small doj text-muted">
+
+                      <div
+                        class="small doj d-flex align-items-center justify-content-md-start justify-content-center"
+                      >
+                        <strong>User ID:</strong>
+                        <span
+                          class="ms-2 d-none d-md-block"
+                          [ngClass]="{ 'highlight-id': copiedUserId }"
+                          >{{ record.user.id | slice : 0 : 8 }}...
+                        </span>
+                        <span
+                          class="ms-2 d-block d-md-none"
+                          [ngClass]="{ 'highlight-id': copiedUserId }"
+                          >{{ record.user.id | slice : 0 : 20 }}...
+                        </span>
+
+                        <button
+                          class="btn btn-sm btn-outline-secondary ms-2"
+                          ngxClipboard
+                          [cbContent]="record.user.id"
+                          (cbOnSuccess)="onCopySuccess('user')"
+                          [ngbTooltip]="
+                            copiedUserId ? 'Copied!' : 'Copy User ID'
+                          "
+                          [autoClose]="false"
+                          placement="top"
+                        >
+                          <i class="fa fa-copy"></i>
+                        </button>
+                      </div>
+
+                      <div
+                        class="small doj d-flex align-items-center justify-content-md-start justify-content-center mt-2"
+                      >
+                        <strong>KYC ID:</strong>
+                        <span
+                          class="ms-2 d-none d-md-block"
+                          [ngClass]="{ 'highlight-id': copiedKycId }"
+                          >{{ record.id | slice : 0 : 8 }}...
+                        </span>
+                        <span
+                          class="ms-2 d-block d-md-none"
+                          [ngClass]="{ 'highlight-id': copiedKycId }"
+                          >{{ record.id | slice : 0 : 20 }}...
+                        </span>
+
+                        <button
+                          class="btn btn-sm btn-outline-secondary ms-2"
+                          ngxClipboard
+                          [cbContent]="record.id"
+                          (cbOnSuccess)="onCopySuccess('kyc')"
+                          [ngbTooltip]="copiedKycId ? 'Copied!' : 'Copy KYC ID'"
+                          placement="top"
+                          [autoClose]="false"
+                        >
+                          <i class="fa fa-copy"></i>
+                        </button>
+                      </div>
+
+                      <div class="small doj mt-2 text-muted">
                         <strong>User since:</strong>
                         {{ record.user.createdAt | date : "medium" }}
                       </div>
-
-                      <div class="d-flex gap-2 staff-msg">
-                        <!-- Action buttons for KYC -->
-                        <button class="btn btn-success btn-sm">Approve</button>
-                        <button class="btn btn-danger btn-sm">Reject</button>
-                      </div>
                     </div>
                   </div>
-                  <div class="col-md-7">
-                    <ul class="personal-info">
+                  <div class="col-md-6">
+                    <ul class="kyc personal-info">
                       <li>
-                        <div class="title">Phone:</div>
+                        <div class="title">Progress:</div>
                         <div class="text">
-                          <a href="tel:{{ record.user.phone }}">{{
-                            record.user.phone
-                          }}</a>
+                          {{ showKYCStep(record.step) }}
                         </div>
                       </li>
                       <li>
-                        <div class="title">Email:</div>
+                        <div class="title">Submitted:</div>
                         <div class="text">
-                          <a href="mailto:{{ record.user.email }}">{{
-                            record.user.email
-                          }}</a>
+                          {{ record.createdAt | date : "medium" }}
                         </div>
                       </li>
                       <li>
-                        <div class="title">Birthday:</div>
+                        <div class="title">Updated:</div>
                         <div class="text">
-                          {{
-                            record.user.dob
-                              ? (record.user.dob | date : "medium")
-                              : "N/A"
-                          }}
+                          {{ record.updatedAt | date : "medium" }}
                         </div>
                       </li>
                       <li>
-                        <div class="title">Address:</div>
-                        <div
-                          class="text"
-                          [innerHTML]="getUserAddress(record.user)"
-                        ></div>
+                        <div class="title">Selfie:</div>
+                        <div class="text">
+                          <!-- Fontawesome checkmark/x -->
+                          <i
+                            class="fa fa-{{
+                              record.selfie ? 'check' : 'times'
+                            }}"
+                            [ngClass]="{
+                              'text-success': record.selfie,
+                              'text-danger': !record.selfie
+                            }"
+                          ></i>
+                        </div>
                       </li>
                       <li>
-                        <div class="title">Gender:</div>
+                        <div class="title">School ID:</div>
                         <div class="text">
-                          {{ record.user.gender ? record.user.gender : "N/A" }}
+                          <!-- Fontawesome checkmark/x -->
+                          <i
+                            class="fa fa-{{
+                              record.schoolID ? 'check' : 'times'
+                            }}"
+                            [ngClass]="{
+                              'text-success': record.schoolID,
+                              'text-danger': !record.schoolID
+                            }"
+                          ></i>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="title">Passport:</div>
+                        <div class="text">
+                          <!-- Fontawesome checkmark/x -->
+                          <i
+                            class="fa fa-{{
+                              record.internationalPassport ? 'check' : 'times'
+                            }}"
+                            [ngClass]="{
+                              'text-success': record.internationalPassport,
+                              'text-danger': !record.internationalPassport
+                            }"
+                          ></i>
                         </div>
                       </li>
                     </ul>
@@ -111,66 +198,59 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- <div class="card tab-box">
-      <div class="row user-tabs">
-        <div class="col-lg-12 col-md-12 col-sm-12 line-tabs">
-          <ul class="nav nav-tabs nav-tabs-bottom" role="tablist">
-            <li class="nav-item" role="presentation">
-              <a
-                href="#emp_profile"
-                data-bs-toggle="tab"
-                class="nav-link active"
-                aria-selected="true"
-                role="tab"
-                >Profile</a
-              >
-            </li>
-            <li class="nav-item" role="presentation">
-              <a
-                href="#emp_projects"
-                data-bs-toggle="tab"
-                class="nav-link"
-                aria-selected="false"
-                role="tab"
-                tabindex="-1"
-                >Projects</a
-              >
-            </li>
-            <li class="nav-item" role="presentation">
-              <a
-                href="#bank_statutory"
-                data-bs-toggle="tab"
-                class="nav-link"
-                aria-selected="false"
-                role="tab"
-                tabindex="-1"
-                >Bank &amp; Statutory
-                <small class="text-danger">(Admin Only)</small></a
-              >
-            </li>
-            <li class="nav-item" role="presentation">
-              <a
-                href="#emp_assets"
-                data-bs-toggle="tab"
-                class="nav-link"
-                aria-selected="false"
-                role="tab"
-                tabindex="-1"
-                >Assets</a
-              >
-            </li>
-          </ul>
+      <div class="card tab-box m-0 border-0 shadow-none">
+        <div class="row user-tabs">
+          <div class="col-lg-12 col-md-12 col-sm-12 line-tabs">
+            <admin-app-tab
+              [tabs]="tabs"
+              (activeTabChange)="activeTab = $event"
+            ></admin-app-tab>
+          </div>
         </div>
       </div>
-    </div> -->
+    </div>
   </ng-container>
 </ng-container>
 
+<!-- Tab Content Loader Skeleton Card -->
+<ng-container *ngIf="kycRecord$ | async as record; else TabLoadingTemplate">
+  <!-- Tab Contents -->
+  <ng-container *ngIf="(loading$ | async) === false">
+    <!-- Personal Info Tab -->
+    <admin-app-personal-info
+      *ngIf="activeTab.content === 'personal'"
+      [record]="record"
+    ></admin-app-personal-info>
+
+    <!-- KYC Info Tab -->
+    <admin-app-kyc-info
+      *ngIf="activeTab.content === 'kyc'"
+      [record]="record"
+      (editKYC)="canEditKYC = $event"
+    ></admin-app-kyc-info>
+
+    <!-- Documents Tab -->
+    <admin-app-documents
+      *ngIf="activeTab.content === 'documents'"
+      [record]="record"
+      (editDocuments)="canEditDocuments = $event"
+    ></admin-app-documents>
+  </ng-container>
+</ng-container>
+
+<!-- Loading Template -->
+<ng-template #TabLoadingTemplate>
+  <div class="card mb-0 record-skeleton bg-transparent mt-3">
+    <div class="card-body">
+      <ngx-skeleton-loader count="10" appearance="line"></ngx-skeleton-loader>
+    </div>
+  </div>
+</ng-template>
+
 <ng-template #loadingTemplate>
   <!-- Loading template here -->
-  <div class="card mb-0 record-skeleton">
+  <div class="card mb-0 record-skeleton mt-3">
     <div class="card-body">
       <div class="row">
         <div class="col-md-12">
@@ -189,7 +269,7 @@
             </div>
             <div class="profile-basic">
               <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-6">
                   <div class="profile-info-left">
                     <h3 class="user-name m-t-0 mb-0 text-capitalize">
                       <ngx-skeleton-loader
@@ -210,7 +290,32 @@
                       ></ngx-skeleton-loader>
                     </small>
                     <div class="staff-id d-flex">
-                      User ID :
+                      <ngx-skeleton-loader
+                        [count]="1"
+                        [theme]="{
+                          width: '50px',
+                          height: '20px',
+                          margin: '0 5px'
+                        }"
+                      ></ngx-skeleton-loader>
+                      <ngx-skeleton-loader
+                        [count]="1"
+                        [theme]="{
+                          width: '50px',
+                          height: '20px',
+                          margin: '0 5px'
+                        }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                    <div class="staff-id d-flex">
+                      <ngx-skeleton-loader
+                        [count]="1"
+                        [theme]="{
+                          width: '100px',
+                          height: '20px',
+                          margin: '0 5px'
+                        }"
+                      ></ngx-skeleton-loader>
                       <ngx-skeleton-loader
                         [count]="1"
                         [theme]="{
@@ -221,7 +326,14 @@
                       ></ngx-skeleton-loader>
                     </div>
                     <div class="small doj text-muted d-flex">
-                      User since :
+                      <ngx-skeleton-loader
+                        [count]="1"
+                        [theme]="{
+                          width: '100px',
+                          height: '20px',
+                          margin: '0 5px'
+                        }"
+                      ></ngx-skeleton-loader>
                       <ngx-skeleton-loader
                         [count]="1"
                         [theme]="{
@@ -239,10 +351,15 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-7">
+                <div class="col-md-6">
                   <ul class="personal-info">
                     <li>
-                      <div class="title">Phone:</div>
+                      <div class="title">
+                        <ngx-skeleton-loader
+                          [count]="1"
+                          [theme]="{ width: '100px', height: '20px' }"
+                        ></ngx-skeleton-loader>
+                      </div>
                       <div class="text">
                         <ngx-skeleton-loader
                           [count]="1"
@@ -254,7 +371,12 @@
                       </div>
                     </li>
                     <li>
-                      <div class="title">Email:</div>
+                      <div class="title">
+                        <ngx-skeleton-loader
+                          [count]="1"
+                          [theme]="{ width: '100px', height: '20px' }"
+                        ></ngx-skeleton-loader>
+                      </div>
                       <div class="text">
                         <ngx-skeleton-loader
                           [count]="1"
@@ -263,7 +385,12 @@
                       </div>
                     </li>
                     <li>
-                      <div class="title">Birthday:</div>
+                      <div class="title">
+                        <ngx-skeleton-loader
+                          [count]="1"
+                          [theme]="{ width: '100px', height: '20px' }"
+                        ></ngx-skeleton-loader>
+                      </div>
                       <div class="text">
                         <ngx-skeleton-loader
                           [count]="1"
@@ -272,7 +399,12 @@
                       </div>
                     </li>
                     <li>
-                      <div class="title">Address:</div>
+                      <div class="title">
+                        <ngx-skeleton-loader
+                          [count]="1"
+                          [theme]="{ width: '100px', height: '20px' }"
+                        ></ngx-skeleton-loader>
+                      </div>
                       <div class="text">
                         <ngx-skeleton-loader
                           [count]="1"
@@ -281,7 +413,12 @@
                       </div>
                     </li>
                     <li>
-                      <div class="title">Gender:</div>
+                      <div class="title">
+                        <ngx-skeleton-loader
+                          [count]="1"
+                          [theme]="{ width: '100px', height: '20px' }"
+                        ></ngx-skeleton-loader>
+                      </div>
                       <div class="text">
                         <ngx-skeleton-loader
                           [count]="1"
@@ -308,3 +445,48 @@
     </div>
   </div>
 </ng-template>
+
+<!-- Action buttons fixed bottom -->
+<div class="container-fluid bg-wrapper" style="z-index: 1000">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-12 py-3">
+      <div class="row">
+        <div class="col-4">
+          <button
+            class="btn"
+            placement="top"
+            style="
+              padding: 15px;
+              background-color: #e36f00 !important;
+              color: #fff !important;
+            "
+            [disabled]="!canSave"
+            matRipple
+          >
+            Save
+          </button>
+        </div>
+        <div class="col-4">
+          <button
+            class="btn btn-success"
+            [ngbTooltip]="'Approve KYC'"
+            placement="top"
+            matRipple
+          >
+            Approve
+          </button>
+        </div>
+        <div class="col-4">
+          <button
+            class="btn btn-danger"
+            [ngbTooltip]="'Reject KYC'"
+            placement="top"
+            matRipple
+          >
+            Reject
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

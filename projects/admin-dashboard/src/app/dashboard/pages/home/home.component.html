@@ -1,23 +1,9 @@
 <admin-app-page-header [pageTitle]="pageTitle"></admin-app-page-header>
 
-<div class="row">
-  <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-    <div class="card dash-widget">
-      <div class="card-body">
-        <span class="dash-widget-icon"><i class="fa-solid fa-user"></i></span>
-        <div class="dash-widget-info">
-          <h3 *ngIf="!(kycLoading$ | async)">{{ (kycRecordsCount$ | async) | number }}</h3>
-          <ngx-skeleton-loader
-            *ngIf="kycLoading$ | async"
-            [count]="1"
-            [theme]="{ width: '40px', height: '30px' }"
-          ></ngx-skeleton-loader>
-          <span>KYC Records</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<admin-app-info-card
+  [infoCards]="infoCards"
+  [loading]="(kycLoading$ | async) ? true : false"
+></admin-app-info-card>
 
 <admin-app-kyc-list
   [tableTitle]="'Recent KYC Records'"
@@ -25,4 +11,5 @@
   text: 'View all KYC Records',
   link: '/dashboard/kyc-records',
 }"
+  [showTableFilter]="false"
 ></admin-app-kyc-list>
