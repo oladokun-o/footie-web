@@ -204,7 +204,8 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Status</th>
-                <th>Time Submitted</th>
+                <th>Progress</th>
+                <th>Time Updated</th>
                 <th class="text-end static-column">Action</th>
               </tr>
             </thead>
@@ -236,7 +237,10 @@
                       >
                     </td>
                     <td>
-                      {{ record.createdAt | date: 'yyyy-MM-dd HH:mm:ss' }}
+                      {{ showKYCStep(record.step) }}
+                    </td>
+                    <td>
+                      {{ record.updatedAt| date: 'medium' }}
                     </td>
                     <td class="text-end static-column">
                       <div class="btn-group">

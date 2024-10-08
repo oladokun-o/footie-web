@@ -8,6 +8,8 @@ import { NgbDropdownModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { AdminDashboardComponentsModule } from '../../../components/dashboard-components.module';
 import { SharedComponentsModule } from 'projects/admin-dashboard/src/shared/components/components.module';
 import { ClipboardModule } from 'ngx-clipboard';
+import { AdminKYCRecordComponentsModule } from './record/components/components.module';
+import { MatRippleModule } from '@angular/material/core';
 
 
 
@@ -24,7 +26,9 @@ import { ClipboardModule } from 'ngx-clipboard';
     AdminDashboardComponentsModule,
     SharedComponentsModule,
     ClipboardModule,
-    NgbTooltip
+    NgbTooltip,
+    AdminKYCRecordComponentsModule,
+    MatRippleModule
   ]
 })
 export class KYCRecordsPagesModule { }

@@ -134,7 +134,7 @@ export class KycService {
       .pipe(
         switchMap((response) =>
           response.result === 'success'
-            ? of(response.data)
+            ? of(response.data.records)
             : throwError(response)
         ),
         catchError((error) => throwError(error))

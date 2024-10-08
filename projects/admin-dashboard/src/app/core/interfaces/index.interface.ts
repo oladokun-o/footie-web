@@ -11,3 +11,10 @@ export enum Languages {
   FRENCH = 'fr',
   RUSSIAN = 'ru',
 }
+
+export interface Tab {
+  title: string;
+  active: boolean;
+  disabled: boolean;
+  content: string;
+}

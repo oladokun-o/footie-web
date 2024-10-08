@@ -131,7 +131,7 @@ export class KycListComponent {
 
   showKYCStep(step: KYCStep): string {
     const stepLabels = {
-      [KYCStep.START]: 'Started',
+      [KYCStep.START]: 'Started, Pending Documents',
       [KYCStep.SUBMIT_SELFIE]: 'Missing Selfie',
       [KYCStep.SUBMIT_INTERNATIONAL_PASSPORT]: 'Missing International Passport',
       [KYCStep.SUBMIT_RUSSIAN_PASSPORT]: 'Missing Russian Passport',

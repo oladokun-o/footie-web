@@ -2,7 +2,8 @@ import { AfterContentChecked, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
-import { User, UserKYC } from 'projects/admin-dashboard/src/app/core/interfaces/user.interface';
+import { Tab } from 'projects/admin-dashboard/src/app/core/interfaces/index.interface';
+import { KYCStep, User, UserKYC } from 'projects/admin-dashboard/src/app/core/interfaces/user.interface';
 import { kycActions } from 'projects/admin-dashboard/src/app/core/store/actions/kyc.action';
 import { KycState } from 'projects/admin-dashboard/src/app/core/store/reducers/kyc.reducer';
 import { map, Observable } from 'rxjs';
@@ -22,6 +23,35 @@ export class RecordComponent implements AfterContentChecked {
   copiedUserId: boolean = false;
   copiedKycId: boolean = false;
 
+  tabs: Tab[] = [
+    {
+      title: 'KYC Information',
+      active: true,
+      disabled: false,
+      content: 'kyc'
+    },
+    {
+      title: 'Documents',
+      active: false,
+      disabled: false,
+      content: 'documents'
+    },
+    {
+      title: 'Additional Information',
+      active: false,
+      disabled: true,
+      content: 'additional'
+    }
+  ];
+  activeTab: Tab = this.tabs[0];
+
+  canEditKYC: boolean = false;
+  canEditDocuments: boolean = false;
+
+  get canSave(): boolean {
+    return this.canEditKYC || this.canEditDocuments;
+  }
+
   constructor(
     private store: Store<{ kyc: KycState }>,
     private route: ActivatedRoute,
@@ -33,6 +63,19 @@ export class RecordComponent implements AfterContentChecked {
     ).subscribe(id => {
       if (id) {
         this.recordID = id;
+      }
+    });
+
+    // Get active tab from the route query params
+    this.route.queryParams.pipe(
+      map(params => params['tab'])
+    ).subscribe(tab => {
+      if (tab) {
+        let activeTab = this.tabs.find(t => t.content === tab) as Tab;
+        this.tabs.forEach(t => {
+          t.active = t.content === activeTab.content;
+        });
+        this.activeTab = activeTab;
       }
     });
 
@@ -99,5 +142,27 @@ export class RecordComponent implements AfterContentChecked {
         this.copiedKycId = false;
       }
     }, 2000); // Adjust this duration as needed
+  }
+
+  editPersonalInfo(): void {
+    // update tab state
+    let tab = this.tabs.find(t => t.content === 'personal') as Tab;
+    this.tabs.forEach(t => {
+      t.active = t.content === tab.content;
+    });
+    this.activeTab = tab;
+  }
+
+  showKYCStep(step: KYCStep): string {
+    const stepLabels = {
+      [KYCStep.START]: 'Started',
+      [KYCStep.SUBMIT_SELFIE]: 'Missing Selfie',
+      [KYCStep.SUBMIT_INTERNATIONAL_PASSPORT]: 'Missing International Passport',
+      [KYCStep.SUBMIT_RUSSIAN_PASSPORT]: 'Missing Russian Passport',
+      [KYCStep.SUBMIT_SCHOOL_ID]: 'Missing School ID',
+      [KYCStep.REVIEW]: 'In Review',
+      [KYCStep.COMPLETE]: 'Completed',
+    };
+    return stepLabels[step] || 'Unknown Step';
   }
 }

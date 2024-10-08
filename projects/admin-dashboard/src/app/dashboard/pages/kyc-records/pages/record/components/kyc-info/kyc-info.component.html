@@ -1,0 +1,165 @@
+<div class="tab-content" *ngIf="record">
+  <div
+    id="emp_profile"
+    class="pro-overview tab-pane fade show active"
+    role="tabpanel"
+  >
+    <div class="row">
+      <div class="col-12 d-flex">
+        <div class="card profile-box flex-fill">
+          <div class="card-body">
+            <h3 class="card-title">
+              KYC Information
+              <a
+                href="javascript:void(0)"
+                (click)="editKYCInfo()"
+                class="edit-icon"
+                ngbTooltip="Edit KYC Information"
+                ><i class="fa-solid fa-pencil"></i
+              ></a>
+            </h3>
+
+            <form>
+              <div class="row">
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-12 col-md-8 profile-basic">
+                      <!-- Heading, info about kyc -->
+                      <ul class="personal-info">
+                        <li>
+                          <div class="title">KYC Type:</div>
+                          <div class="text">Individual</div>
+                        </li>
+                        <li>
+                          <div class="title">KYC Verification:</div>
+                          <div class="text">{{ showKYCStep(record.step) }}</div>
+                        </li>
+                        <li>
+                          <div class="title">Submitted On:</div>
+                          <div class="text">
+                            {{ record.createdAt | date : "medium" }}
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div
+                      class="col-12 col-md-4 d-flex justify-content-md-end flex-row flex-wrap"
+                    >
+                      <ul class="personal-info image">
+                        <li>
+                          <div class="title text-nowrap">Selfie Image:</div>
+                          <div class="text d-block d-md-none">
+                            <button
+                              matRipple
+                              class="btn btn-sm btn-primary"
+                              (click)="displayImage(content, record.selfie)"
+                            >
+                              <i class="fa-solid fa-search-plus"></i> View
+                            </button>
+                          </div>
+                        </li>
+                      </ul>
+                      <!-- Profile Image Section -->
+                      <div
+                        class="profile-img d-none d-md-block"
+                        (click)="displayImage(content, record.selfie)"
+                      >
+                        <img
+                          [src]="record.selfie"
+                          alt="User selfie"
+                          class="img-fluid"
+                          #selfieImage
+                          (error)="handleImageError(selfieImage)"
+                          loading="lazy"
+                        />
+                        <div class="overlay">
+                          <i class="zoom-icon fas fa-search-plus"></i>
+                        </div>
+                      </div>
+
+                      <!-- Modal Template -->
+                      <ng-template #content let-modal>
+                        <div class="modal-body p-0 overflow-hidden">
+                          <div
+                            class="img-container"
+                            (mousemove)="zoomImage($event)"
+                            (mouseleave)="resetZoom($event)"
+                          >
+                            <img
+                              #selfieImage2
+                              [src]="activeModalImage"
+                              (error)="handleImageError(selfieImage2)"
+                              alt="User selfie preview"
+                              class="img-fluid zoom-on-hover"
+                              loading="lazy"
+                              [style.transform]="currentZoomLevel"
+                            />
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <!-- Zoom In Button -->
+                          <button
+                            type="button"
+                            class="btn btn-secondary"
+                            (click)="zoomIn(selfieImage2)"
+                          >
+                            <i class="fa-solid fa-search-plus"></i>
+                          </button>
+
+                          <!-- Zoom Out Button -->
+                          <button
+                            type="button"
+                            class="btn btn-secondary"
+                            (click)="zoomOut(selfieImage2)"
+                          >
+                            <i class="fa-solid fa-search-minus"></i>
+                          </button>
+
+                          <!-- Close Button -->
+                          <button
+                            type="button"
+                            matRipple
+                            class="btn"
+                            style="
+                              background-color: #e36f00 !important;
+                              color: #fff !important;
+                            "
+                            (click)="modal.close('Close click')"
+                          >
+                            <i class="fa-solid fa-times"></i> Close
+                          </button>
+
+                          <!-- Download Button -->
+                          <button
+                            type="button"
+                            matRipple
+                            *ngIf="activeModalImage"
+                            class="btn btn-secondary"
+                            (click)="downloadImage(activeModalImage)"
+                          >
+                            <i class="fa-solid fa-download"></i> Download
+                          </button>
+
+                          <!-- Reject Button -->
+                          <button
+                            type="button"
+                            matRipple
+                            *ngIf="record.selfie"
+                            class="btn btn-danger"
+                          >
+                            <i class="fa-solid fa-times"></i> Reject
+                          </button>
+                        </div>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<ul class="nav nav-tabs nav-tabs-bottom pb-0" role="tablist">
+  <li *ngFor="let tab of tabs" class="nav-item m-0" role="presentation">
+    <a
+      class="nav-link tab"
+      [class.active]="tab.active"
+      role="tab"
+      [class.disabled]="tab.disabled"
+      (click)="handleTabChange(tab)"
+      [routerLink]="['./']"
+      [queryParams]="{ tab: tab.content }"
+      >{{ tab.title }}</a
+    >
+  </li>
+</ul>
