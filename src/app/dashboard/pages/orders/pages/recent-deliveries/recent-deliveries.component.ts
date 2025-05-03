@@ -32,7 +32,9 @@ export class RecentDeliveriesComponent extends OrdersHelpers implements OnInit {
     // Select orders and loading state from the store
     this.orders$ = this.store.select(selectAllOrders).pipe(
       map((orders) => {
-        let userOrders = orders.filter((order) => order.courier?.id === this.user.id);
+        let userOrders = orders.filter(
+          (order) => order.courier?.id === this.user.id
+        );
         return userOrders;
       })
     );

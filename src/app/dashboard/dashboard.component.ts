@@ -109,7 +109,7 @@ export class DashboardComponent implements OnDestroy {
               <path d="M11.999 0L0 13L11.999 26L14 23.8336L3.99919 13L14 2.16641L11.999 0Z" fill="#01674F"/>
             </svg>
           </a>
-          View ${this.innerPage}
+          Go back
           `;
           this.hideBottomNav = true;
           this.hideProfileIcon = true;

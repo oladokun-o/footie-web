@@ -19,6 +19,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxFileDropModule } from 'ngx-file-drop';
+import { RecentDeliveriesComponent } from './recent-deliveries/recent-deliveries.component';
 
 const mapConfig: YaConfig = {
   apikey: ApiEndpoints.map.yandex_key,
@@ -29,7 +30,8 @@ const mapConfig: YaConfig = {
   declarations: [
     SummaryComponent,
     ManageComponent,
-    NewComponent
+    NewComponent,
+    RecentDeliveriesComponent,
   ],
   imports: [
     CommonModule,
@@ -48,8 +50,8 @@ const mapConfig: YaConfig = {
     MatExpansionModule,
     MatIconModule,
     NgSelectModule,
-    NgxFileDropModule
+    NgxFileDropModule,
   ],
-  providers: []
+  providers: [],
 })
-export class PagesModule { }
+export class PagesModule {}

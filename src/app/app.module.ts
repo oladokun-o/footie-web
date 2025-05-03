@@ -75,7 +75,7 @@ registerLocaleData(localeRu, 'ru'); // Register Russian locale
       useClass: AuthInterceptor,
       multi: true,
     },
-    { provide: LOCALE_ID, useValue: 'ru' },
+    // { provide: LOCALE_ID, useValue: 'ru' },
   ],
   bootstrap: [AppComponent],
 })

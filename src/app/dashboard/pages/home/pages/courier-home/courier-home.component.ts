@@ -17,9 +17,11 @@ import {
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
-import { filter, interval, of, Subscription, switchMap } from 'rxjs';
+import { EMPTY, filter, interval, Observable, of, Subscription, switchMap } from 'rxjs';
+import { Orders } from 'src/app/core/interfaces/order.interface';
 import { User } from 'src/app/core/interfaces/user.interface';
 import { UserService } from 'src/app/core/services/user.service';
+import { selectAllOrders, selectOrdersLoadingState } from 'src/app/core/store/orders/orders.selectors';
 
 @Component({
   selector: 'footiedrop-web-courier-home',
@@ -85,7 +87,7 @@ export class CourierHomeComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   get firstTruncatedWarning(): string {
-    return this.warnings.length > 0 ? this.warnings[0].substring(0, 30) + '...' : '';
+    return this.warnings.length > 0 ? this.warnings[0].substring(0, 25) + '...' : '';
   }
 
   loading: boolean = false;
@@ -93,13 +95,24 @@ export class CourierHomeComponent implements AfterViewInit, OnDestroy, OnInit {
 
   latestOrdersFound: number = 0;
 
+  orders$: Observable<Orders> = EMPTY;
+  loading$: Observable<boolean> = EMPTY;
+
   constructor(
     private userService: UserService,
     private toastr: ToastrService,
     private store: Store
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.orders$ = this.store.select(selectAllOrders);
+    this.loading$ = this.store.select(selectOrdersLoadingState);
+
+    // Set latest orders found
+    this.orders$.subscribe(orders => {
+      this.latestOrdersFound = orders.length;
+    });
+  }
 
   ngAfterViewInit(): void {
     this.setupTabVisibilityListener();

@@ -5,6 +5,7 @@ import { SummaryComponent } from './pages/summary/summary.component';
 import { ManageComponent } from './pages/manage/manage.component';
 import { NewComponent } from './pages/new/new.component';
 import { CanDeactivateGuard } from 'src/app/core/guards/can-deactivate.guard';
+import { RecentDeliveriesComponent } from './pages/recent-deliveries/recent-deliveries.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,10 @@ const routes: Routes = [
         path: 'new',
         component: NewComponent,
         canDeactivate: [CanDeactivateGuard]
+      },
+      {
+        path: 'recent',
+        component: RecentDeliveriesComponent,
       },
       {
         path: ':id',

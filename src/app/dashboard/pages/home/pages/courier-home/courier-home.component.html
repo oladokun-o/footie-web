@@ -47,7 +47,7 @@
         (closed)="firstTruncatedWarningEl.classList.remove('invisible')"
       >
         <mat-expansion-panel-header>
-          <mat-panel-title style="font-weight: 600">
+          <mat-panel-title class="text-nowrap" style="font-weight: 600">
             ({{ warnings.length }}) Notification{{
               warnings.length > 1 ? "s" : ""
             }}
@@ -102,7 +102,7 @@
                   ? latestOrdersFound +
                     (latestOrdersFound === 1
                       ? " Delivery order found!"
-                      : " Delivery orders found!")
+                      : "+ Delivery orders found!")
                   : "No delivery orders found."
               }}
             </h5>
